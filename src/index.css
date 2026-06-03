@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #3B82F6;
+  --secondary: #1E2025;
+  --tertiary: #10B981;
+  --neutral: #0B0C0E;
+  --primary-hover: #2573E6;
+  
+  --text: #C2C6D6;
+  --text-primary: #002E6A;
+
+  --body-font: 'Inter', sans-serif;
+  --headlines: 'DM Serif Display', serif;
+  --labels: 'JetBrains Mono', monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+body {
+  margin: 0;
+  font-family: var(--body-font);
+  background: linear-gradient(180deg, #121315 0%, #121315 100%);
+}
+
+button {
+  cursor: pointer
+}
