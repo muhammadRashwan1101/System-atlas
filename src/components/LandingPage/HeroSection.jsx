@@ -2,7 +2,10 @@ import {FaRegCirclePlay} from 'react-icons/fa6';
 export default function HeroSection() {
   return (
     <>
-    <div className="flex flex-col items-center justify-center text-white text-center gap-15 mx-auto max-w-[80ch] py-20 px-5 border-b border-(--secondary)">
+    <div className="flex flex-col items-center justify-center text-white text-center gap-15 mx-auto max-w-[80ch] pt-20 px-5">
+      <div class="absolute inset-0 -z-10 flex items-center justify-center">
+    <div class="h-[300px] w-[1000px] relative -top-30 rounded-full bg-[#ADC6FF]/5 blur-[40px]"></div>
+  </div>
         <div className="flex flex-col items-center justify-center text-center">
             <h2 className="text-6xl font-bold font-(family-name:--headlines) leading-18" >Visualize Services. <span className="text-6xl font-bold font-(family-name:--headlines) bg-[linear-gradient(90deg,#ADC6FF,#ADC6FF80,#ADC6FF70,#ADC6FF)] text-transparent bg-clip-text"> Understand Dependencies.</span> Predict Impact.</h2>
             

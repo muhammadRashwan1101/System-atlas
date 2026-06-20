@@ -30,13 +30,16 @@ export default function Navbar() {
             </DisclosureButton>
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-            <div className="flex shrink-0 items-center bg-[#ADC6FF] p-2 rounded me-10">
+            <div clasName="flex items-center ">
+              <div className="flex shrink-0 items-center bg-[#ADC6FF] p-2 rounded me-10">
               <img
                 alt="Your Company"
                 src={logo}
                 className="h-5 w-auto"
-              />
-            </div>
+                />
+              </div>
+              {/* <h1>System Atlas</h1> */}
+              </div>
             <div className="hidden sm:ml-6 sm:block">
               <div className="flex space-x-4 items-center justify-center h-full">
                 {navigation.map((item) => (
