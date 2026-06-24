@@ -14,12 +14,7 @@ export default function Login() {
         reValidateMode: "onSubmit"
     })
     const [error, setError] = useState(null)
-    const navigate = useNavigate()
     
-    // use useForm to validate the data 
-    
-    // Get input value
-    // Submit values to the api 
     const handleLogin = async (data) => {
         try {
             const response = await api.post("/auth/login", data)    
