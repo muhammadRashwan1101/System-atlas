@@ -1,11 +1,13 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
 import logo from "../../assets/Container.png"
+import { NavLink, Link } from "react-router-dom"
+
 const navigation = [
-  { name: 'Explorer', href: '#', current: true },
-  { name: 'Archeticture', href: '#', current: false },
-  { name: 'Documentation', href: '#', current: false },
-  { name: 'About', href: '#', current: false },
+  { name: 'Explorer', href: '/explorer', current: true },
+  { name: 'Archeticture', href: '/archeticture', current: false },
+  { name: 'Documentation', href: '/docs', current: false },
+  { name: 'About', href: '/about', current: false },
 ]
 
 function classNames(...classes) {
@@ -30,48 +32,50 @@ export default function Navbar() {
             </DisclosureButton>
           </div>
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
-            <div clasName="flex items-center ">
-              <div className="flex shrink-0 items-center bg-[#ADC6FF] p-2 rounded me-10">
-              <img
-                alt="Your Company"
-                src={logo}
-                className="h-5 w-auto"
-                />
-              </div>
+            <div className="flex items-center ">
+                <Link to="/">
+                  <div className="flex shrink-0 w-fit items-center bg-[#ADC6FF] p-2 rounded ">
+                      <img
+                        alt="Your Company"
+                        src={logo}
+                        className="h-5 w-auto"
+                      />
+                  </div>
+                </Link>
               {/* <h1>System Atlas</h1> */}
               </div>
             <div className="hidden sm:ml-6 sm:block">
-              <div className="flex space-x-4 items-center justify-center h-full">
+              <div className="flex space-x-4 items-center justify-center h-full ms-10">
                 {navigation.map((item) => (
-                  <a
+                  <NavLink
                     key={item.name}
-                    href={item.href}
+                    to={item.href}
                     aria-current={item.current ? 'page' : undefined}
                     className= 'text-gray-300 rounded-md px-3 py-2 font-(family-name:--body-font) text-sm transition-colors duration-200  hover:text-white'
                     
                   >
                     {item.name}
-                  </a>
+                  </NavLink>
                 ))}
               </div>
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <button
-              type="button"
+            <Link
+              to="/login"
               className="btn relative rounded-full p-1 text-gray-400 hover:text-white transition-colors duration-200"
             >
               <span className="absolute -inset-1.5" />
               <span className="sr-only">Sign in</span>
               Sign in
-            </button>
+            </Link>
 
-            <button
-                type="button"
+            <Link
+                to="/signup"
                 className="btn relative ms-3 bg-white py-2 px-3 text-(--secondary) font-semibold rounded transition-colors duration-200 hover:bg-white/85"
             >
                 New Provision Account
-            </button> 
+            </Link> 
           </div>
         </div>
       </div>
