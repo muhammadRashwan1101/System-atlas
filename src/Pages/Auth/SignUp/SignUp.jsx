@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form"
 
 
 export default function SignUp() {
-    const { register, handleSubmit, watch, formState: {errors}} = useForm({
+    const { register, handleSubmit, getValues, formState: {errors}} = useForm({
         mode: "onSubmit",
     })
 
@@ -114,10 +114,10 @@ export default function SignUp() {
                             placeholder="Re-enter Your Password" 
                             {...register("confirmPassword", {
                                 required: "Please Re-Enter your Password",
-                                validate: (value) => value ===  watch("password") || "Passwords do not match",
+                                validate: (value) => value ===  getValues("password")|| "Passwords do not match",
                             })}
                             />
-                            {errors.ConfirmPassword && <span className="text-xs text-red-500">{errors.ConfirmPassword.message}</span>}
+                            {errors.confirmPassword && <span className="text-xs text-red-500">{errors.confirmPassword.message}</span>}
                         </div>
                     </div>
                     <button className="bg-[#2a60dd] p-3 rounded-md text-white font-semibold hover:bg-[#2a60dd]/80 mt-3" type="submit">Create Account</button>
