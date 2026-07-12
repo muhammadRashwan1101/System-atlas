@@ -5,7 +5,6 @@ import styles from "./login.module.css"
 import api from "../../../api/axios"
 import { useForm } from "react-hook-form"
 import { useState, useEffect } from "react"
-import { useNavigate } from "react-router-dom"
 // setup useForm and useState
 
 export default function Login() {
