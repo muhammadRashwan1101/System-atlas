@@ -10,8 +10,6 @@ import api from "../../../api/axios"
 import { useForm } from "react-hook-form"
 import { useState, useEffect } from "react"
 
-// setup useForm and useState
-
 export default function Login() {
     const { register, handleSubmit, formState: {errors} } = useForm({
         mode: "onSubmit",
