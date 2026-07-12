@@ -7,10 +7,13 @@
   --neutral: #0B0C0E;
   --primary-hover: #2573E6;
   
+  --main-bg: #0A0B0D;
+  --secondary-bg: #0B0E15;
 
-  --text: #A1A1AA;
+  --text: #C4C6D0;
   --text-primary: #002E6A;
-
+  --border: #44474F;
+  
   --body-font: 'Inter', sans-serif;
   --headlines: 'DM Serif Display', serif;
   --labels: 'JetBrains Mono', monospace;

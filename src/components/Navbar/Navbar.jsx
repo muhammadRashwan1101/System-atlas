@@ -1,7 +1,8 @@
 import { Disclosure, DisclosureButton, DisclosurePanel } from '@headlessui/react'
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline'
-import logo from "../../assets/Container.png"
+import SystemAtlasLogo from "../../assets/Logo/Logo"
 import { NavLink, Link } from "react-router-dom"
+import LogoStyle from "./logo.module.css"
 
 const navigation = [
   { name: 'Explorer', href: '/explorer', current: true },
@@ -18,7 +19,7 @@ export default function Navbar() {
   return (
     <Disclosure
       as="nav"
-      className="relative bg-(--neutral) after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10"
+      className="relative bg-[#0D0E11] after:pointer-events-none after:absolute after:inset-x-0 after:bottom-0 after:h-px after:bg-white/10"
     >
       <div className="px-5 sm:px-12 lg:px-20 py-1 text-sm">
         <div className="relative flex h-16 items-center justify-between">
@@ -34,12 +35,8 @@ export default function Navbar() {
           <div className="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex items-center ">
                 <Link to="/">
-                  <div className="flex shrink-0 w-fit items-center bg-[#ADC6FF] p-2 rounded ">
-                      <img
-                        alt="Your Company"
-                        src={logo}
-                        className="h-5 w-auto"
-                      />
+                  <div className="flex shrink-0 w-fit items-center rounded-xl">
+                      <SystemAtlasLogo className={`h-22 w-auto ${LogoStyle.atlasLogo}`} />
                   </div>
                 </Link>
               {/* <h1>System Atlas</h1> */}
