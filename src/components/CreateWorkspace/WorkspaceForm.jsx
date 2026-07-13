@@ -132,9 +132,14 @@ export default function WorkspaceForm({formRef}) {
             </div>
           </div>
           <div className="flex flex-col gap-8">
-            <h2 className="font-(family-name:--labels) uppercase text-(--primary) text-sm">
-              0.2 Workspace Summary Preview
-            </h2>
+            <div className="flex gap-4">
+              <h2 className="font-(family-name:--labels) uppercase text-(--primary) text-sm">
+                0.2 Workspace Summary Preview
+              </h2>
+              <p className="text-(--border) italic text-sm">
+                Assets will appear after workspace creation
+              </p>
+            </div>
             <ul className="grid grid-cols-2 gap-10">
               <li className="flex items-center gap-2">
                 <FaRegCircleCheck className="text-(--primary)" />
@@ -165,9 +170,6 @@ export default function WorkspaceForm({formRef}) {
                 </h3>
               </li>
             </ul>
-            <p className="text-(--border) italic text-sm">
-              Assets will appear after workspace creation
-            </p>
           </div>
         </form>
       </div>
