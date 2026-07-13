@@ -1,6 +1,4 @@
-import logo from "../../../assets/Container.png";
 import { Link } from "react-router-dom";
-import background from "../../../assets/background-login.png";
 import A_logo from "../../../assets/Atlas-Logo.png";
 import graph from "../../../assets/START_ANIMATION.png";
 import login_icon from "../../../assets/login-icon.png";
@@ -10,6 +8,7 @@ import api from "../../../api/axios";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import loginBg from "../../../assets/loginBg/login-bg.mp4"
 
 export default function Login() {
   const {
@@ -22,7 +21,6 @@ export default function Login() {
   });
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-
   const handleLogin = async (data) => {
     try {
       const response = await api.post("/auth/login", data);
@@ -35,14 +33,18 @@ export default function Login() {
       localStorage.setItem("token", response.data.token);
       navigate("/new-workspace");
     } catch (err) {
-      setError(err.response.data.msg || "Unable to connect to the server");
+      setError(err.response?.data?.msg || "Unable to connect to the server");
     }
   };
+
   useEffect(() => {
     setTimeout(() => {
       setError(null);
-    }, 5000);
+    }, 3000);
+
   }, [error]);
+
+
   const stats = [
     {
       value: "132",
@@ -76,22 +78,17 @@ export default function Login() {
     <div
       id={styles.container}
       className="flex min-h-screen"
-      style={{
-        backgroundImage: `
-      linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.3)),
-      url(${background})
-    `,
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundRepeat: "no-repeat",
-      }}
     >
-      <div className="w-[60%] min-h-screen flex flex-col">
+      <div className="relative w-[60%] min-h-screen flex flex-col overflow-hidden">
+        <video loop autoPlay playInline muted className="absolute shrink-0 inset-0 -z-2 w-full h-full object-cover ">
+          <source src={loginBg} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 -z-1 bg-black/75"></div>
         <div className="flex-1 flex flex-col justify-center items-center">
           <div className="mb-4 ">
           <div className="mb-4">
             <Link to="/">
-            <img src={A_logo} alt="logo company" className="rounded-xl" />
+            <img src={A_logo} alt="logo company" className={`${styles.logo} rounded-xl`} />
             </Link>
           </div>
           </div>
@@ -99,7 +96,7 @@ export default function Login() {
             Visualize Your Architecture
           </h1>
           <p>The living map of your software ecosystem.</p>
-          <div className="my-9 ">
+          <div className={`${styles.graph} my-9`}>
             <img src={graph} />
           </div>
           <div className="flex flex-wrap justify-center gap-6">
@@ -120,7 +117,7 @@ export default function Login() {
             ))}
           </div>
         </div>
-        <footer className="flex justify-center gap-8 py-3 flex-wrap bg-[#0B0F17]">
+        <footer className="flex justify-center gap-8 py-3 flex-wrap mb-10">
           {footerStatus.map((item, index) => (
             <div key={index} className="flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(74,222,128,0.8)]"></span>
@@ -133,9 +130,9 @@ export default function Login() {
         </footer>
       </div>
 
-      <div className="w-[40%] bg-[#0B0F17] flex items-center justify-center">
-        <div className=" w-full max-w-md flex flex-col items-center gap-4  px-8  ">
-          <div className="flex flex-col gap-2 self-start">
+      <div className="w-[40%] bg-[#0B0F17] flex items-center justify-center shadow-[5px_0px_20px_rgba(0,100,120,0.5)]">
+        <div className=" w-full max-w-lg flex flex-col items-center gap-8 p-10 rounded-2xl shadow-[0px_0px_10px_rgba(0,0,0,0.6)]">
+          <div className="flex flex-col gap-2 self-start ">
             <h2 className="text-2xl font-medium text-(--text)">
               Infrastructure Access
             </h2>
@@ -229,7 +226,7 @@ export default function Login() {
             <span className="text-[#64748B] font-light">
               ENTERPRISE ACCESS RESTRICTED
             </span>
-            <img src={footer_login} c />
+            <img src={footer_login} />
           </div>
         </div>
       </div>

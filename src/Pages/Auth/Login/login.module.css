@@ -2,3 +2,31 @@
         position: relative;
         overflow: hidden;
     }
+
+    
+@keyframes float {
+  0% {
+    transform: translatey(7px);
+  }
+  50% {
+    transform: translatey(-10px);
+  }
+  100% {
+    transform: translatey(7px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.95);
+  }
+}
+
+.logo { animation : float 4s ease-in-out infinite; }
+
