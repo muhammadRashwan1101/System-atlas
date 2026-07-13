@@ -15,9 +15,7 @@ export default function WorkspaceForm({formRef}) {
 
   const [error, setError] = useState(null);
   const {user, loading} = useAuth()
-
   const submitForm = async (data) => {
-    console.log(data);
     try {
       const response = await api.post("/workspace", data);
       console.log(response.status)

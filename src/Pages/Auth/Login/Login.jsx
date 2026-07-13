@@ -8,6 +8,7 @@ import api from "../../../api/axios";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import useAuth from "../../../context/AuthContext";
 import loginBg from "../../../assets/loginBg/login-bg.mp4"
 
 export default function Login() {
@@ -21,16 +22,20 @@ export default function Login() {
   });
   const navigate = useNavigate();
   const [error, setError] = useState(null);
+
+  const {getCurrentUser} = useAuth()
   const handleLogin = async (data) => {
     try {
       const response = await api.post("/auth/login", data);
+
       console.log(response.data);
       if (!response.data.token) {
         setError(response.data.msg);
         return;
       }
-
       localStorage.setItem("token", response.data.token);
+
+      await getCurrentUser()
       navigate("/new-workspace");
     } catch (err) {
       setError(err.response?.data?.msg || "Unable to connect to the server");
