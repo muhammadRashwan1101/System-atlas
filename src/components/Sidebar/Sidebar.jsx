@@ -20,25 +20,25 @@ export default function Sidebar() {
           </div>
           <NavLink
             to="/dashboard"
-            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transform ease-in-out duration-250"
+            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transition-all ease-in-out duration-250"
           >
             <MdOutlineDashboard className="w-5 h-5 (--text)" />
           </NavLink>
           <NavLink
             to="/graph"
-            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transform ease-in-out duration-250"
+            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transition-all ease-in-out duration-250"
           >
             <PiGraph className="w-5 h-5 (--text)" />
           </NavLink>
           <NavLink
             to="/components"
-            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transform ease-in-out duration-250"
+            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transition-all ease-in-out duration-250"
           >
             <IoExtensionPuzzleSharp className="w-5 h-5 (--text)" />
           </NavLink>
           <NavLink
             to="/analysis"
-            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transform ease-in-out duration-250"
+            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transition-all ease-in-out duration-250"
           >
             <div className="w-5 h-5">
               <PiStarFourFill className="relative top-[13px] -right-[9.5px] scale-x-[-1] w-[7px] h-2 (--text) translate-y-[-13px] translate-x-[2px]" />
@@ -48,19 +48,19 @@ export default function Sidebar() {
           </NavLink>
           <NavLink
             to="/projects"
-            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transform ease-in-out duration-250"
+            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transition-all ease-in-out duration-250"
           >
             <FaFolderOpen className="w-5 h-5 (--text)" />
           </NavLink>
           <NavLink
             to="/workspaces"
-            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transform ease-in-out duration-250"
+            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transition-all ease-in-out duration-250"
           >
             <MdOutlineDomain className="w-5 h-5 (--text)" />
           </NavLink>
           <NavLink
             to="/teams"
-            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transform ease-in-out duration-250"
+            className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transition-all ease-in-out duration-250"
           >
             <HiUserGroup className="w-5 h-5 (--text)" />
           </NavLink>

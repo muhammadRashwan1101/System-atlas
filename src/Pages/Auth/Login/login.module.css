@@ -2,32 +2,31 @@
         position: relative;
         overflow: hidden;
     }
-    #container::before{
-        position: absolute;
-        content: "";
-        background-color: #ADC6FF30;
-        background-size: 100% 100%;
-        width: 40%;
-        height: 70%;
-        top: -25rem;
-        right: 0px;
-        bottom: 0px;
-        left: -20rem;
-        border-radius: 50%;
-        opacity: 0.3;
-        filter: blur(60px);
-    }
 
-    #container::after{
-        position: absolute;
-        content: "";
-        background-color: #4EDEA330;
-        background-size: 100% 100%;
-        width: 40%;
-        height: 70%;
-        right: -20rem;
-        bottom: -30rem;
-        border-radius: 50%;
-        opacity: 0.3;
-        filter: blur(60px);
-    }
+    
+@keyframes float {
+  0% {
+    transform: translatey(7px);
+  }
+  50% {
+    transform: translatey(-10px);
+  }
+  100% {
+    transform: translatey(7px);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.95);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(0.95);
+  }
+}
+
+.logo { animation : float 4s ease-in-out infinite; }
+

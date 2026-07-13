@@ -6,7 +6,8 @@
   --tertiary: #10B981;
   --neutral: #0B0C0E;
   --primary-hover: #2573E6;
-  
+  ;
+
   --main-bg: #0A0B0D;
   --secondary-bg: #0B0E15;
 
@@ -40,4 +41,38 @@ body {
 
 button {
   cursor: pointer
+}
+
+.atlas-toast {
+  background: var(--main-bg);
+  color: var(--text);
+  border-radius: 12px;
+  box-shadow:
+    4px 4px 8px rgba(37, 37, 37, 0.5) inset,
+    -4px -4px 8px rgba(19, 17, 17, 0.5) inset !important;
+  font-family: var(--labels) !important;
+  font-size: 13px !important;
+}
+
+.Toastify__progress-bar-theme--dark {
+  background: var(--primary) !important;
+}
+
+.Toastify__progress-bar--error {
+  background: #e04136 !important;
+}
+
+.Toastify__progress-bar--warning {
+  background: #FEB685 !important;
+}
+
+
+#bg-video {
+  object-fit: cover;
+  width: 100vh;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
 }
