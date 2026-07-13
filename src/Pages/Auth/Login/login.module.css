@@ -2,32 +2,3 @@
         position: relative;
         overflow: hidden;
     }
-    #container::before{
-        position: absolute;
-        content: "";
-        background-color: #ADC6FF30;
-        background-size: 100% 100%;
-        width: 40%;
-        height: 70%;
-        top: -25rem;
-        right: 0px;
-        bottom: 0px;
-        left: -20rem;
-        border-radius: 50%;
-        opacity: 0.3;
-        filter: blur(60px);
-    }
-
-    #container::after{
-        position: absolute;
-        content: "";
-        background-color: #4EDEA330;
-        background-size: 100% 100%;
-        width: 40%;
-        height: 70%;
-        right: -20rem;
-        bottom: -30rem;
-        border-radius: 50%;
-        opacity: 0.3;
-        filter: blur(60px);
-    }
