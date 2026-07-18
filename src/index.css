@@ -6,7 +6,7 @@
   --tertiary: #10B981;
   --neutral: #0B0C0E;
   --primary-hover: #2573E6;
-  ;
+  --danger: #FF8A7A;
 
   --main-bg: #0A0B0D;
   --secondary-bg: #0B0E15;
@@ -36,7 +36,7 @@
 body {
   margin: 0;
   font-family: var(--body-font);
-  background: linear-gradient(180deg, #121315 0%, #121315 100%);
+  background: #0A0B0D;
 }
 
 button {
@@ -76,3 +76,19 @@ button {
   left: 0;
   z-index: -1;
 }
+
+progress {
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+progress::-webkit-progress-bar {
+  background: #272A31;
+  border-radius: 9999px;
+}
+
+progress::-webkit-progress-value {
+  background: #ADC6FF;
+  border-radius: 9999px;
+}
+

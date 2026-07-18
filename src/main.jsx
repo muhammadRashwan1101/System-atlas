@@ -11,6 +11,8 @@ import { ToastContainer } from 'react-toastify';
 import AuthProvider from "./context/AuthProvider"
 import ProtectedRoute from "./routes/ProtectedRoute"
 import AppEntry from "./routes/AppEntry"
+import EmptyGraph from "./Pages/EmptyGraph/EmptyGraph"
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
@@ -29,8 +31,8 @@ createRoot(document.getElementById('root')).render(
             <Route path="/app" element={<AppEntry />} />
             <Route path="/new-workspace" element={<WorkspaceCreation />} />
             <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+            <Route path="/graph" element={<EmptyGraph />} />
           </Route>
-
 
         </Routes>
 

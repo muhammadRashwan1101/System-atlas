@@ -1,6 +1,8 @@
+import { RxGear } from "react-icons/rx"; 
+import { FaUser } from "react-icons/fa"; 
 import logo from "../../assets/system_atlas_logo.png"
 
-import { NavLink } from "react-router-dom"
+import { NavLink, Link } from "react-router-dom"
 import { MdOutlineDashboard } from "react-icons/md";
 import { PiGraph } from "react-icons/pi";
 import { IoExtensionPuzzleSharp } from "react-icons/io5";
@@ -13,7 +15,7 @@ import { HiUserGroup } from "react-icons/hi2";
 export default function Sidebar() {
   return (
     <>
-      <div className="flex flex-col items-center justify-between bg-(--main-bg) border-r border-(--border)/30 w-20 min-h-screen p-4">
+      <div className="flex flex-col items-center justify-between bg-(--main-bg) border-r border-(--border)/30 w-20 min-h-screen pb-4">
         <div className="flex flex-col items-center justify-center w-full mb-5 space-y-4">
           <div className="flex flex-col items-center justify-center w-30 p-5">
             <img src={logo} alt="Logo" className="w-13 h-auto rounded-lg" />
@@ -64,6 +66,14 @@ export default function Sidebar() {
           >
             <HiUserGroup className="w-5 h-5 (--text)" />
           </NavLink>
+        </div>
+        <div className="flex flex-col gap-8 items-center">
+          <Link to="/settings"><RxGear className="text-2xl text-(--text) hover:text-white transition-all duration-150 ease-in-out"/></Link>
+          <Link to="/profile">
+            <div className="bg-(--primary) p-2.5 rounded-full">
+              <FaUser className="text-(--text-primary)"/>
+            </div>
+          </Link>
         </div>
       </div>
     </>
