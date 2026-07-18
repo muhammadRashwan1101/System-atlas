@@ -11,16 +11,16 @@
 #addComp::after, #addComp::before {
     content: "";
     position: absolute;
-    inset: -2px;
-    background-image: conic-gradient(from var(--angle),  var(--primary), var(--border), var(--primary));
+    inset: -3px;
+    background-image: conic-gradient(from var(--angle),  #00174d, transparent, #6694ff, transparent, #00174d);
     z-index: -1;
     border-radius: 15px;
-    animation: spin 5s linear infinite;
+    animation: spin 3s linear infinite;
 }
 
 #addComp::before {
-    filter: blur(10px);
-    opacity: 0.4;
+    filter: blur(15px);
+    opacity: 0.8;
 }
 
 @keyframes spin {

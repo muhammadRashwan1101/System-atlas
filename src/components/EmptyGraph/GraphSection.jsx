@@ -1,3 +1,4 @@
+import { AiOutlineImport } from "react-icons/ai"; 
 import { CgAddR } from "react-icons/cg"; 
 import { MdOutlineRouter } from "react-icons/md"; 
 import { GrStorage } from "react-icons/gr"; 
@@ -33,11 +34,14 @@ export default function GraphSection() {
             <h3 className="text-4xl text-[#E3E2E7]">Your architecture starts here.</h3>
             <p className="text-md leading-7 max-w-[45ch] font-light ">Begin mapping your system's infrastructure to unlock real-time telemetry visualization, automated impact analysis, and workspace-wide tracing.</p>
             <div className="flex gap-3">
-                <Link to="/new-component" id={styles.addComp} className="bg-[#131519] p-4 rounded-xl text-sm flex items-center gap-2">
-                    <CgAddR className="text-xl"/>
-                    Add First Component
+                <Link to="/new-component" id={styles.addComp} className="bg-(--primary) text-(--text-primary) p-5 rounded-xl text-sm flex items-center gap-2 max-w-[25ch] hover:bg-[#ccdaff] transition-all ease-in-out duration-200">
+                    <CgAddR className="text-3xl"/>
+                    Add the First Component
                 </Link>
-
+                <Link to="/archeticture" className="bg-transparent border border-(--border) p-5 rounded-xl text-sm flex items-center max-w-[25ch] hover:bg-(--border)/30 hover:text-white transition-all ease-in-out duration-200">
+                    <AiOutlineImport className="text-3xl"/>
+                    Import existing Archeticture
+                </Link>
             </div>
         </div>
     </div>
