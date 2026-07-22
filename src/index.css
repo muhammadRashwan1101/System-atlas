@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+:root {
+  --primary: #ADC6FF;
+  --secondary: #1E2025;
+  --tertiary: #10B981;
+  --neutral: #0B0C0E;
+  --primary-hover: #2573E6;
+  ;
+
+  --main-bg: #0A0B0D;
+  --secondary-bg: #0B0E15;
+
+  --text: #C4C6D0;
+  --text-primary: #002E6A;
+  --border: #44474F;
+  --border2:#0D0E11CC ;
+  
+  --body-font: 'Inter', sans-serif;
+  --headlines: 'DM Serif Display', serif;
+  --labels: 'JetBrains Mono', monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color-scheme: light dark;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+body {
+  margin: 0;
+  font-family: var(--body-font);
+  background: linear-gradient(180deg, #121315 0%, #121315 100%);
+}
+
+button {
+  cursor: pointer
+}
+
+.atlas-toast {
+  background: var(--main-bg);
+  color: var(--text);
+  border-radius: 12px;
+  box-shadow:
+    4px 4px 8px rgba(37, 37, 37, 0.5) inset,
+    -4px -4px 8px rgba(19, 17, 17, 0.5) inset !important;
+  font-family: var(--labels) !important;
+  font-size: 13px !important;
+}
+
+.Toastify__progress-bar-theme--dark {
+  background: var(--primary) !important;
+}
+
+.Toastify__progress-bar--error {
+  background: #e04136 !important;
+}
+
+.Toastify__progress-bar--warning {
+  background: #FEB685 !important;
+}
+
+
+#bg-video {
+  object-fit: cover;
+  width: 100vh;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: -1;
+}
