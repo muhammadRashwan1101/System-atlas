@@ -20,14 +20,14 @@ export default function Login() {
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
+
   const navigate = useNavigate();
   const [error, setError] = useState(null);
-
   const {getCurrentUser} = useAuth()
+
   const handleLogin = async (data) => {
     try {
       const response = await api.post("/auth/login", data);
-
       console.log(response.data);
       if (!response.data.token) {
         setError(response.data.msg);
@@ -36,7 +36,7 @@ export default function Login() {
       localStorage.setItem("token", response.data.token);
 
       await getCurrentUser()
-      navigate("/new-workspace");
+      navigate("/app");
     } catch (err) {
       setError(err.response?.data?.msg || "Unable to connect to the server");
     }

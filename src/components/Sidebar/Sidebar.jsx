@@ -47,7 +47,7 @@ export default function Sidebar() {
             </div>
           </NavLink>
           <NavLink
-            to="/projects"
+            to="/workspaces/workspaceId/new-project"
             className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transition-all ease-in-out duration-250"
           >
             <FaFolderOpen className="w-5 h-5 (--text)" />
