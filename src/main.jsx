@@ -9,6 +9,7 @@ import WorkspaceCreation from "./Pages/CreateWorkspace/CreateWorkspace"
 import Login from "./Pages/Auth/Login/Login"
 import { ToastContainer } from 'react-toastify';
 import AuthProvider from "./context/AuthProvider"
+import Profile from './Pages/profile/Profile'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -18,10 +19,18 @@ createRoot(document.getElementById('root')).render(
           <Route path="/" element={<MainLayout />}>
             <Route index element={<LandingPage />} />
           </Route>
-            <Route path="/login" element={<Login />} />
-            <Route path="/new-workspace" element={<InnerLayout />}>
-              <Route index element={<WorkspaceCreation />} />
-            </Route>
+
+          <Route path="/login" element={<Login />} />
+
+          {/* Protected Routes */}
+          <Route element={ <ProtectedRoute><InnerLayout /></ProtectedRoute>}>
+            <Route path="/app" element={<AppEntry />} />
+          <Route path='/profile' element={<Profile/>} />
+            <Route path="/new-workspace" element={<WorkspaceCreation />} />
+            <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+            <Route path="/graph" element={<EmptyGraph />} />
+          </Route>
+
         </Routes>
 
         <ToastContainer 
