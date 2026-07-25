@@ -11,7 +11,10 @@ import Login from "./Pages/Auth/Login/Login"
 import { ToastContainer } from 'react-toastify';
 import AuthProvider from "./context/AuthProvider"
 import ProtectedRoute from "./routes/ProtectedRoute"
-import AppEntry from "./routes/AppEntry"import Profile from './Pages/profile/Profile'
+import AppEntry from "./routes/AppEntry"
+import Profile from './Pages/profile/Profile'
+import EmptyGraph from "./Pages/EmptyGraph/EmptyGraph"
+import ProfileSettings from './Pages/profile/ProfileSettings'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -42,6 +45,7 @@ createRoot(document.getElementById('root')).render(
           <Route element={ <ProtectedRoute><InnerLayout /></ProtectedRoute>}>
             <Route path="/app" element={<AppEntry />} />
           <Route path='/profile' element={<Profile/>} />
+          <Route path='/profile-settings' element={<ProfileSettings/>} />
             <Route path="/new-workspace" element={<WorkspaceCreation />} />
             <Route path="/dashboard" element={<h1>Dashboard</h1>} />
             <Route path="/graph" element={<EmptyGraph />} />
