@@ -11,7 +11,9 @@ import Login from "./Pages/Auth/Login/Login"
 import { ToastContainer } from 'react-toastify';
 import AuthProvider from "./context/AuthProvider"
 import ProtectedRoute from "./routes/ProtectedRoute"
-import AppEntry from "./routes/AppEntry"import Profile from './Pages/profile/Profile'
+import AppEntry from "./routes/AppEntry"
+import EmptyGraph from "./Pages/EmptyGraph/EmptyGraph"
+import Profile from './Pages/'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
