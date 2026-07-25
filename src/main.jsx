@@ -6,14 +6,12 @@ import InnerLayout from './layout/InnerLayout'
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import LandingPage from "./Pages/LandingPage/LandingPage"
 import WorkspaceCreation from "./Pages/CreateWorkspace/CreateWorkspace"
-import ProjectCreation from './Pages/CreatProject/CreatProject'
 import Login from "./Pages/Auth/Login/Login"
 import { ToastContainer } from 'react-toastify';
 import AuthProvider from "./context/AuthProvider"
 import ProtectedRoute from "./routes/ProtectedRoute"
 import AppEntry from "./routes/AppEntry"
 import EmptyGraph from "./Pages/EmptyGraph/EmptyGraph"
-import Profile from './Pages/'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -26,24 +24,11 @@ createRoot(document.getElementById('root')).render(
           </Route>
 
           <Route path="/login" element={<Login />} />
-          <Route element={<ProtectedRoute><InnerLayout /></ProtectedRoute>}>
-            <Route path="/app" element={<AppEntry />} />
-            <Route path="/new-workspace" element={<WorkspaceCreation />} />
-            <Route
-              path="workspaces/:workspaceId/new-project"
-              element={<ProjectCreation />}
-            />
-            <Route path="/dashboard" element={<h1>Dashboard</h1>} />
-          </Route>
 
-
-
-          <Route path="/login" element={<Login />} />
 
           {/* Protected Routes */}
           <Route element={ <ProtectedRoute><InnerLayout /></ProtectedRoute>}>
             <Route path="/app" element={<AppEntry />} />
-          <Route path='/profile' element={<Profile/>} />
             <Route path="/new-workspace" element={<WorkspaceCreation />} />
             <Route path="/dashboard" element={<h1>Dashboard</h1>} />
             <Route path="/graph" element={<EmptyGraph />} />
@@ -51,7 +36,7 @@ createRoot(document.getElementById('root')).render(
 
         </Routes>
 
-        <ToastContainer
+        <ToastContainer 
           position="top-right"
           autoClose={3000}
           hideProgressBar={false}

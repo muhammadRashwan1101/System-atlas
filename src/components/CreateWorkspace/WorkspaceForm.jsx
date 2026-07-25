@@ -3,58 +3,37 @@ import { MdDomainAdd } from "react-icons/md";
 import { useForm } from "react-hook-form";
 import { useState, useEffect } from "react";
 import api from "../../api/axios";
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 import useAuth from "../../context/AuthContext";
 import { FaUser } from "react-icons/fa6";
-import { useNavigate } from "react-router-dom";
 
-export default function WorkspaceForm({ formRef }) {
-  const navigate = useNavigate();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+export default function WorkspaceForm({formRef}) {
+  const { register, handleSubmit, formState: { errors } } = useForm({
     mode: "onSubmit",
     reValidateMode: "onSubmit",
   });
 
   const [error, setError] = useState(null);
-  const { user, loading } = useAuth();
+  const {user, loading} = useAuth()
 
+  console.log(user)
   const submitForm = async (data) => {
     try {
       const response = await api.post("/workspace", data);
-
-      const workspaceId = response.data.workspace._id;
-
-      console.log("Created Workspace:", workspaceId);
-
-      navigate(`/workspaces/${workspaceId}/new-project`);
-
-      toast.success("Workspace created successfully");
-
-
+      console.log(response.status)
+      toast.success("Workspace created successfully")
     } catch (err) {
-      const message = Array.isArray(err.response?.data?.msg)
-        ? err.response?.data?.msg[0]
-        : err.response?.data?.msg;
-
-      toast.error(message || "Unable to connect to the server");
+      const message = Array.isArray(err.response?.data?.msg) ? err.response?.data?.msg[0] : err.response?.data?.msg
+      toast.error(message || "Unable to connect to the server")
       setError(message || "Unable to connect to the server");
     }
-  };
-
+  }
   useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
+      setTimeout(() => {  
         setError(null);
       }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
+  
+    }, [error]);
 
   return (
     <div className="flex flex-col w-full h-full p-5 ps-30 ">
