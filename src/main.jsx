@@ -13,6 +13,7 @@ import AuthProvider from "./context/AuthProvider"
 import ProtectedRoute from "./routes/ProtectedRoute"
 import AppEntry from "./routes/AppEntry"
 import EmptyGraph from "./Pages/EmptyGraph/EmptyGraph"
+import Profile from './Pages/profile/Profile'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -33,6 +34,18 @@ createRoot(document.getElementById('root')).render(
             <Route path="/dashboard" element={<h1>Dashboard</h1>} />
           </Route>
 
+
+
+          <Route path="/login" element={<Login />} />
+
+          {/* Protected Routes */}
+          <Route element={ <ProtectedRoute><InnerLayout /></ProtectedRoute>}>
+            <Route path="/app" element={<AppEntry />} />
+          <Route path='/profile' element={<Profile/>} />
+            <Route path="/new-workspace" element={<WorkspaceCreation />} />
+            <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+            <Route path="/graph" element={<EmptyGraph />} />
+          </Route>
 
         </Routes>
 
