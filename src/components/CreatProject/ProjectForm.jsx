@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { MdOutlineRocketLaunch, MdOutlineLayers, MdTerminal, MdOutlineGrid4X4 } from "react-icons/md";
 import { AiFillCodeSandboxSquare } from "react-icons/ai";
 import { MdOutlineHub } from "react-icons/md";
@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom';
 import api from "../../api/axios";
 import { useNavigate } from "react-router-dom";
 import "react-datepicker/dist/react-datepicker.css";
+
 const TARGET_ENVIRONMENT_OPTIONS = [
     {
         title: "Production Ready",
