@@ -12,24 +12,29 @@ export default function NotificationPrefrencs() {
   const { user, loading, error } = useMyProfile();
 
   const [enabledOwnershipChanges, setEnabledOwnershipChanges] = useState(true);
-  const [enabledprojectAssignment, setEnabledProjectAssignment] = useState(true);
-  const [enabledrelationshipChanges, setEnabledRelationshipChanges] = useState(true);
+  const [enabledprojectAssignment, setEnabledProjectAssignment] =
+    useState(true);
+  const [enabledrelationshipChanges, setEnabledRelationshipChanges] =
+    useState(true);
   const [enabledCriticalAlerts, setEnabledCriticalAlerts] = useState(true);
-  const [enabledDocumentationAlerts, setEnabledDocumentationAlerts] = useState(true);
+  const [enabledDocumentationAlerts, setEnabledDocumentationAlerts] =
+    useState(true);
 
-  // لما بيانات اليوزر توصل من الباك، نعبي بيها الـ toggles
-const [syncedUserId, setSyncedUserId] = useState(null);
+  const [syncedUserId, setSyncedUserId] = useState(null);
 
-if (user?._id && user._id !== syncedUserId) {
-  setSyncedUserId(user._id);
-  setEnabledOwnershipChanges(user.notificationPreferences.ownershipChanges);
-  setEnabledProjectAssignment(user.notificationPreferences.projectAssignment);
-  setEnabledRelationshipChanges(user.notificationPreferences.relationshipChanges);
-  setEnabledCriticalAlerts(user.notificationPreferences.criticalAlerts);
-  setEnabledDocumentationAlerts(user.notificationPreferences.documentationAlerts);
-}
+  if (user?._id && user._id !== syncedUserId) {
+    setSyncedUserId(user._id);
+    setEnabledOwnershipChanges(user.notificationPreferences.ownershipChanges);
+    setEnabledProjectAssignment(user.notificationPreferences.projectAssignment);
+    setEnabledRelationshipChanges(
+      user.notificationPreferences.relationshipChanges,
+    );
+    setEnabledCriticalAlerts(user.notificationPreferences.criticalAlerts);
+    setEnabledDocumentationAlerts(
+      user.notificationPreferences.documentationAlerts,
+    );
+  }
 
-  // دالة واحدة بتبعت التحديث للباك، هنستخدمها في كل toggle
   const updatePreference = async (key, value) => {
     try {
       await api.patch("/profile/me/notifications", { key, value });

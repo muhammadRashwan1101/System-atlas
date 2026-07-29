@@ -1,7 +1,6 @@
 import profile_pic from "../../assets/profile-pic/profliePic.png";
 import api from "../../api/axios";
 import { useEffect, useState } from "react";
-
 import { LuSquareChartGantt } from "react-icons/lu";
 import { CiLocationOn } from "react-icons/ci";
 import { IoEllipsisHorizontalCircle } from "react-icons/io5";
@@ -37,7 +36,7 @@ export default function UserInfo() {
 
   if (loading) return <p className="text-white">Loading...</p>;
   if (error) return <p className="text-red-700">{error}</p>;
- const avatarSrc = user.avatar ? `${SERVER_URL}${user.avatar}` : profile_pic;
+  const avatarSrc = user.avatar ? `${SERVER_URL}${user.avatar}` : profile_pic;
   return (
     <>
       <div className="bg-[#1E1F23] border border-[#2D303A] rounded-lg p-12 ">
@@ -45,7 +44,7 @@ export default function UserInfo() {
           <div className=" col-1 relative">
             <img
               className="w-50 border-3 rounded-b-md border-(--tertiary)  p-1 rounded-xl"
-              src= {avatarSrc}
+              src={avatarSrc}
               alt="Profile Picture"
             />
             <span className="absolute bottom-0 right-0 text-[#003824] bg-(--tertiary) px-4 py-1 font-semibold rounded-full text-sm">

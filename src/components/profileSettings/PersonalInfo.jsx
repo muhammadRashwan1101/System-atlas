@@ -8,7 +8,7 @@ import useMyProfile from "../../hooks/useMyProfile";
 export default function PersonalInfo({ isEditing, onCancel, onSaved }) {
   const { user, loading, error, refetch } = useMyProfile();
 
-  // بنحسب initial state مباشرة من user، من غير useEffect
+  
   const [form, setForm] = useState(() => ({
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",

@@ -60,8 +60,6 @@ export default function ProfileHeader({ isEditing, onEditToggle }) {
   const shortId = user._id ? `#${user._id.slice(-8).toUpperCase()}` : "—";
   const workspacesCount = user.workspaceAccess?.length ?? 0;
 
-  // avatar بيرجع من الباك كـ path نسبي (/uploads/avatars/xxx.png)
-  // لازم نضيفله الـ SERVER_URL عشان يبقى صورة صالحة للعرض
   const avatarSrc = user.avatar ? `${SERVER_URL}${user.avatar}` : profile_pic;
 
   return (
