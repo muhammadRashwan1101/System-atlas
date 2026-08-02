@@ -35,27 +35,10 @@ export default function WorkspaceForm({ formRef }) {
 
       toast.success("Workspace created successfully");
 
-
     } catch (err) {
-      const message = Array.isArray(err.response?.data?.msg)
-        ? err.response?.data?.msg[0]
-        : err.response?.data?.msg;
-
-      toast.error(message || "Unable to connect to the server");
-      setError(message || "Unable to connect to the server");
-    }
+            console.error(err.message);
+        }
   };
-
-  useEffect(() => {
-    if (error) {
-      const timer = setTimeout(() => {
-        setError(null);
-      }, 3000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [error]);
-
   return (
     <div className="flex flex-col w-full h-full p-5 ps-30 ">
       <div className="w-2/3 h-full">
