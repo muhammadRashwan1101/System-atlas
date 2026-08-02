@@ -107,10 +107,7 @@ export default function ProjectForm({ projectSummary, setProjectSummary }) {
                 systemTopology,
             };
 
-            const response = await api.post(
-                `/workspaces/${workspaceId}/projects`,
-                projectData
-            );
+            const response = await api.post( `/workspaces/${workspaceId}/projects`, projectData );
 
             toast.success(
                 response.data.msg || "Project initialized successfully"

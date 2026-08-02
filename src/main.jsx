@@ -6,8 +6,10 @@ import InnerLayout from './layout/InnerLayout'
 import { BrowserRouter, Route, Routes } from "react-router-dom"
 import LandingPage from "./Pages/LandingPage/LandingPage"
 import WorkspaceCreation from "./Pages/CreateWorkspace/CreateWorkspace"
-import ProjectCreation from './Pages/CreatProject/CreatProject'
-import Login from "./Pages/Auth/Login/Login"
+import ProjectCreation from "./Pages/CreatProject/CreatProject"
+import Login from "./Pages/Auth/Login/Login";
+import CreateTeam from "./Pages/Create Team/CreateTeam";
+import EmptyGraph from "./Pages/EmptyGraph/EmptyGraph"
 import { ToastContainer } from 'react-toastify';
 import AuthProvider from "./context/AuthProvider"
 import ProtectedRoute from "./routes/ProtectedRoute"
@@ -44,9 +46,10 @@ createRoot(document.getElementById('root')).render(
           {/* Protected Routes */}
           <Route element={ <ProtectedRoute><InnerLayout /></ProtectedRoute>}>
             <Route path="/app" element={<AppEntry />} />
-          <Route path='/profile' element={<Profile/>} />
+            <Route path='/profile' element={<Profile/>} />
           <Route path='/profile-settings' element={<ProfileSettings/>} />
             <Route path="/new-workspace" element={<WorkspaceCreation />} />
+             <Route path="/create-team" element={<CreateTeam/>} />
             <Route path="/dashboard" element={<h1>Dashboard</h1>} />
             <Route path="/graph" element={<EmptyGraph />} />
           </Route>
