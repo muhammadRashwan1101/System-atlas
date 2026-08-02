@@ -7,11 +7,11 @@ import { BiCheckShield } from "react-icons/bi";
 import { AiOutlineClose } from "react-icons/ai";
 import { AiOutlineCamera } from "react-icons/ai";
 import profile_pic from "../../assets/profile-pic/profliePic.png";
-import useMyProfile from "../../hooks/useMyProfile";
+
 import api, { SERVER_URL } from "../../api/axios";
 
-export default function ProfileHeader({ isEditing, onEditToggle }) {
-  const { user, loading, error, refetch } = useMyProfile();
+export default function ProfileHeader({ isEditing, onEditToggle , user, loading, error, refetch}) {
+
   const fileInputRef = useRef(null);
 
   const [uploading, setUploading] = useState(false);

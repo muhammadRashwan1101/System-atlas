@@ -16,6 +16,7 @@ import Profile from './Pages/profile/Profile'
 import EmptyGraph from "./Pages/EmptyGraph/EmptyGraph"
 import ProfileSettings from './Pages/profile/ProfileSettings'
 
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <AuthProvider>
@@ -46,6 +47,8 @@ createRoot(document.getElementById('root')).render(
             <Route path="/app" element={<AppEntry />} />
           <Route path='/profile' element={<Profile/>} />
           <Route path='/profile-settings' element={<ProfileSettings/>} />
+          <Route path='/profile-settings/edit' element={<ProfileSettings/>} />
+      
             <Route path="/new-workspace" element={<WorkspaceCreation />} />
             <Route path="/dashboard" element={<h1>Dashboard</h1>} />
             <Route path="/graph" element={<EmptyGraph />} />

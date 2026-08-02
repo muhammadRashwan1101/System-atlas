@@ -50,7 +50,7 @@ export default function NotificationPrefrencs() {
     <>
       <div className="flex items-center gap-3 mb-10">
         <MdOutlineNotificationsActive className="text-[#D8E2FF] text-4xl" />
-        <h2 className="text-3xl font-medium text-[#E3E2E7]">
+        <h2 className="text-2xl font-medium text-[#E3E2E7]">
           Notification Preferences
         </h2>
       </div>
