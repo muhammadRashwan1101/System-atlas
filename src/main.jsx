@@ -27,24 +27,14 @@ createRoot(document.getElementById('root')).render(
           </Route>
 
           <Route path="/login" element={<Login />} />
-          <Route element={<ProtectedRoute><InnerLayout /></ProtectedRoute>}>
-            <Route path="/app" element={<AppEntry />} />
-            <Route path="/new-workspace" element={<WorkspaceCreation />} />
-            <Route path="/graph" element={<EmptyGraph />} />
-            <Route path="workspaces/:workspaceId/new-project" element={<ProjectCreation />} />
-            <Route path="/dashboard" element={<h1>Dashboard</h1>} />
-          </Route>
-
-
-
-          <Route path="/login" element={<Login />} />
 
           {/* Protected Routes */}
           <Route element={ <ProtectedRoute><InnerLayout /></ProtectedRoute>}>
             <Route path="/app" element={<AppEntry />} />
           <Route path='/profile' element={<Profile/>} />
-          <Route path='/profile-settings' element={<ProfileSettings/>} />
+          <Route path='/settings' element={<ProfileSettings/>} />
             <Route path="/new-workspace" element={<WorkspaceCreation />} />
+            <Route path="/workspaces/:workspaceId/new-project" element={<ProjectCreation />} />
             <Route path="/dashboard" element={<h1>Dashboard</h1>} />
             <Route path="/graph" element={<EmptyGraph />} />
           </Route>

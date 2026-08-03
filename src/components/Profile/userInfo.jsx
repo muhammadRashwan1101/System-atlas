@@ -1,4 +1,4 @@
-import profile_pic from "../../assets/profile-pic/AB6AXuARfjphqxLOVfKIAwziXLGL99vQMTf5DMhPlWgDCjB5g2IOOGogl31sHtNpFVanKVxwam-Onwpqed3ThMhwb02hxs1waLCvxZnx1JyxOydNr2Gs9HlCwNyRI_lL9wyS4fGBx3OO9V-NsLUyBUv91hCjEdlPiJsTE8kJaedu-40uFTQyX__e1ub5k7b1-di93wS7uABKSm4fGyPUjc.png";
+import profile_pic from "../../assets/profile-pic//profliePic.png";
 import api from "../../api/axios";
 import { useEffect, useState } from "react";
 
