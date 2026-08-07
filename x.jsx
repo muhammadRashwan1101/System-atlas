@@ -3,12 +3,12 @@ import { MdOutlineMail } from "react-icons/md";
 import { BiIdCard } from "react-icons/bi";
 import { FiCheck } from "react-icons/fi";
 import api from "../../api/axios";
+import useMyProfile from "../../hooks/useMyProfile";
 
+export default function PersonalInfo({ isEditing, onCancel, onSaved }) {
+  const { user, loading, error, refetch } = useMyProfile();
 
-export default function PersonalInfo({ isEditing, onCancel, onSaved , user, loading, error, refetch}) {
-
-
-  
+  // بنحسب initial state مباشرة من user، من غير useEffect
   const [form, setForm] = useState(() => ({
     firstName: user?.firstName || "",
     lastName: user?.lastName || "",
@@ -48,7 +48,7 @@ export default function PersonalInfo({ isEditing, onCancel, onSaved , user, load
       <div className="flex items-center justify-between mb-10">
         <div className="flex items-center gap-3">
           <BiIdCard className="text-[#D8E2FF] text-4xl" />
-          <h2 className="text-2xl font-medium text-[#E3E2E7]">
+          <h2 className="text-3xl font-medium text-[#E3E2E7]">
             Personal Information
           </h2>
         </div>

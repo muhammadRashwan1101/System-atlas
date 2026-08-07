@@ -15,8 +15,8 @@ import AuthProvider from "./context/AuthProvider"
 import ProtectedRoute from "./routes/ProtectedRoute"
 import AppEntry from "./routes/AppEntry"
 import Profile from './Pages/profile/Profile'
-import EmptyGraph from "./Pages/EmptyGraph/EmptyGraph"
 import ProfileSettings from './Pages/profile/ProfileSettings'
+
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -29,31 +29,21 @@ createRoot(document.getElementById('root')).render(
           </Route>
 
           <Route path="/login" element={<Login />} />
+          
+          
+          {/* Protected Routes */}
           <Route element={<ProtectedRoute><InnerLayout /></ProtectedRoute>}>
             <Route path="/app" element={<AppEntry />} />
             <Route path="/new-workspace" element={<WorkspaceCreation />} />
-            <Route
-              path="workspaces/:workspaceId/new-project"
-              element={<ProjectCreation />}
-            />
+            <Route path="workspaces/:workspaceId/new-project" element={<ProjectCreation />} />
             <Route path="/dashboard" element={<h1>Dashboard</h1>} />
-          </Route>
-
-
-
-          <Route path="/login" element={<Login />} />
-
-          {/* Protected Routes */}
-          <Route element={ <ProtectedRoute><InnerLayout /></ProtectedRoute>}>
-            <Route path="/app" element={<AppEntry />} />
-            <Route path='/profile' element={<Profile/>} />
-          <Route path='/profile-settings' element={<ProfileSettings/>} />
             <Route path="/new-workspace" element={<WorkspaceCreation />} />
-             <Route path="/create-team" element={<CreateTeam/>} />
-            <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+            <Route path="/create-team" element={<CreateTeam/>} />
             <Route path="/graph" element={<EmptyGraph />} />
+            <Route path='/profile' element={<Profile/>} />
+            <Route path='/profile-settings/edit' element={<ProfileSettings/>} />
+            <Route path='/profile-settings' element={<ProfileSettings/>} />
           </Route>
-
         </Routes>
 
         <ToastContainer
