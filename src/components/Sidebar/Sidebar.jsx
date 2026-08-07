@@ -59,7 +59,7 @@ export default function Sidebar() {
             <MdOutlineDomain className="w-5 h-5 (--text)" />
           </NavLink>
           <NavLink
-            to="/teams"
+            to="/create-team"
             className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transition-all ease-in-out duration-250"
           >
             <HiUserGroup className="w-5 h-5 (--text)" />
