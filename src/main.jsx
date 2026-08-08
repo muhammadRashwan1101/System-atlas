@@ -14,8 +14,9 @@ import WorkspaceCreation from "./Pages/CreateWorkspace/CreateWorkspace";
 import ProjectCreation from "./Pages/CreatProject/CreatProject";
 import CreateTeam from "./Pages/Create Team/CreateTeam";
 import EmptyGraph from "./Pages/EmptyGraph/EmptyGraph";
-import Profile from "./Pages/profile/Profile";
-import ProfileSettings from "./Pages/profile/ProfileSettings";
+import TeamsManagement from "./Pages/Teams/TeamsManagement";
+// import Profile from "./Pages/profile/Profile";
+// import ProfileSettings from "./Pages/profile/ProfileSettings";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
@@ -50,14 +51,14 @@ createRoot(document.getElementById("root")).render(
 
             <Route path="/create-team" element={<CreateTeam />} />
 
-            <Route path="/profile" element={<Profile />} />
+            {/* <Route path="/profile" element={<Profile />} />
             <Route
               path="/profile-settings"
               element={<ProfileSettings />}
-            />
+            /> */}
 
             <Route path="/graph" element={<EmptyGraph />} />
-            <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+            <Route path="/dashboard" element={<TeamsManagement/>} />
           </Route>
 
         </Routes>

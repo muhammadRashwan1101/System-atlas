@@ -2,13 +2,20 @@ import { useState, useEffect, useRef } from "react";
 import { FiSearch, FiUserCheck } from "react-icons/fi";
 import api from "../../api/axios";
 
-export default function TeamLeadSelect({ value, onChange }) {
+export default function TeamLeadSelect({  value,
+ onChange,
+ resetTrigger }) {
   const [query, setQuery] = useState("");
   const [teamLeads, setTeamLeads] = useState([]);
   const [selectedLead, setSelectedLead] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
+ useEffect(()=>{
+ if(resetTrigger){
+   setSelectedLead(null);
+   setQuery("");
+ }
+},[resetTrigger]);
   const containerRef = useRef(null);
 
   useEffect(() => {
@@ -31,7 +38,7 @@ export default function TeamLeadSelect({ value, onChange }) {
           `/team-leads/search?name=${encodeURIComponent(query)}`,
           { signal: controller.signal }
         );
-        
+
         const leadsData = response.data?.data || response.data || [];
         setTeamLeads(leadsData);
 
@@ -44,7 +51,7 @@ export default function TeamLeadSelect({ value, onChange }) {
         if (err.name !== "CanceledError" && err.name !== "AbortError") {
           console.error("Error fetching team leads:", err);
         }
-      } 
+      }
       finally {
         setIsLoading(false);
       }
@@ -72,7 +79,7 @@ export default function TeamLeadSelect({ value, onChange }) {
     setSelectedLead(lead);
     setIsDropdownOpen(false);
     setQuery("");
-    if (onChange) onChange(lead); 
+    if (onChange) onChange(lead);
   };
 
   const handleRemove = () => {

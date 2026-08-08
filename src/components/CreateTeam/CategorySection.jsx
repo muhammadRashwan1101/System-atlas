@@ -2,7 +2,7 @@ import {
   FiShare2, FiSidebar, FiSliders, FiTerminal,
   FiCloud, FiShield, FiDatabase, FiCompass, FiCheckSquare,
 } from "react-icons/fi";
-
+import { useEffect } from "react";
 const categories = [
   { id: "Platform", label: "Platform", icon: FiShare2 },
   { id: "Frontend", label: "Frontend", icon: FiSidebar },
@@ -15,10 +15,20 @@ const categories = [
   { id: "QA", label: "QA", icon: FiCheckSquare },
 ];
 
-export default function CategorySection({ selectedCategory, onSelectCategory }) {
+export default function CategorySection({
+  selectedCategory,
+  onSelectCategory,
+  resetTrigger,
+}) {
+  useEffect(() => {
+    if (resetTrigger) {
+      onSelectCategory("");
+    }
+  }, [resetTrigger, onSelectCategory]);
+
   const handleCategoryClick = (categoryId) => {
     const newCategory = selectedCategory === categoryId ? "" : categoryId;
-    if (onSelectCategory) onSelectCategory(newCategory);
+    onSelectCategory?.(newCategory);
   };
 
   return (
