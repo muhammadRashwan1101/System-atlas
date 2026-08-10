@@ -67,7 +67,7 @@ export default function Sidebar() {
           </NavLink>
           </div>
           <div className="flex flex-col gap-8 items-center">
-            <Link to="/settings"><RxGear className="text-2xl text-(--text) hover:text-white transition-all duration-150 ease-in-out"/></Link>
+            <Link to="/profile-settings"><RxGear className="text-2xl text-(--text) hover:text-white transition-all duration-150 ease-in-out"/></Link>
             <Link to="/profile">
               <div className="bg-(--primary) p-2.5 rounded-full">
                 <FaUser className="text-(--text-primary)"/>

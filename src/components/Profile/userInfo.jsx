@@ -1,13 +1,12 @@
 import profile_pic from "../../assets/profile-pic//profliePic.png";
 import api from "../../api/axios";
 import { useEffect, useState } from "react";
-
 import { LuSquareChartGantt } from "react-icons/lu";
 import { CiLocationOn } from "react-icons/ci";
 import { IoEllipsisHorizontalCircle } from "react-icons/io5";
 import { RiTeamFill } from "react-icons/ri";
 import { FiMessageSquare } from "react-icons/fi";
-
+import { SERVER_URL } from "../../api/axios";
 export default function UserInfo() {
   const [user, setUser] = useState(null);
   const [stats, setStats] = useState(null);
@@ -37,18 +36,19 @@ export default function UserInfo() {
 
   if (loading) return <p className="text-white">Loading...</p>;
   if (error) return <p className="text-red-700">{error}</p>;
-
+  const avatarSrc = user.avatar ? `${SERVER_URL}${user.avatar}` : profile_pic;
   return (
     <>
-      <div className="bg-[#1E1F23] border border-[#2D303A] rounded-lg p-12 ">
-        <div className="grid grid-cols-8 ">
-          <div className=" col-1 relative">
+    <div className="grid grid-cols-4 bg-[#1E1F23] border border-[#2D303A] rounded-lg p-12">
+<div className= "col-span-3  ">
+        <div className="grid grid-cols-5 ">
+          <div className=" col-span-1 relative">
             <img
               className="w-50 border-3 rounded-b-md border-(--tertiary)  p-1 rounded-xl"
-              src={profile_pic}
+              src={avatarSrc}
               alt="Profile Picture"
             />
-            <span className="absolute bottom-0 right-0 text-[#003824] bg-(--tertiary) px-4 py-1 font-semibold rounded-full text-sm">
+            <span className="absolute bottom-2 right-2 text-[#003824] bg-(--tertiary) px-4 py-1 font-semibold rounded-full text-sm">
               ACTIVE
             </span>
           </div>
@@ -80,23 +80,26 @@ export default function UserInfo() {
               <IoEllipsisHorizontalCircle className="text-xl" /> Workspace
               Alpha, Beta, Core-Infra
             </p>
-            <p>{stats.ownedComponents}</p>
+            <p className="my-3">{stats.ownedComponents} Owned Components</p>
           </div>
-          <div className="col-span-2 flex justify-center items-center">
-            <div className="inline-flex flex-col gap-4 w-55">
-              <button className="flex items-center justify-center gap-2 text-[#003824] bg-(--tertiary) p-4 rounded">
+          
+        </div>
+      </div>
+      <div className="col-span-1 flex justify-center items-center ">
+            <div className="inline-flex flex-col gap-4 w-full m-5">
+              <button className="flex items-center justify-center gap-2  text-[#003824] bg-(--tertiary) py-5 rounded w-full">
                 <FiMessageSquare />
                 Message User
               </button>
 
-              <button className="w-full flex items-center justify-center gap-2 bg-[#343538] p-4 rounded">
+              <button className="w-full flex items-center justify-center gap-2 bg-[#343538] py-5 rounded">
                 <RiTeamFill />
                 View Team
               </button>
             </div>
           </div>
-        </div>
-      </div>
+    </div>
+      
     </>
   );
 }

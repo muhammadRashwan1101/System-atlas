@@ -31,7 +31,7 @@ export default function StatsSection() {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className={` rounded-lg border ${stat.border} border-l-5 p-6 flex flex-col jusify-center items-center`}
+            className={` bg-[#1E1F23] rounded-lg border ${stat.border} border-l-5 p-6 flex flex-col jusify-center items-center`}
           >
             <p className="text-[14px] text-neutral-400 uppercase mb-4">
               {stat.label}
