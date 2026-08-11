@@ -16,7 +16,8 @@ import ProtectedRoute from "./routes/ProtectedRoute"
 import AppEntry from "./routes/AppEntry"
 import Profile from './Pages/profile/Profile'
 import ProfileSettings from './Pages/profile/ProfileSettings'
-
+import UserManagement from "./Pages/UserManagement/UserManagement"
+import CreateUserModal from "./components/UserManagment/CreateUserModal";
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
@@ -37,12 +38,13 @@ createRoot(document.getElementById('root')).render(
             <Route path="/new-workspace" element={<WorkspaceCreation />} />
             <Route path="workspaces/:workspaceId/new-project" element={<ProjectCreation />} />
             <Route path="/dashboard" element={<h1>Dashboard</h1>} />
-            <Route path="/new-workspace" element={<WorkspaceCreation />} />
-            <Route path="/create-team" element={<CreateTeam/>} />
+            <Route path="/create-team" element={<CreateTeam />} />
             <Route path="/graph" element={<EmptyGraph />} />
-            <Route path='/profile' element={<Profile/>} />
+            <Route path="/user-managemnt" element={<UserManagement />} />
+            <Route path="/modal" element={<CreateUserModal />} />
+            <Route path="/profile" element={<Profile />} />
+            <Route path="/profile-settings" element={<ProfileSettings />} />
             <Route path='/profile-settings/edit' element={<ProfileSettings/>} />
-            <Route path='/profile-settings' element={<ProfileSettings/>} />
           </Route>
         </Routes>
 
