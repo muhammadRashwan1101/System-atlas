@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { MdOutlineRocketLaunch, MdOutlineLayers, MdTerminal, MdOutlineGrid4X4 } from "react-icons/md";
 import { AiFillCodeSandboxSquare } from "react-icons/ai";
 import { MdOutlineHub } from "react-icons/md";
@@ -7,10 +7,11 @@ import { FiPlusCircle } from "react-icons/fi";
 import DatePicker from "react-datepicker";
 import { useForm } from "react-hook-form";
 import { toast } from 'react-toastify';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import api from "../../api/axios";
-import { useNavigate } from "react-router-dom";
+import useWorkspace from "../../context/WorkspaceContext";
 import "react-datepicker/dist/react-datepicker.css";
+
 const TARGET_ENVIRONMENT_OPTIONS = [
     {
         title: "Production Ready",
@@ -57,7 +58,6 @@ export default function ProjectForm({ projectSummary, setProjectSummary }) {
         register,
         handleSubmit,
         watch,
-        getValues,
         formState: { errors }
     } = useForm({
         mode: "onSubmit",
@@ -69,7 +69,7 @@ export default function ProjectForm({ projectSummary, setProjectSummary }) {
     const [targetEnvironment, setTargetEnvironment] = useState("");
     const [systemTopology, setSystemTopology] = useState("");
     const navigate = useNavigate();
-    const [departments, setDepartments] = useState([
+    const departments = [
         "Platform",
         "Frontend",
         "Backend",
@@ -82,7 +82,10 @@ export default function ProjectForm({ projectSummary, setProjectSummary }) {
         "UI/UX",
         "Engineering",
         "QA",
-    ]);
+    ];
+
+
+    const { refreshProjects } = useWorkspace();
 
     const projectName = watch("name");
     const managerName = watch("managerName");
@@ -94,6 +97,7 @@ export default function ProjectForm({ projectSummary, setProjectSummary }) {
             managerName: managerName || "",
         }));
     }, [projectName, managerName, setProjectSummary]);
+
     const handleProjectSubmit = async (data) => {
         try {
             const projectData = {
@@ -113,6 +117,17 @@ export default function ProjectForm({ projectSummary, setProjectSummary }) {
                 response.data.msg || "Project initialized successfully"
             );
 
+            if (workspaceId) {
+                refreshProjects(workspaceId);
+            }
+
+            const createdProjectId = response.data?.project?._id;
+            if (createdProjectId) {
+                navigate(`/workspaces/${workspaceId}/projects/${createdProjectId}/components`);
+            } else if (workspaceId) {
+                navigate(`/workspaces/${workspaceId}`);
+            }
+
         } catch (err) {
             const message = Array.isArray(err.response?.data?.msg)
                 ? err.response.data.msg.join(", ")
@@ -122,6 +137,8 @@ export default function ProjectForm({ projectSummary, setProjectSummary }) {
             toast.error(message || "Unable to connect to the server");
         }
     };
+
+
 
     useEffect(() => {
         if (error) {
@@ -322,17 +339,19 @@ export default function ProjectForm({ projectSummary, setProjectSummary }) {
                     <div className="flex justify-between items-center mt-8 text-[#FF8A80] ">
                         <button
                             type="button"
-                            onClick={() => navigate("/new-workspace")}
+                            onClick={() => navigate(workspaceId ? `/workspaces/${workspaceId}` : "/dashboard")}
+                            className="cursor-pointer hover:underline"
                         >
                             Cancel
                         </button>
                         <div className="flex items-center gap-3">
-                            <button type="submit" className="w-50 p-3 rounded-lg bg-sky-100 text-black font-medium border transition hover:scale-105 hover:shadow-[0_0_15px_rgba(56,189,248,0.5)] flex items-center justify-center gap-2">
+                            <button type="submit" className="w-50 p-3 rounded-lg bg-sky-100 text-black font-medium border transition hover:scale-105 hover:shadow-[0_0_15px_rgba(56,189,248,0.5)] flex items-center justify-center gap-2 cursor-pointer">
                                 <FiPlusCircle size={20} />
                                 Initialize Project
                             </button>
                         </div>
                     </div>
+
                 </form>
             </div >
         </div >
