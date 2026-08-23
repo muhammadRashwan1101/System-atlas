@@ -1,49 +1,92 @@
+// src/components/TeamManagmentDashboard/TeamsHeader.jsx
+
+import React from "react";
 import { FiDownload, FiUpload, FiPlus } from "react-icons/fi";
 
 export default function TeamsHeader({
+  title = "Teams Management",
+  subtitle = "Manage and audit cross-functional engineering units across the workspace.",
   onImport,
   onExport,
   onCreateTeam,
+  buttonText = "New Team",
 }) {
   return (
-    <header className="flex items-center justify-between px-8 py-5 border-b border-slate-800 bg-[#0B0C10]">
-
+    <header className="w-full flex items-center justify-between py-1">
+      {/* Title & Subtitle */}
       <div>
-        <h1 className="text-4xl font-bold text-white">
-          Teams Management
+        <h1 className="text-2xl font-bold text-slate-100 tracking-tight">
+          {title}
         </h1>
-
         <p className="mt-1 text-sm text-slate-400">
-          Manage and audit cross-functional engineering units across the workspace.
+          {subtitle}
         </p>
       </div>
 
-      <div className="flex gap-3">
+      {/* Action Buttons */}
+      <div className="flex items-center gap-3">
+        {onImport && (
+          <button
+            type="button"
+            onClick={onImport}
+            className="
+              flex items-center gap-2
+              px-4 py-2.5
+              text-sm font-medium
+              text-slate-200
+              bg-[#12161F]
+              border border-slate-800
+              rounded-lg
+              hover:bg-slate-800/80
+              transition-colors
+            "
+          >
+            <FiUpload size={16} className="text-slate-400" />
+            Import
+          </button>
+        )}
 
-        <button
-          onClick={onImport}
-          className="flex items-center gap-2 px-4 py-2 border border-slate-700 rounded-lg text-sm hover:bg-slate-800 transition"
-        >
-          <FiUpload />
-          Import
-        </button>
+        {onExport && (
+          <button
+            type="button"
+            onClick={onExport}
+            className="
+              flex items-center gap-2
+              px-4 py-2.5
+              text-sm font-medium
+              text-slate-200
+              bg-[#12161F]
+              border border-slate-800
+              rounded-lg
+              hover:bg-slate-800/80
+              transition-colors
+            "
+          >
+            <FiDownload size={16} className="text-slate-400" />
+            Export
+          </button>
+        )}
 
-        <button
-          onClick={onExport}
-          className="flex items-center gap-2 px-4 py-2 border border-slate-700 rounded-lg text-sm hover:bg-slate-800 transition"
-        >
-          <FiDownload />
-          Export
-        </button>
-
-        <button
-          onClick={onCreateTeam}
-          className="flex items-center gap-2 px-5 py-2 rounded-lg bg-[#AFC7FF] text-slate-900 font-semibold hover:bg-[#9db9ff] transition"
-        >
-          <FiPlus />
-          New Team
-        </button>
-
+        {onCreateTeam && (
+          <button
+            type="button"
+            onClick={onCreateTeam}
+            className="
+              flex items-center gap-2
+              px-4.5 py-2.5
+              text-sm font-semibold
+              text-slate-900
+              bg-[#B2CCFF]
+              hover:bg-[#9ebdfd]
+              rounded-lg
+              transition-colors
+              shadow-sm
+            "
+          >
+            <FiPlus size={16} />
+            {buttonText}
+          </button>
+        )}
       </div>
     </header>
   );

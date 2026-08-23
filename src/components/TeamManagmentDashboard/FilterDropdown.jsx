@@ -3,27 +3,54 @@ import { FiChevronDown } from "react-icons/fi";
 export default function FilterDropdown({
   label,
   options = [],
-  value,
-  onChange,
+  value = "all",
+  onChange = () => {},
 }) {
   return (
-    <div className="relative">
-      <select value={value} onChange={(e) => onChange(e.target.value)}
-        className="appearance-none bg-[#10131A] border border-slate-800 rounded-lg px-4 py-2 pr-10 text-sm text-slate-300  focus:outline-none focus:border-slate-600 hover:border-slate-700 transition">
+    
+    <div className="relative ">
+      <select
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        className="
+          h-9
+          min-w-[150px]
+          appearance-none
+          bg-[#10131A]
+          border border-slate-800
+          rounded-lg
+          pl-3.5
+          pr-9
+          text-xs
+          text-slate-300
+          outline-none
+          cursor-pointer
+          transition-colors
+          hover:border-slate-700
+          focus:border-slate-600
+        "
+      >
         {options.map((option) => (
           <option
             key={option.value}
             value={option.value}
-            className="bg-[#2D303A]"
+            className="bg-[#10131A] text-slate-300"
           >
-            {label}: {option.label}
+            {option.label}
           </option>
         ))}
       </select>
 
       <FiChevronDown
-        className="absolute right-3 top-1/2 -translate-y-1/2
-                   text-slate-500 pointer-events-none"
+        size={14}
+        className="
+          absolute
+          right-3
+          top-1/2
+          -translate-y-1/2
+          text-slate-500
+          pointer-events-none
+        "
       />
     </div>
   );

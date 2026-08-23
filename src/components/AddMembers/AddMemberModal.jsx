@@ -183,22 +183,37 @@ export default function AddMemberModal({ isOpen, onClose, team, onGoToTeam }) {
   }, []);
 
   const handleAddMembers = async () => {
-    if (!team?._id) return toast.error("Target team not found.");
-    if (selectedUsers.length === 0) return toast.warning("Please select at least one user.");
+  if (!team?._id) {
+    return toast.error("Target team not found.");
+  }
 
-    setSubmitting(true);
-    try {
-      await api.post(`/${team._id}/members`, { members: selectedUsers.map((u) => u._id) });
-      toast.success("Members added successfully!");
-      handleClose();
-      onGoToTeam?.();
-    }  catch (err) {
-            console.error(err.message);
-   
-    } finally {
-      setSubmitting(false);
-    }
-  };
+  if (selectedUsers.length === 0) {
+    return toast.warning("Please select at least one user.");
+  }
+
+  setSubmitting(true);
+
+  try {
+    await api.post(`/${team._id}/members`, {
+      members: selectedUsers.map((u) => u._id),
+    });
+
+    toast.success("Members added successfully!");
+
+    handleClose();
+    onGoToTeam?.();
+
+  } catch (err) {
+    console.error("Add members error:", err);
+    console.error("Status:", err.response?.status);
+    console.error("Data:", err.response?.data);
+
+    // Don't show another toast here
+    // because axios interceptor already shows it.
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   if (!isOpen) return null;
 

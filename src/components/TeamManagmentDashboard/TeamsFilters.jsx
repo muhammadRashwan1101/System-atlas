@@ -31,78 +31,81 @@ export default function TeamsFilters({
   onViewChange,
 }) {
   return (
-    <div className="w-full flex items-center justify-between gap-4">
-
+    <div className="flex items-center justify-between gap-4">
+      
       {/* Filters */}
-      <div className="flex items-center gap-3 flex-wrap">
-
+      <div className="flex items-center gap-2.5 flex-wrap">
         <FilterDropdown
-          label="Workspace"
-          value={filters.workspace}
           options={workspaceOptions}
+          value={filters.workspace}
           onChange={(value) =>
             onFilterChange("workspace", value)
           }
         />
 
         <FilterDropdown
-          label="Status"
-          value={filters.status}
           options={statusOptions}
+          value={filters.status}
           onChange={(value) =>
             onFilterChange("status", value)
           }
         />
 
         <FilterDropdown
-          label="Lead"
-          value={filters.lead}
           options={leadOptions}
+          value={filters.lead}
           onChange={(value) =>
             onFilterChange("lead", value)
           }
         />
 
         <FilterDropdown
-          label="Size"
-          value={filters.size}
           options={sizeOptions}
+          value={filters.size}
           onChange={(value) =>
             onFilterChange("size", value)
           }
         />
-
       </div>
 
       {/* View Switcher */}
-      <div className="flex items-center p-1 rounded-lg border border-slate-800 bg-[#10131A]">
-
+      <div className="flex items-center gap-1 p-1 rounded-lg border border-slate-800 bg-[#10131A] shrink-0">
         <button
           type="button"
           onClick={() => onViewChange("grid")}
-          className={`p-2 rounded-md transition ${
-            view === "grid"
-              ? "bg-slate-700 text-white"
-              : "text-slate-500 hover:text-slate-300"
-          }`}
+          className={`
+            w-8 h-8
+            flex items-center justify-center
+            rounded-md
+            transition
+            ${
+              view === "grid"
+                ? "bg-slate-700 text-white"
+                : "text-slate-500 hover:text-slate-300"
+            }
+          `}
         >
-          <FiGrid size={16} />
+          <FiGrid size={15} />
         </button>
 
         <button
           type="button"
           onClick={() => onViewChange("list")}
-          className={`p-2 rounded-md transition ${
-            view === "list"
-              ? "bg-slate-700 text-white"
-              : "text-slate-500 hover:text-slate-300"
-          }`}
+          className={`
+            w-8 h-8
+            flex items-center justify-center
+            rounded-md
+            transition
+            ${
+              view === "list"
+                ? "bg-slate-700 text-white"
+                : "text-slate-500 hover:text-slate-300"
+            }
+          `}
         >
-          <FiList size={16} />
+          <FiList size={15} />
         </button>
-
       </div>
-
     </div>
   );
 }
