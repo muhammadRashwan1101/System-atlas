@@ -24,10 +24,10 @@ export default function WorkspaceGateway() {
     fetchProjects(workspaceId).then((resList) => {
       if (!isMounted) return;
       setLoading(false);
-      // If exactly 1 project, auto navigate into it
+      // If exactly 1 project, auto navigate into graph explorer
       if (resList && resList.length === 1) {
         navigate(
-          `/workspaces/${workspaceId}/projects/${resList[0]._id}/components`,
+          `/workspaces/${workspaceId}/projects/${resList[0]._id}/graph`,
           { replace: true }
         );
       }
@@ -75,7 +75,7 @@ export default function WorkspaceGateway() {
         <p className="text-xs text-slate-300 leading-relaxed font-light">
           {projects.length === 0
             ? "This workspace does not have any active architecture projects yet. Architecture components and telemetry graphs require a project context."
-            : "Choose which project to inspect components and telemetry graphs for:"}
+            : "Choose which project to inspect architecture graph for:"}
         </p>
 
         {/* Project List (if > 1 projects) */}
@@ -87,7 +87,7 @@ export default function WorkspaceGateway() {
                 type="button"
                 onClick={() =>
                   navigate(
-                    `/workspaces/${workspaceId}/projects/${prj._id}/components`
+                    `/workspaces/${workspaceId}/projects/${prj._id}/graph`
                   )
                 }
                 className="flex items-center justify-between w-full p-4 rounded-xl bg-[#141721] hover:bg-[#1A1F2C] border border-[#232733] hover:border-sky-400/40 text-left transition-all group cursor-pointer"

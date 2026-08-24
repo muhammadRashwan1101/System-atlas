@@ -12,6 +12,7 @@ export default function ComponentCard({
 
   return (
     <div
+      onClick={() => onInspect && onInspect(comp)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       className={`relative flex flex-col justify-between bg-[#121418] rounded-xl p-5 transition-all duration-300 shadow-lg overflow-hidden cursor-pointer ${

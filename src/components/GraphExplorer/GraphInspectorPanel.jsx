@@ -403,9 +403,12 @@ export default function GraphInspectorPanel({
             {/* View in Components Management */}
             <button
               type="button"
-              onClick={() => onNavigateToComponents && onNavigateToComponents()}
+              onClick={() =>
+                onNavigateToComponents &&
+                onNavigateToComponents(nodeData.id || rawComp._id)
+              }
               className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-[#191B23] border border-[#2B3240] hover:bg-white/5 text-white font-medium text-xs shadow-[4px_4px_8px_rgba(8,10,14,1),-2px_-2px_6px_rgba(50,56,66,0.4)] transition-all cursor-pointer"
-              title="View in Components Management"
+              title="View in Component Details"
             >
               <FiEye /> View Details
             </button>

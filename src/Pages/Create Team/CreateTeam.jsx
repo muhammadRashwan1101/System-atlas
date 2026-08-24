@@ -79,9 +79,10 @@ export default function CreateTeam() {
 
       if (response.status === 201 || response.status === 200) {
         toast.success("Team created successfully!");
-        navigate("/teams"); 
+        navigate("/dashboard"); 
       }
     } catch (err) {
+      console.log(err.response)
       const errorMessage =
         err.response?.data?.message ||
         err.response?.data?.error ||
