@@ -368,8 +368,12 @@ export default function EmptyGraph() {
     }
   };
 
-  const handleNavigateToComponents = () => {
-    if (workspaceId && projectId) {
+  const handleNavigateToComponents = (compId) => {
+    if (workspaceId && projectId && compId) {
+      navigate(
+        `/workspaces/${workspaceId}/projects/${projectId}/components/${compId}`
+      );
+    } else if (workspaceId && projectId) {
       navigate(
         `/workspaces/${workspaceId}/projects/${projectId}/components`
       );

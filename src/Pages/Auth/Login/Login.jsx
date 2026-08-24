@@ -28,15 +28,21 @@ export default function Login() {
   const handleLogin = async (data) => {
     try {
       const response = await api.post("/auth/login", data);
-      console.log(response.data);
       if (!response.data.token) {
         setError(response.data.msg);
         return;
       }
       localStorage.setItem("token", response.data.token);
 
-      await getCurrentUser()
-      navigate("/app");
+      await getCurrentUser();
+      
+      const searchParams = new URLSearchParams(window.location.search);
+      const inviteToken = searchParams.get("invite") || searchParams.get("invitation");
+      if (inviteToken) {
+        navigate(`/invite/${inviteToken}`);
+      } else {
+        navigate("/app");
+      }
     } catch (err) {
       setError(err.response?.data?.msg || "Unable to connect to the server");
     }

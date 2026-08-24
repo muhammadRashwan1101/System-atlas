@@ -182,7 +182,11 @@ export default function ComponentsManagement() {
   };
 
   const handleInspect = (comp) => {
-    console.log("Inspecting component:", comp);
+    if (workspaceId && projectId && comp?._id) {
+      navigate(`/workspaces/${workspaceId}/projects/${projectId}/components/${comp._id}`);
+    } else if (comp?._id) {
+      navigate(`/components/${comp._id}`);
+    }
   };
 
   const handleEdit = () => {
@@ -274,7 +278,10 @@ export default function ComponentsManagement() {
 
         {/* List View */}
         {viewMode === "list" && (
-          <ComponentListView components={filteredComponents} />
+          <ComponentListView
+            components={filteredComponents}
+            onInspect={handleInspect}
+          />
         )}
       </main>
     </div>

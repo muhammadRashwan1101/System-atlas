@@ -11,10 +11,12 @@ import { FaFolderOpen } from "react-icons/fa6";
 import { MdOutlineDomain } from "react-icons/md";
 import { HiUserGroup } from "react-icons/hi2";
 import useContextNavigator from "../../hooks/useContextNavigator";
+import useAuth from "../../context/AuthContext";
 import WorkspaceSelectionModal from "../Navigation/WorkspaceSelectionModal";
 
 export default function Sidebar() {
   const location = useLocation();
+  const { user } = useAuth();
   const {
     currentWorkspaceId,
     currentProjectId,
@@ -23,6 +25,10 @@ export default function Sidebar() {
     modalState,
     closeModal,
   } = useContextNavigator();
+
+  const userRole = String(user?.role || user?.user?.role || "user").toLowerCase();
+  const isDashboardRole = userRole === "admin" || userRole === "manager";
+  const dashboardPath = userRole === "manager" ? "/manager-dashboard" : "/dashboard";
 
   // Active state checkers based strictly on the authoritative URL
   const isGraphActive = location.pathname.endsWith("/graph");
@@ -39,7 +45,7 @@ export default function Sidebar() {
     !currentProjectId &&
     location.pathname === `/workspaces/${currentWorkspaceId}` &&
     !isNewProjectActive;
-  const isDashboardActive = location.pathname === "/dashboard";
+  const isDashboardActive = location.pathname === "/dashboard" || location.pathname === "/manager-dashboard";
   const isTeamsActive =
     location.pathname.startsWith("/teams/") ||
     location.pathname.endsWith("/create-team");
@@ -49,23 +55,25 @@ export default function Sidebar() {
       <div className="flex flex-col items-center justify-between bg-(--main-bg) border-r border-(--border)/30 w-20 min-h-screen p-4 shrink-0">
         <div className="flex flex-col items-center justify-center w-full mb-5 space-y-4">
           <div className="flex flex-col items-center justify-center w-30 p-5">
-            <Link to="/dashboard">
+            <Link to="/app">
               <img src={logo} alt="Logo" className="w-13 h-auto rounded-lg" />
             </Link>
           </div>
 
-          {/* Dashboard */}
-          <Link
-            to="/dashboard"
-            title="Dashboard"
-            className={`p-3 rounded transition-all ease-in-out duration-250 cursor-pointer ${
-              isDashboardActive
-                ? "bg-(--primary) text-(--text-primary)"
-                : "hover:bg-(--primary) hover:text-(--text-primary) text-(--text)"
-            }`}
-          >
-            <MdOutlineDashboard className="w-5 h-5" />
-          </Link>
+          {/* Dashboard (Admin & Manager only) */}
+          {isDashboardRole && (
+            <Link
+              to={dashboardPath}
+              title={userRole === "manager" ? "Manager Dashboard" : "Admin Dashboard"}
+              className={`p-3 rounded transition-all ease-in-out duration-250 cursor-pointer ${
+                isDashboardActive
+                  ? "bg-(--primary) text-(--text-primary)"
+                  : "hover:bg-(--primary) hover:text-(--text-primary) text-(--text)"
+              }`}
+            >
+              <MdOutlineDashboard className="w-5 h-5" />
+            </Link>
+          )}
 
           {/* Architecture Graph (Project-scoped) */}
           <button

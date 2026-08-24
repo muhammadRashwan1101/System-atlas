@@ -19,7 +19,13 @@ import Profile from "./Pages/profile/Profile";
 import ProfileSettings from "./Pages/profile/ProfileSettings";
 import SetupWizard from "./Pages/SetupWizard/SetupWizard";
 import ComponentsManagement from "./Pages/ComponentsManagement/ComponentsManagement";
+import ComponentDetails from "./Pages/ComponentDetails/ComponentDetails";
 import WorkspaceGateway from "./Pages/WorkspaceGateway/WorkspaceGateway";
+import Dashboard from "./Pages/Dashboard/Dashboard";
+import ManagerDashboard from "./Pages/ManagerDashboard/ManagerDashboard";
+import ImpactAnalysis from "./Pages/ImpactAnalysis/ImpactAnalysis";
+import InvitationAcceptance from "./Pages/Auth/Invitation/InvitationAcceptance";
+import SetNewPassword from "./Pages/Auth/SetNewPassword/SetNewPassword";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
@@ -32,6 +38,16 @@ createRoot(document.getElementById("root")).render(
               <Route index element={<LandingPage />} />
             </Route>
             <Route path="/login" element={<Login />} />
+            <Route path="/invite" element={<InvitationAcceptance />} />
+            <Route path="/invite/:token" element={<InvitationAcceptance />} />
+            <Route
+              path="/set-new-password"
+              element={
+                <ProtectedRoute requirePasswordChange={true}>
+                  <SetNewPassword />
+                </ProtectedRoute>
+              }
+            />
 
             {/* Protected Routes */}
             <Route
@@ -49,8 +65,23 @@ createRoot(document.getElementById("root")).render(
                 path="/profile-settings/edit"
                 element={<ProfileSettings />}
               />
-              <Route path="/profile-settings" element={<ProfileSettings />} />
-              <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+              <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={["admin"]}>
+                    <Dashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/manager-dashboard"
+                element={
+                  <ProtectedRoute allowedRoles={["manager", "admin"]}>
+                    <ManagerDashboard />
+                  </ProtectedRoute>
+                }
+              />
+              <Route path="/impact" element={<ImpactAnalysis />} />
 
               {/* Workspace level */}
               <Route path="/workspaces/:workspaceId">
@@ -62,9 +93,18 @@ createRoot(document.getElementById("root")).render(
                 <Route path="projects/:projectId">
                   <Route index element={<ComponentsManagement />} />
                   <Route path="components" element={<ComponentsManagement />} />
+                  <Route
+                    path="components/:componentId"
+                    element={<ComponentDetails />}
+                  />
+                  <Route
+                    path="components/:componentId/impact"
+                    element={<ImpactAnalysis />}
+                  />
                   <Route path="wizard" element={<SetupWizard />} />
                   <Route path="wizard/:wizardId" element={<SetupWizard />} />
                   <Route path="graph" element={<EmptyGraph />} />
+                  <Route path="impact" element={<ImpactAnalysis />} />
                 </Route>
               </Route>
             </Route>

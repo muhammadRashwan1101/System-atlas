@@ -1,7 +1,7 @@
 import { FiShare2 } from "react-icons/fi";
 import ComponentIcon from "./ComponentIcon";
 
-export default function ComponentListView({ components }) {
+export default function ComponentListView({ components, onInspect }) {
   return (
     <div className="flex flex-col bg-[#121418] border border-[#232730] rounded-xl overflow-hidden shadow-lg">
       <div className="grid grid-cols-6 gap-4 p-3.5 bg-[#1a1e26] border-b border-[#232730] text-[11px] font-mono uppercase text-[#8b949e] font-semibold">
@@ -16,14 +16,15 @@ export default function ComponentListView({ components }) {
         {components.map((comp) => (
           <div
             key={comp._id}
-            className="grid grid-cols-6 gap-4 p-4 items-center hover:bg-white/5 transition-colors text-xs"
+            onClick={() => onInspect && onInspect(comp)}
+            className="grid grid-cols-6 gap-4 p-4 items-center hover:bg-white/5 transition-colors text-xs cursor-pointer"
           >
             <div className="col-span-2 flex items-center gap-3">
               <div className="w-8 h-8 rounded-lg bg-[#1a1e26] border border-[#2b3240] flex items-center justify-center shrink-0">
                 <ComponentIcon iconType={comp.iconType} />
               </div>
               <div>
-                <h4 className="font-semibold text-white text-xs">{comp.name}</h4>
+                <h4 className="font-semibold text-white text-xs hover:text-[#ADC6FF] transition-colors">{comp.name}</h4>
                 <span className="text-[10px] font-mono text-[#8b949e]">
                   {comp._id}
                 </span>
