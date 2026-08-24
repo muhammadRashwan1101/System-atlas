@@ -19,7 +19,7 @@ export default function Sidebar() {
             <img src={logo} alt="Logo" className="w-13 h-auto rounded-lg" />
           </div>
           <NavLink
-            to="/dashboard"
+            to="/dashboard/project"
             className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transition-all ease-in-out duration-250"
           >
             <MdOutlineDashboard className="w-5 h-5 (--text)" />
@@ -47,7 +47,7 @@ export default function Sidebar() {
             </div>
           </NavLink>
           <NavLink
-            to="/workspaces/workspaceId/new-project"
+            to="/new-project"
             className="hover:bg-(--primary) hover:text-(--text-primary) p-3 rounded transition-all ease-in-out duration-250"
           >
             <FaFolderOpen className="w-5 h-5 (--text)" />

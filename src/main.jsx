@@ -15,7 +15,8 @@ import AuthProvider from "./context/AuthProvider"
 import ProtectedRoute from "./routes/ProtectedRoute"
 import AppEntry from "./routes/AppEntry"
 import Profile from './Pages/profile/Profile'
-import EmptyGraph from "./Pages/EmptyGraph/EmptyGraph"
+import ProjectDashboard from './Pages/ProjectDashboard/ProjectDashboard'
+
 import ProfileSettings from './Pages/profile/ProfileSettings'
 
 createRoot(document.getElementById('root')).render(
@@ -32,10 +33,10 @@ createRoot(document.getElementById('root')).render(
           <Route element={<ProtectedRoute><InnerLayout /></ProtectedRoute>}>
             <Route path="/app" element={<AppEntry />} />
             <Route path="/new-workspace" element={<WorkspaceCreation />} />
-            <Route
+            {/* <Route
               path="workspaces/:workspaceId/new-project"
               element={<ProjectCreation />}
-            />
+            /> */}
             <Route path="/dashboard" element={<h1>Dashboard</h1>} />
           </Route>
 
@@ -50,7 +51,9 @@ createRoot(document.getElementById('root')).render(
           <Route path='/profile-settings' element={<ProfileSettings/>} />
             <Route path="/new-workspace" element={<WorkspaceCreation />} />
              <Route path="/create-team" element={<CreateTeam/>} />
-            <Route path="/dashboard" element={<h1>Dashboard</h1>} />
+            <Route path="/dashboard/project" element={<ProjectDashboard/>} />
+            <Route path="/new-project" element={<ProjectCreation />} />
+            
             <Route path="/graph" element={<EmptyGraph />} />
           </Route>
 

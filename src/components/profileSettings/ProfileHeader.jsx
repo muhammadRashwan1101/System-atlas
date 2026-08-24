@@ -3,7 +3,7 @@ import { CgSoftwareUpload } from "react-icons/cg";
 import { AiOutlineFolderOpen } from "react-icons/ai";
 import { RiOrganizationChart } from "react-icons/ri";
 import { BiCheckShield } from "react-icons/bi";
-import profile_pic from "../../assets/profile-pic/AB6AXuARfjphqxLOVfKIAwziXLGL99vQMTf5DMhPlWgDCjB5g2IOOGogl31sHtNpFVanKVxwam-Onwpqed3ThMhwb02hxs1waLCvxZnx1JyxOydNr2Gs9HlCwNyRI_lL9wyS4fGBx3OO9V-NsLUyBUv91hCjEdlPiJsTE8kJaedu-40uFTQyX__e1ub5k7b1-di93wS7uABKSm4fGyPUjc.png";
+// import profile_pic from "../../assets/profile-pic/profilePic.png";
 import { AiOutlineCamera } from "react-icons/ai";
 export default function ProfileHeader() {
   return (

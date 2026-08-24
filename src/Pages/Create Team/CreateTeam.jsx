@@ -43,14 +43,14 @@ export default function CreateTeam() {
   };
 
   const handleFinalSubmit = async (basicFormData) => {
-    if (isSubmitting) return; // منع التكرار إذا كان زر الإرسال نشطاً
+    if (isSubmitting) return; 
 
     if (!formData.category) {
       toast.error("Please select a team category");
       return;
     }
 
-    // مرونة في قراءة معرف القائد سواء كان كائناً أو معرفاً مباشراً
+  
     const leadId =
       formData.teamLead?._id ||
       formData.teamLead?.id ||
