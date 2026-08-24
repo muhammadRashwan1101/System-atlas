@@ -1,4 +1,4 @@
-import profile_pic from "../../assets/profile-pic/profilePic.png";
+import profile_pic from "../../assets/profile-pic/profliePic.png";
 
 import { FaHeadSideVirus } from "react-icons/fa";
 import { IoIosPeople } from "react-icons/io";

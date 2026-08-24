@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate, useParams } from "react-router-dom"; 
 import axios from "axios";
 
 import ProjectDashboardNavbar from "../../components/ProjectDashboard/ProjectDashboardNavbar";
@@ -10,11 +10,13 @@ import ProjectsGrid from "../../components/ProjectDashboard/ProjectsGrid";
 const API_BASE_URL = import.meta.env?.VITE_API_URL || "http://localhost:3000/api";
 
 export default function ProjectDashboard() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+
+  const { workspaceId } = useParams(); 
 
   const [search, setSearch] = useState("");
+ 
   const [filters, setFilters] = useState({
-    workspaceId: "All",
     status: "All",
     targetEnvironment: "All",
     manager: "Any",
@@ -22,34 +24,23 @@ export default function ProjectDashboard() {
   });
 
   const [projects, setProjects] = useState([]);
-  const [workspaces, setWorkspaces] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
-    const fetchWorkspaces = async () => {
-      try {
-        const token = localStorage.getItem("token");
-        const res = await axios.get(`${API_BASE_URL}/workspaces`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setWorkspaces(res.data.workspaces || []);
-      } catch (err) {
-        console.error("Error fetching workspaces:", err);
-      }
-    };
-    fetchWorkspaces();
-  }, []);
-
   const fetchProjects = useCallback(async (signal) => {
+  
+    if (!workspaceId) return;
+
     setLoading(true);
     setError(null);
     try {
       const token = localStorage.getItem("token");
       const params = new URLSearchParams();
 
+    
+      params.append("workspaceId", workspaceId);
+
       if (search.trim()) params.append("search", search.trim());
-      if (filters.workspaceId && filters.workspaceId !== "All") params.append("workspaceId", filters.workspaceId);
       if (filters.status && filters.status !== "All") params.append("status", filters.status);
       if (filters.targetEnvironment && filters.targetEnvironment !== "All") params.append("targetEnvironment", filters.targetEnvironment);
       if (filters.manager && filters.manager !== "Any") params.append("manager", filters.manager);
@@ -69,7 +60,7 @@ export default function ProjectDashboard() {
     } finally {
       setLoading(false);
     }
-  }, [search, filters]);
+  }, [workspaceId, search, filters]);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -84,7 +75,7 @@ export default function ProjectDashboard() {
 
   const handleResetFilters = () => {
     setSearch("");
-    setFilters({ workspaceId: "All", status: "All", targetEnvironment: "All", manager: "Any", techLead: "Any" });
+    setFilters({ status: "All", targetEnvironment: "All", manager: "Any", techLead: "Any" });
   };
 
   return (
@@ -92,19 +83,19 @@ export default function ProjectDashboard() {
       <ProjectDashboardNavbar onSearchChange={setSearch} searchValue={search} />
 
       <PageHeader
-        title="Projects"
-        subtitle="GLOBAL INSTANCE INDEX"
+        title="Workspace Projects"
+        subtitle={`WORKSPACE ID: ${workspaceId || "N/A"}`}
         onImport={() => alert("Importing...")}
         onExport={() => alert("Exporting...")}
         onGetReport={() => alert("Reporting...")}
       />
 
       <div className="p-6 text-slate-300 space-y-6 flex-1">
+     
         <SearchBar
           filters={filters}
           onFilterChange={handleFilterChange}
           onReset={handleResetFilters}
-          workspaces={workspaces}
         />
 
         <ProjectsGrid
@@ -112,7 +103,7 @@ export default function ProjectDashboard() {
           loading={loading}
           error={error}
           onResetFilters={handleResetFilters}
-          onAddProject={() => navigate("/new-project")} 
+          onAddProject={() => navigate(`/workspaces/${workspaceId}/new-project`)} 
         />
       </div>
     </div>

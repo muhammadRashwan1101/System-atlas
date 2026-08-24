@@ -79,8 +79,8 @@ createRoot(document.getElementById("root")).render(
               />
 
               <Route
-                path="/dashboard"
-                element={<h1>Dashboard</h1>}
+                path="/ProjectDashboard"
+                element={<ProjectDashboard/>}
               />
 
               <Route

@@ -1,4 +1,4 @@
-import profile_pic from "../../assets/profile-pic/profilePic.png";
+import profile_pic from "../../assets/profile-pic/profliePic.png";
 import api, { SERVER_URL } from "../../api/axios";
 
 import { useEffect, useState } from "react";

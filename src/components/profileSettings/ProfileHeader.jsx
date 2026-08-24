@@ -6,7 +6,7 @@ import { RiOrganizationChart } from "react-icons/ri";
 import { BiCheckShield } from "react-icons/bi";
 import { AiOutlineClose, AiOutlineCamera } from "react-icons/ai";
 
-import profile_pic from "../../assets/profile-pic/profilePic.png";
+import profile_pic from "../../assets/profile-pic/profliePic.png";
 
 import api, { SERVER_URL } from "../../api/axios";
 

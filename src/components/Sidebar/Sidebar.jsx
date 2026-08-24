@@ -77,7 +77,7 @@ export default function Sidebar() {
           {/* ================= Dashboard ================= */}
 
           <Link
-            to="/dashboard"
+            to="/ProjectDashboard"
             title="Dashboard"
             className={`p-3 rounded transition-all ease-in-out duration-250 cursor-pointer ${
               isDashboardActive
