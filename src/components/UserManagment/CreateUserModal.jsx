@@ -1,9 +1,112 @@
 import { BiInfoCircle } from "react-icons/bi";
 import { IoIosClose } from "react-icons/io";
-import { IoEyeOutline, IoRefreshOutline } from "react-icons/io5";
+import { IoEyeOutline, IoEyeOffOutline, IoRefreshOutline } from "react-icons/io5";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import useCreateUser from "../../hooks/useCreateUser";
+import useWorkspacesAndTeams from "../../hooks/useWorkspacesAndTeams";
+
+const ROLES = ["developer", "admin", "manager"];
+const LEVELS = ["Senior", "Mid", "Junior"];
+
+const generatePassword = () => {
+  const upper = "ABCDEFGHJKLMNPQRSTUVWXYZ";
+  const lower = "abcdefghijkmnopqrstuvwxyz";
+  const digits = "23456789";
+  const special = "@$!%*#?&";
+  const all = upper + lower + digits + special;
+
+  let pwd =
+    upper[Math.floor(Math.random() * upper.length)] +
+    lower[Math.floor(Math.random() * lower.length)] +
+    digits[Math.floor(Math.random() * digits.length)] +
+    special[Math.floor(Math.random() * special.length)];
+
+  for (let i = 0; i < 8; i++) {
+    pwd += all[Math.floor(Math.random() * all.length)];
+  }
+
+  return pwd
+    .split("")
+    .sort(() => Math.random() - 0.5)
+    .join("");
+};
+
 export default function CreateUserModal() {
+  const navigate = useNavigate();
+  const { createUser, creating, error } = useCreateUser();
+  const { workspaces, teams, loadingOptions } = useWorkspacesAndTeams();
+
   const [option, setOption] = useState("send");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [form, setForm] = useState({
+    firstName: "",
+    lastName: "",
+    username: "",
+    email: "",
+    role: ROLES[0],
+    level: LEVELS[0],
+    workspace: "",
+    team: "",
+    password: "",
+    requirePasswordReset: true,
+  });
+
+  const handleChange = (field) => (e) => {
+    const value =
+      e.target.type === "checkbox" ? e.target.checked : e.target.value;
+    setForm((prev) => ({ ...prev, [field]: value }));
+  };
+
+  const handleClose = () => navigate("/user-managemnt");
+
+  const handleGeneratePassword = () => {
+    setForm((prev) => ({ ...prev, password: generatePassword() }));
+    setShowPassword(true);
+  };
+
+  const handleSubmit = async (invitationOption) => {
+    if (!form.firstName || !form.lastName || !form.username || !form.email) {
+      toast.error("Please fill in all personal information fields");
+      return;
+    }
+    if (!form.password) {
+      toast.error("Please enter or generate a temporary password");
+      return;
+    }
+
+    setOption(invitationOption);
+
+    const payload = {
+      firstName: form.firstName,
+      lastName: form.lastName,
+      username: form.username,
+      email: form.email,
+      role: form.role,
+      level: form.level,
+      workspace: form.workspace || undefined,
+      team: form.team || undefined,
+      password: form.password,
+      requirePasswordReset: form.requirePasswordReset,
+      invitationOption,
+    };
+
+    const createdUser = await createUser(payload);
+
+    if (createdUser) {
+      toast.success(
+        invitationOption === "send"
+          ? `Invitation sent to ${createdUser.email}`
+          : "User created successfully",
+      );
+      navigate("/user-managemnt");
+    } else {
+      toast.error(error || "Unable to create user");
+    }
+  };
+
   return (
     <>
       <div className="  flex justify-center  items-center   ">
@@ -13,7 +116,10 @@ export default function CreateUserModal() {
             <div className="text-[#C4C6D0] text-sm">
               Create a new user account and generate initial credentials.
             </div>
-            <IoIosClose className="absolute right-4 top-4 text-4xl" />
+            <IoIosClose
+              onClick={handleClose}
+              className="absolute right-4 top-4 text-4xl cursor-pointer"
+            />
           </div>
           <div className="bg-[#191B23]  p-6 ">
             <div className="flex items-center gap-4">
@@ -27,22 +133,39 @@ export default function CreateUserModal() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block mb-2 text-sm font-mono text-[#C4C6D0]">
-                    Full Name
+                    First Name
                   </label>
                   <input
                     type="text"
-                    placeholder="shahd khairy"
+                    placeholder="shahd"
+                    value={form.firstName}
+                    onChange={handleChange("firstName")}
                     className="w-full  rounded border border-[#B8BCC8] bg-white px-4 py-2 text-[#1F2937] placeholder:text-[#6B7280] outline-none focus:border-[#5B8CFF]"
                   />
                 </div>
 
                 <div>
                   <label className="block mb-2 text-sm font-mono text-[#C4C6D0]">
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="khairy"
+                    value={form.lastName}
+                    onChange={handleChange("lastName")}
+                    className="w-full  rounded border border-[#B8BCC8] bg-white px-4 py-2 text-[#1F2937] placeholder:text-[#6B7280] outline-none focus:border-[#5B8CFF]"
+                  />
+                </div>
+
+                <div className="col-span-2">
+                  <label className="block mb-2 text-sm font-mono text-[#C4C6D0]">
                     Username
                   </label>
                   <input
                     type="text"
                     placeholder="shahd_khairy"
+                    value={form.username}
+                    onChange={handleChange("username")}
                     className="w-full rounded border border-[#B8BCC8] bg-white px-4 py-2 text-[#1F2937] placeholder:text-[#6B7280] outline-none focus:border-[#5B8CFF]"
                   />
                 </div>
@@ -54,6 +177,8 @@ export default function CreateUserModal() {
                   <input
                     type="email"
                     placeholder="shahd@gmail.com"
+                    value={form.email}
+                    onChange={handleChange("email")}
                     className="w-full rounded border border-[#B8BCC8] bg-white px-4 py-2 text-[#1F2937] placeholder:text-[#6B7280] outline-none focus:border-[#5B8CFF]"
                   />
                 </div>
@@ -69,10 +194,16 @@ export default function CreateUserModal() {
                   <label className="block mb-2 text-sm font-mono text-[#C4C6D0]">
                     Role
                   </label>
-                  <select className="w-full text-sm rounded-md border border-[#2D303A] bg-[#0D0E11] px-4 py-2 text-[#E3E2E7] outline-none focus:border-[#5B8CFF]">
-                    <option>Developer</option>
-                    <option>Admin</option>
-                    <option>Manager</option>
+                  <select
+                    value={form.role}
+                    onChange={handleChange("role")}
+                    className="w-full text-sm rounded-md border border-[#2D303A] bg-[#0D0E11] px-4 py-2 text-[#E3E2E7] outline-none focus:border-[#5B8CFF]"
+                  >
+                    {ROLES.map((role) => (
+                      <option key={role} value={role}>
+                        {role.charAt(0).toUpperCase() + role.slice(1)}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -80,10 +211,16 @@ export default function CreateUserModal() {
                   <label className="block mb-2 text-sm font-mono text-[#C4C6D0]">
                     Level
                   </label>
-                  <select className="w-full text-sm rounded-md border border-[#2D303A] bg-[#0D0E11] px-4 py-2 text-[#E3E2E7] outline-none focus:border-[#5B8CFF]">
-                    <option>Senior</option>
-                    <option>Mid</option>
-                    <option>Junior</option>
+                  <select
+                    value={form.level}
+                    onChange={handleChange("level")}
+                    className="w-full text-sm rounded-md border border-[#2D303A] bg-[#0D0E11] px-4 py-2 text-[#E3E2E7] outline-none focus:border-[#5B8CFF]"
+                  >
+                    {LEVELS.map((level) => (
+                      <option key={level} value={level}>
+                        {level}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -91,10 +228,20 @@ export default function CreateUserModal() {
                   <label className="block mb-2 text-sm font-mono text-[#C4C6D0]">
                     Workspace
                   </label>
-                  <select className="w-full text-sm rounded-md border border-[#2D303A] bg-[#0D0E11] px-4 py-2 text-[#E3E2E7] outline-none focus:border-[#5B8CFF]">
-                    <option>Global Engineering</option>
-                    <option>Marketing</option>
-                    <option>HR</option>
+                  <select
+                    value={form.workspace}
+                    onChange={handleChange("workspace")}
+                    disabled={loadingOptions}
+                    className="w-full text-sm rounded-md border border-[#2D303A] bg-[#0D0E11] px-4 py-2 text-[#E3E2E7] outline-none focus:border-[#5B8CFF]"
+                  >
+                    <option value="">
+                      {loadingOptions ? "Loading..." : "Select a workspace..."}
+                    </option>
+                    {workspaces.map((ws) => (
+                      <option key={ws._id} value={ws._id}>
+                        {ws.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
@@ -103,8 +250,20 @@ export default function CreateUserModal() {
                     Team Assignment{" "}
                     <span className="text-[#6C7383]">(Optional)</span>
                   </label>
-                  <select className="w-full text-sm rounded-md border border-[#2D303A] bg-[#0D0E11] px-4 py-2 text-[#E3E2E7] outline-none focus:border-[#5B8CFF]">
-                    <option>Select a team...</option>
+                  <select
+                    value={form.team}
+                    onChange={handleChange("team")}
+                    disabled={loadingOptions}
+                    className="w-full text-sm rounded-md border border-[#2D303A] bg-[#0D0E11] px-4 py-2 text-[#E3E2E7] outline-none focus:border-[#5B8CFF]"
+                  >
+                    <option value="">
+                      {loadingOptions ? "Loading..." : "Select a team..."}
+                    </option>
+                    {teams.map((team) => (
+                      <option key={team._id} value={team._id}>
+                        {team.teamName}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
@@ -123,21 +282,29 @@ export default function CreateUserModal() {
                 <div className="flex gap-3">
                   <div className="relative flex-1">
                     <input
-                      type="password"
+                      type={showPassword ? "text" : "password"}
                       placeholder="••••••••••••"
+                      value={form.password}
+                      onChange={handleChange("password")}
                       className="w-full rounded-md border border-[#2D303A] bg-white px-4 py-2 pr-12 text-[#1F2937] placeholder:text-[#C4C6D0] outline-none"
                     />
 
                     <button
                       type="button"
+                      onClick={() => setShowPassword((prev) => !prev)}
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-[#B8BCC8]"
                     >
-                      <IoEyeOutline size={22} />
+                      {showPassword ? (
+                        <IoEyeOffOutline size={22} />
+                      ) : (
+                        <IoEyeOutline size={22} />
+                      )}
                     </button>
                   </div>
 
                   <button
                     type="button"
+                    onClick={handleGeneratePassword}
                     className="flex items-center gap-2 rounded-md border border-[#2D303A] px-4 py-2 text-[#D8E2FF] hover:bg-[#191B23] transition"
                   >
                     <IoRefreshOutline size={18} />
@@ -148,7 +315,8 @@ export default function CreateUserModal() {
                 <label className="mt-5 flex items-center gap-3 text-[#E3E2E7] cursor-pointer">
                   <input
                     type="checkbox"
-                    defaultChecked
+                    checked={form.requirePasswordReset}
+                    onChange={handleChange("requirePasswordReset")}
                     className="h-5 w-5 rounded accent-[#A7C4FF]"
                   />
                   <span>Require password reset on first login</span>
@@ -216,13 +384,27 @@ export default function CreateUserModal() {
             </div>
           </div>
           <div className="bg-[#0D0E11] p-8 flex items-center justify-between font-mono border-t border-[#2D303A]">
-            <div>Cancel</div>
+            <div onClick={handleClose} className="cursor-pointer">
+              Cancel
+            </div>
             <div className="flex gap-4">
-              <button className="border border-[#2D303A]  py-3 px-4 rounded font-medium ">
-                Create User
+              <button
+                type="button"
+                disabled={creating}
+                onClick={() => handleSubmit("pending")}
+                className="border border-[#2D303A]  py-3 px-4 rounded font-medium disabled:opacity-50"
+              >
+                {creating && option === "pending" ? "Creating..." : "Create User"}
               </button>
-              <button className="text-[#385283] bg-[#ADC6FF] font-semibold p-3 rounded">
-                Create & Send Invitation
+              <button
+                type="button"
+                disabled={creating}
+                onClick={() => handleSubmit("send")}
+                className="text-[#385283] bg-[#ADC6FF] font-semibold p-3 rounded disabled:opacity-50"
+              >
+                {creating && option === "send"
+                  ? "Sending..."
+                  : "Create & Send Invitation"}
               </button>
             </div>
           </div>
