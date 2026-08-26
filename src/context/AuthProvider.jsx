@@ -17,7 +17,21 @@ export default function AuthProvider({children}) {
         }
     } 
     useEffect(() => {
-        getCurrentUser()
+        let isMounted = true;
+        api.get("/auth/current-user")
+            .then((res) => {
+                if (isMounted) setUser(res.data);
+            })
+            .catch((err) => {
+                console.error(err);
+            })
+            .finally(() => {
+                if (isMounted) setLoading(false);
+            });
+
+        return () => {
+            isMounted = false;
+        };
     }, [])
 
     return (

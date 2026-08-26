@@ -1,1341 +1,474 @@
-// src/pages/TeamManagement/TeamDetails.jsx
 
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-
-import {
-  FiArrowLeft,
-  FiEdit3,
-  FiTrash2,
-  FiUsers,
-  FiLayers,
-  FiFolder,
-  FiBookOpen,
-  FiMail,
-  FiAlertCircle,
-} from "react-icons/fi";
-
+import { useState, useRef } from "react";
+import { RxMagnifyingGlass } from "react-icons/rx";
+import { AiOutlineBell } from "react-icons/ai";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import api from "../../api/axios";
 
-// ======================================================
-// Helpers
-// ======================================================
+import AddMemberModal from "../../components/AddMembers/AddMemberModal";
+import TeamForm from "../../components/CreateTeam/TeamForm";
+import CategorySection from "../../components/CreateTeam/CategorySection";
+import TeamLeadSelect from "../../components/CreateTeam/TeamLeadSelect";
+import EntityPreview from "../../components/CreateTeam/EntityPreview";
+import TeamCreatedModal from "../../components/CreateTeam/TeamCreatedModal";
 
-const getUserName = (user) => {
-  if (!user) return "Unknown User";
+import useContextNavigator from "../../hooks/useContextNavigator";
 
-  // 1. fullName
-  if (user.fullName?.trim()) {
-    return user.fullName.trim();
-  }
-
-  // 2. displayName
-  if (user.displayName?.trim()) {
-    return user.displayName.trim();
-  }
-
-  // 3. firstName + lastName
-  const firstName = user.firstName?.trim() || "";
-  const lastName = user.lastName?.trim() || "";
-
-  const combinedName = `${firstName} ${lastName}`.trim();
-
-  if (combinedName) {
-    return combinedName;
-  }
-
-  // 4. username
-  if (user.username?.trim()) {
-    return user.username.trim();
-  }
-
-  // IMPORTANT:
-  // Don't use email as the main name.
-  return "Unknown User";
+const INITIAL_FORM_STATE = {
+  teamName: "",
+  teamCode: "",
+  description: "",
+  category: "",
+  teamLead: null,
 };
 
-const getUserInitial = (user) => {
-  const name = getUserName(user);
-
-  if (!name || name === "Unknown User") {
-    return "U";
-  }
-
-  return name.charAt(0).toUpperCase();
-};
-
-const getStatusStyle = (status) => {
-  switch (status?.toLowerCase()) {
-    case "active":
-      return "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
-
-    case "review":
-      return "bg-rose-500/10 text-rose-400 border-rose-500/30";
-
-    case "inactive":
-      return "bg-slate-500/10 text-slate-400 border-slate-500/30";
-
-    default:
-      return "bg-slate-800 text-slate-400 border-slate-700";
-  }
-};
-
-const getCoverageColor = (coverage) => {
-  if (coverage >= 80) return "bg-emerald-400";
-
-  if (coverage >= 50) return "bg-emerald-500";
-
-  return "bg-rose-500";
-};
-
-const getCoverageTextColor = (coverage) => {
-  if (coverage >= 50) {
-    return "text-emerald-400";
-  }
-
-  return "text-rose-400";
-};
-
-const formatRole = (role) => {
-  if (!role) return "Member";
-
-  return role
-    .replace(/([A-Z])/g, " $1")
-    .replace(/^./, (char) => char.toUpperCase())
-    .trim();
-};
-
-// ======================================================
-// Member Row
-// ======================================================
-
-function MemberRow({ member }) {
-  const name = getUserName(member);
-
-  const email = member?.email || "No email";
-
-  const role = formatRole(member?.role);
-
-  return (
-    <div
-      className="
-        flex
-        items-center
-        justify-between
-        px-5
-        py-4
-        border-b
-        border-slate-800/60
-        last:border-b-0
-        hover:bg-slate-800/20
-        transition
-      "
-    >
-      {/* User */}
-      <div className="flex items-center gap-3 min-w-0">
-
-        {/* Avatar */}
-        <div
-          className="
-            w-10
-            h-10
-            rounded-full
-            bg-slate-800
-            border
-            border-slate-700
-            flex
-            items-center
-            justify-center
-            text-sm
-            font-semibold
-            text-slate-300
-            shrink-0
-            overflow-hidden
-          "
-        >
-          {member?.avatar ? (
-            <img
-              src={member.avatar}
-              alt={name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            getUserInitial(member)
-          )}
-        </div>
-
-        {/* User Info */}
-        <div className="min-w-0">
-
-          {/* NAME */}
-          <p className="text-sm font-semibold text-slate-200 truncate">
-            {name}
-          </p>
-
-          {/* EMAIL */}
-          <div className="flex items-center gap-1.5 mt-1">
-
-            <FiMail className="text-slate-600 text-xs shrink-0" />
-
-            <p className="text-xs text-slate-500 truncate">
-              {email}
-            </p>
-
-          </div>
-        </div>
-      </div>
-
-      {/* Role */}
-      <span
-        className="
-          px-2.5
-          py-1
-          rounded-md
-          bg-slate-800
-          border
-          border-slate-700
-          text-[10px]
-          uppercase
-          font-mono
-          text-slate-400
-          shrink-0
-          ml-4
-        "
-      >
-        {role}
-      </span>
-    </div>
-  );
-}
-
-// ======================================================
-// Stat Card
-// ======================================================
-
-function StatCard({ icon, label, value }) {
-  return (
-    <div
-      className="
-        bg-[#10131A]
-        border
-        border-slate-800
-        rounded-xl
-        p-5
-      "
-    >
-      <div className="flex items-center justify-between">
-
-        <div>
-
-          <p
-            className="
-              text-xs
-              uppercase
-              tracking-wider
-              font-semibold
-              text-slate-500
-            "
-          >
-            {label}
-          </p>
-
-          <p
-            className="
-              text-2xl
-              font-bold
-              text-slate-100
-              mt-2
-            "
-          >
-            {value}
-          </p>
-
-        </div>
-
-        <div
-          className="
-            w-10
-            h-10
-            rounded-lg
-            bg-slate-800/70
-            border
-            border-slate-700
-            flex
-            items-center
-            justify-center
-            text-slate-400
-          "
-        >
-          {icon}
-        </div>
-
-      </div>
-    </div>
-  );
-}
-
-// ======================================================
-// Main Component
-// ======================================================
-
-export default function TeamDetails() {
+export default function CreateTeam() {
+  const formRef = useRef();
   const navigate = useNavigate();
 
-  const { id } = useParams();
+  // =====================================================
+  // Current Workspace
+  // =====================================================
 
-  const [team, setTeam] = useState(null);
+  const { currentWorkspaceId } = useContextNavigator();
 
-  const [loading, setLoading] = useState(true);
+  // =====================================================
+  // Component States
+  // =====================================================
 
-  const [error, setError] = useState("");
+  const [formData, setFormData] = useState(INITIAL_FORM_STATE);
 
-  const [deleting, setDeleting] = useState(false);
+  const [createdTeam, setCreatedTeam] = useState(null);
 
-  // ======================================================
-  // Fetch Team
-  // ======================================================
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const fetchTeam = async () => {
-    if (!id) {
-      setError("Team ID is missing.");
-      setLoading(false);
+  const [showMemberModal, setShowMemberModal] = useState(false);
+
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
+
+  const [resetFormTrigger, setResetFormTrigger] = useState(false);
+
+  // =====================================================
+  // Form Handlers
+  // =====================================================
+
+  const handleInputChange = (field, value) => {
+    setFormData((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
+
+  const handleCategorySelect = (categoryLabel) => {
+    handleInputChange("category", categoryLabel);
+  };
+
+  const handleTeamLeadSelect = (leadObj) => {
+    handleInputChange("teamLead", leadObj);
+  };
+
+  // =====================================================
+  // Reset Form
+  // =====================================================
+
+  const resetForm = () => {
+    setFormData(INITIAL_FORM_STATE);
+    setCreatedTeam(null);
+
+    setResetFormTrigger((prev) => !prev);
+  };
+
+  // =====================================================
+  // Footer Submit
+  // =====================================================
+
+  const handleFooterSubmit = (e) => {
+    e.preventDefault();
+
+    formRef.current?.requestSubmit();
+  };
+
+  // =====================================================
+  // Get Lead ID
+  // =====================================================
+
+  const getLeadId = (lead) => {
+    if (!lead) return null;
+
+    if (typeof lead === "string") {
+      return lead;
+    }
+
+    return lead._id || lead.id || null;
+  };
+
+  // =====================================================
+  // Go To Team Details
+  // =====================================================
+
+  const goToTeamDetails = (team) => {
+    if (!team?._id) {
+      toast.error("Team ID is missing");
       return;
     }
 
+    if (!currentWorkspaceId) {
+      toast.error("Workspace is not selected");
+      return;
+    }
+
+    navigate(
+      `/workspaces/${currentWorkspaceId}/teams/${team._id}`
+    );
+  };
+
+  // =====================================================
+  // Main Submit
+  // =====================================================
+
+  const handleFinalSubmit = async (basicFormData) => {
+    if (isSubmitting) {
+      return;
+    }
+
+    // -----------------------------------------------------
+    // Workspace Validation
+    // -----------------------------------------------------
+
+    if (!currentWorkspaceId) {
+      toast.error("Please select a workspace first");
+      return;
+    }
+
+    // -----------------------------------------------------
+    // Category Validation
+    // -----------------------------------------------------
+
+    if (!formData.category) {
+      toast.error("Please select a team category");
+      return;
+    }
+
+    // -----------------------------------------------------
+    // Team Lead Validation
+    // -----------------------------------------------------
+
+    const leadId = getLeadId(formData.teamLead);
+
+    if (!leadId) {
+      toast.error("Please assign a valid team lead");
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    // =====================================================
+    // Create Payload
+    // =====================================================
+
+    const payload = {
+      teamName: basicFormData.teamName.trim(),
+
+      teamCode: basicFormData.teamCode
+        .trim()
+        .toUpperCase(),
+
+      description: basicFormData.description.trim(),
+
+      category: formData.category,
+
+      teamLead: leadId,
+
+      workspaceId: currentWorkspaceId,
+
+      responsibilities: [],
+
+      members: [],
+
+      status: "active",
+    };
+
+    console.log("Creating team with payload:", payload);
+
     try {
-      setLoading(true);
+      // ===================================================
+      // Create Team API
+      // ===================================================
 
-      setError("");
+      const response = await api.post(
+        "/teams",
+        payload
+      );
 
-      const response = await api.get(`/teams/${id}`);
+      console.log(
+        "Create Team Response:",
+        response.data
+      );
 
-      const teamData =
-        response.data?.data ||
+      // ===================================================
+      // Get Created Team
+      // ===================================================
+
+      const team =
         response.data?.team ||
-        null;
+        response.data?.data ||
+        response.data;
 
-      if (!teamData) {
-        setError("Team not found.");
-        return;
+      if (!team?._id) {
+        throw new Error(
+          "Team was created but no team ID was returned."
+        );
       }
 
-      setTeam(teamData);
+      // ===================================================
+      // Success
+      // ===================================================
 
+      setCreatedTeam(team);
+
+      setShowSuccessModal(true);
+
+      toast.success("Team created successfully!");
     } catch (err) {
-      console.error("Failed to fetch team:", err);
-
-      setError(
-        err.response?.data?.msg ||
-          err.response?.data?.message ||
-          "Failed to load team details."
+      console.error(
+        "Failed to create team:",
+        err
       );
 
+      const message =
+        err.response?.data?.message ||
+        err.response?.data?.msg ||
+        err.message ||
+        "Failed to create team";
+
+      toast.error(message);
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
-  useEffect(() => {
-    fetchTeam();
-  }, [id]);
+  // =====================================================
+  // Leader Full Name
+  // =====================================================
 
-  // ======================================================
-  // Team Data
-  // ======================================================
+  const getLeaderFullName = () => {
+    const lead = formData.teamLead;
 
-  const members = useMemo(() => {
-    return Array.isArray(team?.members)
-      ? team.members
-      : [];
-  }, [team]);
-
-  const membersCount = members.length;
-
-  const componentsCount =
-    team?.componentsCount ??
-    (Array.isArray(team?.components)
-      ? team.components.length
-      : 0);
-
-  const projectsCount =
-    team?.projectsCount ??
-    (Array.isArray(team?.projects)
-      ? team.projects.length
-      : 0);
-
-  const documentationCoverage = Math.min(
-    Math.max(
-      Number(team?.documentationCoverage ?? 0),
-      0
-    ),
-    100
-  );
-
-  const teamLead = team?.teamLead;
-
-  const teamLeadName = getUserName(teamLead);
-
-  const teamLeadEmail =
-    teamLead?.email || "No email";
-
-  // ======================================================
-  // Actions
-  // ======================================================
-
-  const handleBack = () => {
-    navigate("/teams");
-  };
-
-  const handleEdit = () => {
-    navigate(`/teams/${id}/edit`);
-  };
-
-  const handleDelete = async () => {
-    if (!team?._id || deleting) return;
-
-    const confirmed = window.confirm(
-      `Are you sure you want to delete "${team.teamName}"?`
-    );
-
-    if (!confirmed) return;
-
-    try {
-      setDeleting(true);
-
-      await api.delete(`/teams/${team._id}`);
-
-      toast.success("Team deleted successfully.");
-
-      navigate("/teams");
-
-    } catch (err) {
-      console.error("Failed to delete team:", err);
-
-      toast.error(
-        err.response?.data?.msg ||
-          err.response?.data?.message ||
-          "Failed to delete team."
-      );
-
-    } finally {
-      setDeleting(false);
+    if (!lead) {
+      return "Unassigned";
     }
+
+    if (typeof lead === "string") {
+      return lead;
+    }
+
+    const fullName =
+      `${lead.firstName || ""} ${lead.lastName || ""}`.trim();
+
+    return (
+      fullName ||
+      lead.name ||
+      lead.username ||
+      "Unassigned"
+    );
   };
 
-  // ======================================================
-  // Loading
-  // ======================================================
-
-  if (loading) {
-    return (
-      <main className="w-full min-h-screen px-8 py-8">
-
-        <div className="flex items-center justify-center min-h-[500px]">
-
-          <div className="flex items-center gap-3 text-slate-400">
-
-            <div
-              className="
-                w-5
-                h-5
-                border-2
-                border-emerald-500
-                border-t-transparent
-                rounded-full
-                animate-spin
-              "
-            />
-
-            <span className="text-sm">
-              Loading team details...
-            </span>
-
-          </div>
-
-        </div>
-
-      </main>
-    );
-  }
-
-  // ======================================================
-  // Error
-  // ======================================================
-
-  if (error || !team) {
-    return (
-      <main className="w-full min-h-screen px-8 py-8">
-
-        <button
-          onClick={handleBack}
-          className="
-            flex
-            items-center
-            gap-2
-            text-sm
-            text-slate-400
-            hover:text-slate-200
-            transition
-            mb-6
-          "
-        >
-          <FiArrowLeft />
-
-          Back to Teams
-        </button>
-
-        <div
-          className="
-            min-h-[400px]
-            rounded-2xl
-            border
-            border-rose-900/30
-            bg-[#10131A]/60
-            flex
-            flex-col
-            items-center
-            justify-center
-            text-center
-            px-6
-          "
-        >
-          <div
-            className="
-              w-12
-              h-12
-              rounded-full
-              bg-rose-500/10
-              border
-              border-rose-500/20
-              flex
-              items-center
-              justify-center
-              mb-4
-            "
-          >
-            <FiAlertCircle className="text-rose-400 text-xl" />
-          </div>
-
-          <h2 className="text-lg font-semibold text-slate-200">
-            Unable to load team
-          </h2>
-
-          <p className="text-sm text-rose-400 mt-2">
-            {error || "Team not found."}
-          </p>
-
-          <div className="flex gap-3 mt-6">
-
-            <button
-              onClick={handleBack}
-              className="
-                px-4
-                py-2
-                rounded-lg
-                border
-                border-slate-800
-                text-sm
-                text-slate-300
-                hover:bg-slate-800/50
-                transition
-              "
-            >
-              Back to Teams
-            </button>
-
-            <button
-              onClick={fetchTeam}
-              className="
-                px-4
-                py-2
-                rounded-lg
-                bg-slate-800
-                hover:bg-slate-700
-                text-sm
-                text-slate-200
-                transition
-              "
-            >
-              Try Again
-            </button>
-
-          </div>
-        </div>
-
-      </main>
-    );
-  }
-
-  // ======================================================
-  // UI
-  // ======================================================
+  // =====================================================
+  // Render
+  // =====================================================
 
   return (
-    <main className="w-full min-h-screen px-8 py-6 pb-10">
+    <div className="flex flex-col w-full h-screen text-white bg-[#0A0B0D]">
 
-      {/* ==================================================
-          Top Navigation
-      ================================================== */}
+      {/* =================================================
+          TOP NAVBAR
+      ================================================= */}
 
-      <div className="flex items-center justify-between mb-6">
-
-        <button
-          onClick={handleBack}
-          className="
-            flex
-            items-center
-            gap-2
-            text-sm
-            text-slate-400
-            hover:text-slate-200
-            transition
-          "
-        >
-          <FiArrowLeft />
-
-          Back to Teams
-        </button>
+      <nav className="flex items-center justify-between w-full h-16 px-8 bg-[#0A0B0D] border-b border-slate-800/60 shadow-lg shrink-0">
 
         <div className="flex items-center gap-3">
 
-          <button
-            onClick={handleEdit}
-            className="
-              flex
-              items-center
-              gap-2
-              px-4
-              py-2
-              rounded-lg
-              border
-              border-slate-800
-              bg-[#10131A]
-              text-sm
-              text-slate-300
-              hover:bg-slate-800/60
-              hover:text-slate-100
-              transition
-            "
-          >
-            <FiEdit3 />
-
-            Edit Team
-          </button>
-
-          <button
-            onClick={handleDelete}
-            disabled={deleting}
-            className="
-              flex
-              items-center
-              gap-2
-              px-4
-              py-2
-              rounded-lg
-              border
-              border-rose-900/40
-              bg-rose-500/5
-              text-sm
-              text-rose-400
-              hover:bg-rose-500/10
-              transition
-              disabled:opacity-50
-              disabled:cursor-not-allowed
-            "
-          >
-            <FiTrash2 />
-
-            {deleting ? "Deleting..." : "Delete Team"}
-          </button>
-
-        </div>
-      </div>
-
-      {/* ==================================================
-          Team Header
-      ================================================== */}
-
-      <section
-        className="
-          bg-[#10131A]
-          border
-          border-slate-800
-          rounded-2xl
-          p-7
-        "
-      >
-
-        <div
-          className="
-            flex
-            flex-col
-            lg:flex-row
-            lg:items-start
-            lg:justify-between
-            gap-6
-          "
-        >
-
-          {/* Team Information */}
-
-          <div className="min-w-0">
-
-            <div className="flex flex-wrap items-center gap-3 mb-3">
-
-              <span
-                className="
-                  px-2.5
-                  py-1
-                  rounded-md
-                  bg-slate-800
-                  border
-                  border-slate-700
-                  text-xs
-                  font-mono
-                  font-semibold
-                  text-slate-400
-                "
-              >
-                {team.teamCode || "N/A"}
-              </span>
-
-              <span
-                className={`
-                  px-2.5
-                  py-1
-                  rounded-md
-                  border
-                  text-xs
-                  uppercase
-                  font-mono
-                  font-semibold
-                  ${getStatusStyle(team.status)}
-                `}
-              >
-                {team.status || "ACTIVE"}
-              </span>
-
-              {team.category && (
-                <span
-                  className="
-                    px-2.5
-                    py-1
-                    rounded-md
-                    bg-slate-800/70
-                    border
-                    border-slate-700
-                    text-xs
-                    text-slate-400
-                  "
-                >
-                  {team.category}
-                </span>
-              )}
-
-            </div>
-
-            <h1
-              className="
-                text-3xl
-                font-bold
-                text-slate-100
-                tracking-tight
-              "
-            >
-              {team.teamName || "Unnamed Team"}
-            </h1>
-
-            <p
-              className="
-                text-sm
-                text-slate-400
-                mt-3
-                max-w-3xl
-                leading-relaxed
-              "
-            >
-              {team.description ||
-                "No team description has been provided."}
-            </p>
-
-          </div>
-
-          {/* Team Lead */}
-
-          <div className="lg:min-w-[250px]">
-
-            <p
-              className="
-                text-[10px]
-                uppercase
-                tracking-wider
-                font-semibold
-                text-slate-500
-                mb-3
-              "
-            >
-              TECH LEAD
-            </p>
-
-            <div className="flex items-center gap-3">
-
-              <div
-                className="
-                  w-11
-                  h-11
-                  rounded-full
-                  bg-slate-800
-                  border
-                  border-slate-700
-                  flex
-                  items-center
-                  justify-center
-                  text-sm
-                  font-semibold
-                  text-slate-300
-                  overflow-hidden
-                "
-              >
-                {teamLead?.avatar ? (
-                  <img
-                    src={teamLead.avatar}
-                    alt={teamLeadName}
-                    className="w-full h-full object-cover"
-                  />
-                ) : (
-                  getUserInitial(teamLead)
-                )}
-              </div>
-
-              <div className="min-w-0">
-
-                {/* NAME */}
-                <p
-                  className="
-                    text-sm
-                    font-semibold
-                    text-slate-200
-                    truncate
-                  "
-                >
-                  {teamLeadName}
-                </p>
-
-                {/* EMAIL */}
-                <p
-                  className="
-                    text-xs
-                    text-slate-500
-                    mt-1
-                    truncate
-                  "
-                >
-                  {teamLeadEmail}
-                </p>
-
-              </div>
-
-            </div>
-          </div>
-
-        </div>
-      </section>
-
-      {/* ==================================================
-          Statistics
-      ================================================== */}
-
-      <section
-        className="
-          grid
-          grid-cols-1
-          sm:grid-cols-2
-          xl:grid-cols-4
-          gap-4
-          mt-6
-        "
-      >
-
-        <StatCard
-          icon={<FiUsers />}
-          label="Members"
-          value={membersCount}
-        />
-
-        <StatCard
-          icon={<FiLayers />}
-          label="Components"
-          value={componentsCount}
-        />
-
-        <StatCard
-          icon={<FiFolder />}
-          label="Projects"
-          value={projectsCount}
-        />
-
-        <StatCard
-          icon={<FiBookOpen />}
-          label="Documentation"
-          value={`${documentationCoverage}%`}
-        />
-
-      </section>
-
-      {/* ==================================================
-          Team Members - FULL WIDTH
-      ================================================== */}
-
-      <section
-        className="
-          bg-[#10131A]
-          border
-          border-slate-800
-          rounded-2xl
-          overflow-hidden
-          mt-6
-        "
-      >
-
-        {/* Header */}
-
-        <div
-          className="
-            flex
-            items-center
-            justify-between
-            px-6
-            py-5
-            border-b
-            border-slate-800/70
-          "
-        >
-
-          <div>
-
-            <h2
-              className="
-                text-base
-                font-semibold
-                text-slate-200
-              "
-            >
-              Team Members
-            </h2>
-
-            <p
-              className="
-                text-xs
-                text-slate-500
-                mt-1
-              "
-            >
-              People currently assigned to this team.
-            </p>
-
-          </div>
-
-          <div
-            className="
-              flex
-              items-center
-              gap-2
-              text-xs
-              text-slate-500
-            "
-          >
-            <FiUsers />
-
-            {membersCount} Members
-          </div>
-
-        </div>
-
-        {/* Members */}
-
-        <div>
-
-          {members.length === 0 ? (
-
-            <div
-              className="
-                py-14
-                flex
-                flex-col
-                items-center
-                justify-center
-                text-center
-                px-6
-              "
-            >
-
-              <div
-                className="
-                  w-12
-                  h-12
-                  rounded-full
-                  bg-slate-800/70
-                  border
-                  border-slate-700
-                  flex
-                  items-center
-                  justify-center
-                  mb-4
-                "
-              >
-                <FiUsers className="text-slate-500 text-xl" />
-              </div>
-
-              <p
-                className="
-                  text-sm
-                  font-medium
-                  text-slate-300
-                "
-              >
-                No members yet
-              </p>
-
-              <p
-                className="
-                  text-xs
-                  text-slate-500
-                  mt-1
-                "
-              >
-                This team does not have any assigned members.
-              </p>
-
-            </div>
-
-          ) : (
-
-            members.map((member) => (
-              <MemberRow
-                key={member._id}
-                member={member}
-              />
-            ))
-
-          )}
-
-        </div>
-      </section>
-
-      {/* ==================================================
-          Documentation Coverage - FULL WIDTH
-      ================================================== */}
-
-      <section
-        className="
-          bg-[#10131A]
-          border
-          border-slate-800
-          rounded-2xl
-          p-6
-          mt-6
-        "
-      >
-
-        <div
-          className="
-            flex
-            items-center
-            justify-between
-            mb-4
-          "
-        >
-
-          <div>
-
-            <h2
-              className="
-                text-base
-                font-semibold
-                text-slate-200
-              "
-            >
-              Documentation Coverage
-            </h2>
-
-            <p
-              className="
-                text-xs
-                text-slate-500
-                mt-1
-              "
-            >
-              Documentation completeness across team components.
-            </p>
-
-          </div>
-
-          <span
-            className={`
-              text-lg
-              font-bold
-              ${getCoverageTextColor(
-                documentationCoverage
-              )}
-            `}
-          >
-            {documentationCoverage}%
+          <h3 className="font-mono text-xs tracking-wider text-slate-400 hover:text-white transition-colors cursor-pointer uppercase">
+            System Atlas
+          </h3>
+
+          <span className="text-slate-600">
+            |
+          </span>
+
+          <span className="font-mono text-xs tracking-wider text-slate-500 uppercase">
+            Governance • Team Creation
           </span>
 
         </div>
 
-        <div
-          className="
-            w-full
-            h-2
-            bg-slate-800
-            rounded-full
-            overflow-hidden
-          "
-        >
 
-          <div
-            className={`
-              h-full
-              rounded-full
-              transition-all
-              duration-500
-              ${getCoverageColor(
-                documentationCoverage
-              )}
-            `}
-            style={{
-              width: `${documentationCoverage}%`,
-            }}
-          />
+        <div className="flex items-center gap-6">
+
+          <div className="relative flex items-center">
+
+            <RxMagnifyingGlass className="absolute left-3 text-slate-500 text-base" />
+
+            <input
+              type="text"
+              placeholder="Search architecture resources..."
+              className="bg-[#0d0f14] border border-slate-800 pl-9 pr-4 py-1.5 rounded-lg text-xs text-slate-200 placeholder:text-slate-600 focus:outline-none focus:border-slate-700 font-mono w-72"
+            />
+
+          </div>
+
+          <AiOutlineBell className="text-xl text-slate-400 hover:text-white cursor-pointer transition-colors" />
 
         </div>
 
-        <div
-          className="
-            flex
-            justify-between
-            mt-3
-            text-[10px]
-            text-slate-600
-            uppercase
-            tracking-wider
-          "
-        >
-          <span>0%</span>
+      </nav>
 
-          <span>50%</span>
 
-          <span>100%</span>
-        </div>
+      {/* =================================================
+          MAIN CONTAINER
+      ================================================= */}
 
-      </section>
+      <div className="flex-1 min-h-0 w-full overflow-y-auto p-8 bg-[#0D0E11CC]">
 
-      {/* ==================================================
-          Team Information
-      ================================================== */}
+        <div className="max-w-7xl mx-auto grid grid-cols-12 gap-8 items-start">
 
-      <section
-        className="
-          bg-[#10131A]
-          border
-          border-slate-800
-          rounded-2xl
-          p-6
-          mt-6
-        "
-      >
+          {/* =============================================
+              LEFT COLUMN
+          ============================================= */}
 
-        <h2
-          className="
-            text-base
-            font-semibold
-            text-slate-200
-            mb-5
-          "
-        >
-          Team Information
-        </h2>
+          <div className="col-span-12 lg:col-span-8 flex flex-col gap-8">
 
-        <div className="space-y-4">
+            <TeamForm
+              formRef={formRef}
+              onInputChange={handleInputChange}
+              onFinalSubmit={handleFinalSubmit}
+              resetTrigger={resetFormTrigger}
+            />
 
-          {/* Team Code */}
 
-          <div className="flex items-center justify-between gap-4">
+            <CategorySection
+              selectedCategory={formData.category}
+              onSelectCategory={handleCategorySelect}
+              resetTrigger={resetFormTrigger}
+            />
 
-            <span className="text-xs text-slate-500">
-              Team Code
-            </span>
 
-            <span className="text-xs font-mono text-slate-300">
-              {team.teamCode || "N/A"}
-            </span>
+            <TeamLeadSelect
+              value={formData.teamLead}
+              onChange={handleTeamLeadSelect}
+              resetTrigger={resetFormTrigger}
+            />
 
           </div>
 
-          <div className="h-px bg-slate-800/70" />
 
-          {/* Category */}
+          {/* =============================================
+              RIGHT COLUMN
+          ============================================= */}
 
-          <div className="flex items-center justify-between gap-4">
+          <div className="col-span-12 lg:col-span-4 sticky top-0">
 
-            <span className="text-xs text-slate-500">
-              Category
-            </span>
-
-            <span className="text-xs text-slate-300">
-              {team.category || "N/A"}
-            </span>
-
-          </div>
-
-          <div className="h-px bg-slate-800/70" />
-
-          {/* Status */}
-
-          <div className="flex items-center justify-between gap-4">
-
-            <span className="text-xs text-slate-500">
-              Status
-            </span>
-
-            <span
-              className={`
-                px-2
-                py-1
-                rounded
-                border
-                text-[10px]
-                uppercase
-                font-mono
-                ${getStatusStyle(team.status)}
-              `}
-            >
-              {team.status || "ACTIVE"}
-            </span>
-
-          </div>
-
-          <div className="h-px bg-slate-800/70" />
-
-          {/* Team Lead */}
-
-          <div className="flex items-center justify-between gap-4">
-
-            <span className="text-xs text-slate-500">
-              Team Lead
-            </span>
-
-            <span className="text-xs text-slate-300">
-              {teamLeadName}
-            </span>
+            <EntityPreview
+              teamName={formData.teamName}
+              teamCode={formData.teamCode}
+              leaderName={getLeaderFullName()}
+            />
 
           </div>
 
         </div>
 
-      </section>
+      </div>
 
-      {/* ==================================================
-          Quick Actions
-      ================================================== */}
 
-      <section
-        className="
-          bg-[#10131A]
-          border
-          border-slate-800
-          rounded-2xl
-          p-6
-          mt-6
-        "
-      >
+      {/* =================================================
+          ADD MEMBER MODAL
+      ================================================= */}
 
-        <h2
-          className="
-            text-base
-            font-semibold
-            text-slate-200
-            mb-4
-          "
-        >
-          Quick Actions
-        </h2>
+      <AddMemberModal
+        isOpen={showMemberModal}
+        team={createdTeam}
 
-        <div
-          className="
-            grid
-            grid-cols-1
-            sm:grid-cols-2
-            gap-3
-          "
-        >
+        onClose={() => {
+          setShowMemberModal(false);
+        }}
+
+        onGoToTeam={() => {
+          goToTeamDetails(createdTeam);
+        }}
+      />
+
+
+      {/* =================================================
+          TEAM CREATED MODAL
+      ================================================= */}
+
+      <TeamCreatedModal
+        isOpen={showSuccessModal}
+        team={createdTeam}
+
+        onAddMembers={() => {
+          setShowSuccessModal(false);
+          setShowMemberModal(true);
+        }}
+
+        onGoToTeam={() => {
+          goToTeamDetails(createdTeam);
+        }}
+
+        onCreateAnother={() => {
+          setShowSuccessModal(false);
+          resetForm();
+        }}
+
+        onClose={() => {
+          setShowSuccessModal(false);
+        }}
+      />
+
+
+      {/* =================================================
+          FOOTER
+      ================================================= */}
+
+      <footer className="flex items-center justify-between w-full px-8 py-4 bg-[#0A0B0D] border-t border-slate-800/80 shrink-0 font-mono text-xs">
+
+        <div className="flex items-center gap-2 text-slate-500 text-[11px]">
+
+          <span className="w-2 h-2 rounded-full bg-slate-600" />
+
+          Need help with team configuration?
+
+          <a
+            href="#"
+            className="text-slate-400 underline hover:text-slate-200"
+          >
+            View Governance Policy
+          </a>
+
+        </div>
+
+
+        <div>
 
           <button
-            onClick={handleEdit}
-            className="
-              flex
-              items-center
-              justify-between
-              px-4
-              py-3
-              rounded-lg
-              bg-slate-800/60
-              border
-              border-slate-700
-              text-sm
-              text-slate-300
-              hover:bg-slate-800
-              hover:text-slate-100
-              transition
-            "
+            type="button"
+            disabled={isSubmitting}
+            onClick={handleFooterSubmit}
+            className="px-6 py-2.5 text-xs font-mono font-bold text-slate-950 bg-[#FF8A7A] hover:bg-[#ff7b6b] disabled:opacity-50 disabled:cursor-not-allowed rounded-lg shadow-lg shadow-red-500/10 transition-all uppercase cursor-pointer"
           >
-
-            <span className="flex items-center gap-2">
-              <FiEdit3 />
-
-              Edit Team
-            </span>
-
-            <span>→</span>
-
-          </button>
-
-          <button
-            onClick={handleBack}
-            className="
-              flex
-              items-center
-              justify-between
-              px-4
-              py-3
-              rounded-lg
-              bg-slate-800/30
-              border
-              border-slate-800
-              text-sm
-              text-slate-400
-              hover:bg-slate-800/60
-              hover:text-slate-200
-              transition
-            "
-          >
-
-            <span className="flex items-center gap-2">
-              <FiArrowLeft />
-
-              All Teams
-            </span>
-
-            <span>→</span>
-
+            {isSubmitting
+              ? "Creating..."
+              : "Create Team"}
           </button>
 
         </div>
 
-      </section>
+      </footer>
 
-    </main>
+    </div>
   );
 }
+
+

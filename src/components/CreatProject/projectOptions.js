@@ -51,16 +51,52 @@ export const TOPOLOGY_OPTIONS = [
 ];
 
 export const departmentOptions = [
-  { value: "Platform", label: "Platform" },
-  { value: "Frontend", label: "Frontend" },
-  { value: "Backend", label: "Backend" },
-  { value: "DevOps", label: "DevOps" },
-  { value: "Cloud", label: "Cloud" },
-  { value: "Mobile", label: "Mobile" },
-  { value: "Security", label: "Security" },
-  { value: "Data Science", label: "Data Science" },
-  { value: "AI/ML", label: "AI/ML" },
-  { value: "UI/UX", label: "UI/UX" },
-  { value: "Engineering", label: "Engineering" },
-  { value: "QA", label: "QA" },
+    {
+        value: "Platform",
+        label: "Platform",
+    },
+    {
+        value: "Frontend",
+        label: "Frontend",
+    },
+    {
+        value: "Backend",
+        label: "Backend",
+    },
+    {
+        value: "DevOps",
+        label: "DevOps",
+    },
+    {
+        value: "Cloud",
+        label: "Cloud",
+    },
+    {
+        value: "Mobile",
+        label: "Mobile",
+    },
+    {
+        value: "Security",
+        label: "Security",
+    },
+    {
+        value: "Data Science",
+        label: "Data Science",
+    },
+    {
+        value: "AI/ML",
+        label: "AI/ML",
+    },
+    {
+        value: "UI/UX",
+        label: "UI/UX",
+    },
+    {
+        value: "QA",
+        label: "QA",
+    },
+    {
+        value: "Other",
+        label: "Other",
+    },
 ];

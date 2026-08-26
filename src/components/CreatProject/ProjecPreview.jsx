@@ -1,5 +1,3 @@
-import React from 'react'
-
 export default function ProjecPreview({ projectSummary }) {
     return (
         <div className="flex flex-col w-full lg:w-1/2 h-full p-4 sm:p-6 lg:p-8 shadow-[-2px_-4px_7px_rgba(0,0,0,0.6)] bg-[#131519]">

@@ -25,7 +25,7 @@ export default function WorkspaceForm({ formRef }) {
 
   const submitForm = async (data) => {
     try {
-      const response = await api.post("/workspace", data);
+      const response = await api.post("/workspaces", data);
 
       const workspaceId = response.data.workspace._id;
 

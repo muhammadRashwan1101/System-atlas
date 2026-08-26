@@ -1,4 +1,4 @@
-import profile_pic from "../../assets/profile-pic/profliePic.png";
+import profile_pic from "../../assets/profile-pic//profliePic.png";
 import api from "../../api/axios";
 import { useEffect, useState } from "react";
 import { LuSquareChartGantt } from "react-icons/lu";
