@@ -62,7 +62,7 @@ describe('Project Creation Flow', () => {
     });
   });
 
-  it('submits valid project data and redirects to component management', async () => {
+  it('submits valid project data and redirects to graph explorer', async () => {
     const user = userEvent.setup();
     const mockRefreshProjects = vi.fn();
 
@@ -80,8 +80,8 @@ describe('Project Creation Flow', () => {
           element={<ProjectCreation />}
         />
         <Route
-          path="/workspaces/:workspaceId/projects/:projectId/components"
-          element={<div data-testid="components-view">Components View</div>}
+          path="/workspaces/:workspaceId/projects/:projectId/graph"
+          element={<div data-testid="graph-view">Graph View</div>}
         />
       </Routes>,
       {
@@ -111,7 +111,7 @@ describe('Project Creation Flow', () => {
           description: 'Handles order checkout, payment routing, and inventory coordination.',
         })
       );
-      expect(screen.getByTestId('components-view')).toBeInTheDocument();
+      expect(screen.getByTestId('graph-view')).toBeInTheDocument();
     });
   });
 });

@@ -20,6 +20,29 @@ export default function AuthProvider({ children }) {
     }
   }, []);
 
+  const completeOnboarding = useCallback(async () => {
+    try {
+      await api.patch("/auth/complete-onboarding");
+    } catch (e) {
+      console.warn("Could not patch backend onboarding status:", e);
+    }
+    setUser((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        onboarding: "completed",
+        onboardingStatus: "completed",
+        user: prev.user
+          ? {
+              ...prev.user,
+              onboarding: "completed",
+              onboardingStatus: "completed",
+            }
+          : prev.user,
+      };
+    });
+  }, []);
+
   const logout = useCallback(() => {
     localStorage.removeItem("token");
     setUser(null);
@@ -52,6 +75,7 @@ export default function AuthProvider({ children }) {
         loading,
         setUser,
         getCurrentUser,
+        completeOnboarding,
         logout,
         isAuthenticated: Boolean(user),
       }}

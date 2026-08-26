@@ -27,6 +27,7 @@ export default function Documentation() {
     register,
     handleSubmit,
     setValue,
+    reset,
     control,
     formState: { errors },
   } = useForm({
@@ -40,6 +41,30 @@ export default function Documentation() {
       tags: Array.isArray(initialDocs.tags) ? initialDocs.tags : [],
     },
   });
+
+  const hasInitializedRef = useState(false);
+
+  useEffect(() => {
+    if (
+      !hasInitializedRef[0] &&
+      (data?.documentation?.repoURL ||
+        data?.documentation?.docsURL ||
+        data?.documentation?.monitorURL ||
+        data?.documentation?.deploymentURL ||
+        (Array.isArray(data?.documentation?.tags) &&
+          data.documentation.tags.length > 0))
+    ) {
+      hasInitializedRef[1](true);
+      const d = data.documentation;
+      reset({
+        repoURL: d.repoURL || "",
+        docsURL: d.docsURL || "",
+        monitorURL: d.monitorURL || "",
+        deploymentURL: d.deploymentURL || "",
+        tags: Array.isArray(d.tags) ? d.tags : [],
+      });
+    }
+  }, [data?.documentation, reset, hasInitializedRef]);
 
   const watchedRepo = useWatch({ control, name: "repoURL" });
   const watchedDocs = useWatch({ control, name: "docsURL" });
@@ -130,7 +155,26 @@ export default function Documentation() {
 
     try {
       const endpoint = `/projects/${projectId}/wizard/${wizardId}`;
-      const response = await api.patch(endpoint, payload);
+      let response;
+      try {
+        response = await api.patch(endpoint, payload);
+      } catch (patchErr) {
+        if (
+          patchErr.response?.status === 404 ||
+          patchErr.response?.status === 405
+        ) {
+          try {
+            response = await api.patch(
+              `/projects/${projectId}/components/${wizardId}`,
+              payload
+            );
+          } catch {
+            throw patchErr;
+          }
+        } else {
+          throw patchErr;
+        }
+      }
 
       toast.success(
         response.data?.msg ||
@@ -143,11 +187,11 @@ export default function Documentation() {
         response.data?.wizard ||
         response.data;
       const nextStep =
-        responseData?.currentStep || response.data?.nextStep || "relationships";
+        responseData?.currentStep || response.data?.nextStep || "review";
 
       updateStepData("documentation", payload);
 
-      // Transition to backend-returned currentStep
+      // Transition to nextStep
       if (nextStep) {
         setCurrentStep(nextStep);
       }

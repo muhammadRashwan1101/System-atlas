@@ -53,6 +53,12 @@ export default function Relationships() {
 
   const [relationships, setRelationships] = useState(initialRelationships);
 
+  useEffect(() => {
+    if (Array.isArray(data?.relationships) && data.relationships.length > 0) {
+      setRelationships(data.relationships);
+    }
+  }, [data?.relationships]);
+
   // New relationship draft state
   const [isAddingNew, setIsAddingNew] = useState(false);
   const [newTargetId, setNewTargetId] = useState("");
@@ -176,7 +182,26 @@ export default function Relationships() {
 
     try {
       const endpoint = `/projects/${projectId}/wizard/${wizardId}`;
-      const response = await api.patch(endpoint, payload);
+      let response;
+      try {
+        response = await api.patch(endpoint, payload);
+      } catch (patchErr) {
+        if (
+          patchErr.response?.status === 404 ||
+          patchErr.response?.status === 405
+        ) {
+          try {
+            response = await api.patch(
+              `/projects/${projectId}/components/${wizardId}`,
+              payload
+            );
+          } catch {
+            throw patchErr;
+          }
+        } else {
+          throw patchErr;
+        }
+      }
 
       toast.success(
         response.data?.msg ||
@@ -189,11 +214,11 @@ export default function Relationships() {
         response.data?.wizard ||
         response.data;
       const nextStep =
-        responseData?.currentStep || response.data?.nextStep || "review";
+        responseData?.currentStep || response.data?.nextStep || "documentation";
 
       updateStepData("relationships", payload.relationships);
 
-      // Transition to backend-returned currentStep
+      // Transition to nextStep
       if (nextStep) {
         setCurrentStep(nextStep);
       }

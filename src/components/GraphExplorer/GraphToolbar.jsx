@@ -126,11 +126,10 @@ export default function GraphToolbar({
             type="button"
             onClick={() => setIsLayoutMenuOpen((prev) => !prev)}
             title="Change Graph Layout"
-            className={`p-2 rounded-lg transition-colors cursor-pointer ${
-              isLayoutMenuOpen
+            className={`p-2 rounded-lg transition-colors cursor-pointer ${isLayoutMenuOpen
                 ? "bg-(--primary)/20 text-(--primary)"
                 : "text-[#9CA3AF] hover:text-white hover:bg-white/10"
-            }`}
+              }`}
           >
             <FiGrid className="text-xs" />
           </button>
@@ -151,11 +150,10 @@ export default function GraphToolbar({
                     key={layout.id}
                     type="button"
                     onClick={() => handleSelectLayout(layout.id)}
-                    className={`flex items-start justify-between p-2.5 rounded-xl text-left transition-all cursor-pointer ${
-                      isActive
+                    className={`flex items-start justify-between p-2.5 rounded-xl text-left transition-all cursor-pointer ${isActive
                         ? "bg-sky-500/15 border border-sky-400/30 text-white shadow-sm"
                         : "hover:bg-white/5 border border-transparent text-[#9CA3AF] hover:text-white"
-                    }`}
+                      }`}
                   >
                     <div className="flex flex-col">
                       <span className="text-xs font-semibold font-(family-name:--headers) text-white">
@@ -183,11 +181,10 @@ export default function GraphToolbar({
           type="button"
           onClick={onToggleInspector}
           title={isInspectorOpen ? "Collapse Inspector" : "Expand Inspector"}
-          className={`p-2 rounded-lg border transition-colors cursor-pointer ${
-            isInspectorOpen
+          className={`p-2 rounded-lg border transition-colors cursor-pointer ${isInspectorOpen
               ? "bg-[#101217] border-[#222634] text-[#9CA3AF] hover:text-white"
               : "bg-sky-500/10 border-sky-400/30 text-sky-400"
-          }`}
+            }`}
         >
           <FiSidebar className="text-sm" />
         </button>

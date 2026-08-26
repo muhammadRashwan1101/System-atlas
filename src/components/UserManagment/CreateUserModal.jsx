@@ -26,35 +26,35 @@ export default function CreateUserModal() {
             <div className="py-5">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block mb-2 text-sm font-mono text-[#C4C6D0]">
+                  <label className="block mb-2 text-xs font-mono uppercase text-[#C4C6D0]">
                     Full Name
                   </label>
                   <input
                     type="text"
                     placeholder="shahd khairy"
-                    className="w-full  rounded border border-[#B8BCC8] bg-white px-4 py-2 text-[#1F2937] placeholder:text-[#6B7280] outline-none focus:border-[#5B8CFF]"
+                    className="w-full rounded-lg border border-(--border) bg-(--secondary-bg) px-4 py-2 text-(--text) placeholder:text-slate-500 outline-none focus:border-(--primary) transition-colors text-sm"
                   />
                 </div>
 
                 <div>
-                  <label className="block mb-2 text-sm font-mono text-[#C4C6D0]">
+                  <label className="block mb-2 text-xs font-mono uppercase text-[#C4C6D0]">
                     Username
                   </label>
                   <input
                     type="text"
                     placeholder="shahd_khairy"
-                    className="w-full rounded border border-[#B8BCC8] bg-white px-4 py-2 text-[#1F2937] placeholder:text-[#6B7280] outline-none focus:border-[#5B8CFF]"
+                    className="w-full rounded-lg border border-(--border) bg-(--secondary-bg) px-4 py-2 text-(--text) placeholder:text-slate-500 outline-none focus:border-(--primary) transition-colors text-sm"
                   />
                 </div>
 
                 <div className="col-span-2">
-                  <label className="block mb-2 text-sm font-mono text-[#C4C6D0]">
+                  <label className="block mb-2 text-xs font-mono uppercase text-[#C4C6D0]">
                     Work Email
                   </label>
                   <input
                     type="email"
                     placeholder="shahd@gmail.com"
-                    className="w-full rounded border border-[#B8BCC8] bg-white px-4 py-2 text-[#1F2937] placeholder:text-[#6B7280] outline-none focus:border-[#5B8CFF]"
+                    className="w-full rounded-lg border border-(--border) bg-(--secondary-bg) px-4 py-2 text-(--text) placeholder:text-slate-500 outline-none focus:border-(--primary) transition-colors text-sm"
                   />
                 </div>
               </div>
@@ -215,13 +215,15 @@ export default function CreateUserModal() {
               </div>
             </div>
           </div>
-          <div className="bg-[#0D0E11] p-8 flex items-center justify-between font-mono border-t border-[#2D303A]">
-            <div>Cancel</div>
-            <div className="flex gap-4">
-              <button className="border border-[#2D303A]  py-3 px-4 rounded font-medium ">
+          <div className="bg-[#0D0E11] p-6 flex items-center justify-between font-mono text-xs border-t border-[#2D303A]">
+            <button type="button" className="text-[#FF8A80] hover:text-[#FF8A80]/80 uppercase font-semibold cursor-pointer">
+              Cancel
+            </button>
+            <div className="flex gap-3">
+              <button type="button" className="border border-[#2D303A] text-slate-300 hover:text-white hover:bg-white/5 py-2.5 px-4 rounded-lg font-medium transition-colors cursor-pointer">
                 Create User
               </button>
-              <button className="text-[#385283] bg-[#ADC6FF] font-semibold p-3 rounded">
+              <button type="button" className="text-(--text-primary) bg-(--primary) hover:bg-[#ccdaff] font-semibold py-2.5 px-4 rounded-lg shadow-[0_0_12px_rgba(173,198,255,0.3)] transition-all cursor-pointer">
                 Create & Send Invitation
               </button>
             </div>

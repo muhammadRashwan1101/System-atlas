@@ -171,7 +171,7 @@ export default function SetNewPassword() {
           <button
             type="submit"
             disabled={submitting}
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-sky-500/10 disabled:opacity-50 mt-2"
+            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-(--primary) hover:bg-[#ccdaff] text-(--text-primary) font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-[0_0_15px_rgba(173,198,255,0.3)] disabled:opacity-50 mt-2"
           >
             {submitting ? (
               <div className="w-4 h-4 border-2 border-slate-950 border-t-transparent rounded-full animate-spin"></div>

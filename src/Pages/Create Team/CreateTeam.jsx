@@ -2,17 +2,21 @@ import { useState, useRef } from "react";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { AiOutlineBell } from "react-icons/ai";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate, useParams, useSearchParams } from "react-router-dom"; 
 import api from "../../api/axios";
 
 import TeamForm from "../../components/CreateTeam/TeamForm";
 import CategorySection from "../../components/CreateTeam/CategorySection";
 import TeamLeadSelect from "../../components/CreateTeam/TeamLeadSelect";
 import EntityPreview from "../../components/CreateTeam/EntityPreview";
+import Breadcrumbs from "../../components/Navigation/Breadcrumbs";
 
 export default function CreateTeam() {
   const formRef = useRef();
   const navigate = useNavigate();
+  const { workspaceId: paramWsId } = useParams();
+  const [searchParams] = useSearchParams();
+  const workspaceId = paramWsId || searchParams.get("workspaceId");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -43,14 +47,13 @@ export default function CreateTeam() {
   };
 
   const handleFinalSubmit = async (basicFormData) => {
-    if (isSubmitting) return; // منع التكرار إذا كان زر الإرسال نشطاً
+    if (isSubmitting) return;
 
     if (!formData.category) {
       toast.error("Please select a team category");
       return;
     }
 
-    // مرونة في قراءة معرف القائد سواء كان كائناً أو معرفاً مباشراً
     const leadId =
       formData.teamLead?._id ||
       formData.teamLead?.id ||
@@ -79,10 +82,14 @@ export default function CreateTeam() {
 
       if (response.status === 201 || response.status === 200) {
         toast.success("Team created successfully!");
-        navigate("/dashboard"); 
+        if (workspaceId) {
+          navigate(`/workspaces/${workspaceId}/new-project?flow=onboarding`);
+        } else {
+          navigate("/dashboard");
+        }
       }
     } catch (err) {
-      console.log(err.response)
+      console.log(err.response);
       const errorMessage =
         err.response?.data?.message ||
         err.response?.data?.error ||
@@ -105,12 +112,10 @@ export default function CreateTeam() {
 
   return (
     <div className="flex flex-col w-full h-screen bg-[#060709] text-white">
-      {/* Navbar */}
+      {/* Navbar with Breadcrumbs */}
       <nav className="flex items-center justify-between w-full h-16 px-8 bg-[#0A0B0D] border-b border-slate-800/60 shadow-lg shrink-0">
         <div className="flex items-center gap-3">
-          <h3 className="font-mono text-xs tracking-wider text-slate-400 hover:text-white transition-colors cursor-pointer uppercase">
-            System Atlas
-          </h3>
+          <Breadcrumbs />
           <span className="text-slate-600">|</span>
           <span className="font-mono text-xs tracking-wider text-slate-500 uppercase">
             Governance • Team Creation
@@ -162,11 +167,11 @@ export default function CreateTeam() {
       </div>
 
       {/* Footer Controls */}
-      <div className="flex items-center justify-between w-full px-8 py-4 bg-[#0A0B0D] border-t border-slate-800/80 shrink-0 font-mono text-xs">
+      <div className="flex items-center justify-between w-full px-8 py-4 bg-(--main-bg) border-t border-(--border)/40 shrink-0 font-(family-name:--labels) text-xs">
         <div className="flex items-center gap-2 text-slate-500 text-[11px]">
-          <span className="w-2 h-2 rounded-full bg-slate-600"></span>
+          <span className="w-2 h-2 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(74,222,128,0.8)]"></span>
           Need help with team configuration?{" "}
-          <a href="#" className="text-slate-400 underline hover:text-slate-200">
+          <a href="#" className="text-slate-400 underline hover:text-(--primary)">
             View Governance Policy
           </a>
         </div>
@@ -174,9 +179,16 @@ export default function CreateTeam() {
         <div className="flex items-center gap-4">
           <button
             type="button"
+            onClick={() => navigate(workspaceId ? `/workspaces/${workspaceId}` : "/dashboard")}
+            className="py-2 px-2 text-sm font-semibold rounded-lg text-[#FF8A80] uppercase hover:text-[#FF8A80]/80 hover:bg-[#FF8A8020] transform ease-in-out duration-200 cursor-pointer"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
             disabled={isSubmitting}
             onClick={handleFooterSubmit}
-            className="px-6 py-2.5 text-xs font-mono font-bold text-slate-950 bg-[#FF8A7A] hover:bg-[#ff7b6b] disabled:opacity-50 disabled:cursor-not-allowed rounded-lg shadow-lg shadow-red-500/10 transition-all uppercase cursor-pointer"
+            className="px-6 py-2.5 text-xs font-mono font-bold text-(--text-primary) bg-(--primary) hover:bg-[#ccdaff] disabled:opacity-50 disabled:cursor-not-allowed rounded-lg shadow-[0_0_12px_rgba(173,198,255,0.3)] transition-all uppercase cursor-pointer"
           >
             {isSubmitting ? "Creating..." : "Create Team"}
           </button>

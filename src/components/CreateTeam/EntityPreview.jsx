@@ -39,21 +39,21 @@ export default function EntityPreview({
         <div className="flex flex-col gap-2.5">
           <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-800/50 bg-[#0d0f14]/80">
             <span className="text-xs font-medium text-slate-300">Components</span>
-            <span className="font-mono text-sm font-bold text-[#FF8A7A]">
+            <span className="font-mono text-sm font-bold text-(--primary)">
               {metrics.components}
             </span>
           </div>
 
           <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-800/50 bg-[#0d0f14]/80">
             <span className="text-xs font-medium text-slate-300">Services</span>
-            <span className="font-mono text-sm font-bold text-[#FF8A7A]">
+            <span className="font-mono text-sm font-bold text-[#4EDEA3]">
               {metrics.services}
             </span>
           </div>
 
           <div className="flex items-center justify-between p-3.5 rounded-xl border border-slate-800/50 bg-[#0d0f14]/80">
             <span className="text-xs font-medium text-slate-300">Projects</span>
-            <span className="font-mono text-sm font-bold text-[#FF8A7A]">
+            <span className="font-mono text-sm font-bold text-[#FEB685]">
               {metrics.projects}
             </span>
           </div>

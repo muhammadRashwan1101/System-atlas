@@ -1,6 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { FiSearch, FiBell, FiSettings, FiGrid } from "react-icons/fi";
 import profilePic from "../../assets/profile-pic/profliePic.png";
+import Breadcrumbs from "../Navigation/Breadcrumbs";
 
 export default function ManagerDashboardHeader({
   activeTab = "Dashboard",
@@ -16,8 +17,10 @@ export default function ManagerDashboardHeader({
 
   return (
     <header className="flex items-center justify-between px-8 py-3 border-b border-[#232730] bg-[#0A0B0D]/90 backdrop-blur-md sticky top-0 z-40">
-      {/* Navigation Tabs (Dashboard, Architecture, Teams, Reports) */}
-      <nav className="flex items-center gap-7 text-xs font-medium">
+      {/* Left: Breadcrumbs & Navigation Tabs */}
+      <div className="flex items-center gap-6">
+        <Breadcrumbs />
+        <nav className="hidden lg:flex items-center gap-7 text-xs font-medium pl-4 border-l border-[#232730]">
         {tabs.map((tab) => {
           const isActive = activeTab === tab;
           return (
@@ -38,7 +41,8 @@ export default function ManagerDashboardHeader({
             </button>
           );
         })}
-      </nav>
+        </nav>
+      </div>
 
       {/* Right Search, Actions & User */}
       <div className="flex items-center gap-4">

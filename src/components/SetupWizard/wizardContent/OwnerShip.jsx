@@ -74,6 +74,7 @@ export default function OwnerShip() {
     register,
     handleSubmit,
     setValue,
+    reset,
     control,
     formState: { errors },
   } = useForm({
@@ -87,6 +88,33 @@ export default function OwnerShip() {
       environment: initialOwnership.environment || "development",
     },
   });
+
+  const hasInitializedRef = useState(false);
+
+  useEffect(() => {
+    if (
+      !hasInitializedRef[0] &&
+      (data?.ownership?.ownerTeam ||
+        data?.ownership?.ownerRefCode ||
+        data?.ownership?.environment ||
+        data?.ownership?.technicalLead)
+    ) {
+      hasInitializedRef[1](true);
+      const own = data.ownership;
+      if (own.ownerRefCode && !own.ownerTeam) {
+        setOwnershipMode("refCode");
+      } else if (own.ownerTeam) {
+        setOwnershipMode("team");
+      }
+      reset({
+        ownerTeam: own.ownerTeam || null,
+        ownerRefCode: own.ownerRefCode || "",
+        technicalLead: own.technicalLead || null,
+        maintainers: Array.isArray(own.maintainers) ? own.maintainers : [],
+        environment: own.environment || "development",
+      });
+    }
+  }, [data?.ownership, reset, hasInitializedRef]);
 
   const watchedTeamId = useWatch({ control, name: "ownerTeam" });
   const watchedRefCode = useWatch({ control, name: "ownerRefCode" });
@@ -328,7 +356,26 @@ export default function OwnerShip() {
 
     try {
       const endpoint = `/projects/${projectId}/wizard/${wizardId}`;
-      const response = await api.patch(endpoint, payload);
+      let response;
+      try {
+        response = await api.patch(endpoint, payload);
+      } catch (patchErr) {
+        if (
+          patchErr.response?.status === 404 ||
+          patchErr.response?.status === 405
+        ) {
+          try {
+            response = await api.patch(
+              `/projects/${projectId}/components/${wizardId}`,
+              payload
+            );
+          } catch {
+            throw patchErr;
+          }
+        } else {
+          throw patchErr;
+        }
+      }
 
       toast.success(
         response.data?.msg ||
@@ -341,11 +388,11 @@ export default function OwnerShip() {
         response.data?.wizard ||
         response.data;
       const nextStep =
-        responseData?.currentStep || response.data?.nextStep || "documentation";
+        responseData?.currentStep || response.data?.nextStep || "relationships";
 
       updateStepData("ownership", payload);
 
-      // Transition to backend-returned currentStep
+      // Transition to nextStep
       if (nextStep) {
         setCurrentStep(nextStep);
       }

@@ -40,6 +40,31 @@ export default function ProtectedRoute({
     return <Navigate to="/app" replace />;
   }
 
+  // Extract onboarding value
+  const onboardingVal =
+    user.user?.onboarding !== undefined
+      ? user.user.onboarding
+      : user.user?.onboardingStatus !== undefined
+      ? user.user.onboardingStatus
+      : user.onboarding !== undefined
+      ? user.onboarding
+      : user.onboardingStatus;
+
+  const isPendingOnboarding = onboardingVal === "pending";
+
+  // If onboarding is pending, block access to any non-onboarding routes and force /new-workspace
+  if (isPendingOnboarding) {
+    const pathname = location.pathname;
+    const allowedOnboardingPaths =
+      pathname === "/new-workspace" ||
+      pathname.startsWith("/workspaces/") ||
+      pathname === "/set-new-password";
+
+    if (!allowedOnboardingPaths) {
+      return <Navigate to="/new-workspace" replace />;
+    }
+  }
+
   // Extract role from top-level or nested user
   const rawRole = user.role || user.user?.role || "user";
   const userRole = String(rawRole).toLowerCase();

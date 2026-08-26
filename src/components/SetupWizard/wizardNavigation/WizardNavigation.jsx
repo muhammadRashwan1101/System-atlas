@@ -16,14 +16,13 @@ export default function WizardNavigation() {
   }
 
   return (
-    <nav className="flex items-center justify-between w-full p-4 px-6 bg-[#0A0B0D] border-t border-[#44474F60]">
+    <nav className="flex items-center justify-between w-full p-4 px-6 bg-(--main-bg) border-t border-(--border)/40 font-(family-name:--labels) text-sm">
       <div className="flex gap-2 items-center">
         <button
           type="button"
           onClick={() => navigate(-1)}
-          className="flex gap-1 items-center bg-(--danger) text-(--dark-text) p-2 px-4 rounded-lg text-sm shadow-none hover:bg-(--danger)/90 hover:shadow-[0px_0px_7px_rgba(255,138,122,0.6)] transform ease-in-out duration-300"
+          className="py-2 px-3 text-sm font-semibold rounded-lg text-[#FF8A80] uppercase hover:text-[#FF8A80]/80 hover:bg-[#FF8A8020] transform ease-in-out duration-200 cursor-pointer"
         >
-          <MdOutlineCancel className="text-lg" />
           Cancel
         </button>
       </div>

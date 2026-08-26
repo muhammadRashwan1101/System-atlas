@@ -75,6 +75,7 @@ export default function BasicInfo() {
     register,
     handleSubmit,
     setValue,
+    reset,
     control,
     formState: { errors },
   } = useForm({
@@ -87,19 +88,41 @@ export default function BasicInfo() {
     },
   });
 
+  const hasInitializedRef = useState(false);
+
+  // Re-sync form fields ONCE if wizard session/component data loads asynchronously
+  useEffect(() => {
+    if (!hasInitializedRef[0] && (data?.basicInfo?.name || data?.basicInfo?.type)) {
+      hasInitializedRef[1](true);
+      reset({
+        name: data.basicInfo.name || data.basicInfo.componentName || "",
+        type: data.basicInfo.type || data.basicInfo.componentType || "",
+        description: data.basicInfo.description || "",
+      });
+    }
+  }, [
+    data?.basicInfo?.name,
+    data?.basicInfo?.type,
+    data?.basicInfo?.description,
+    reset,
+    hasInitializedRef,
+  ]);
+
   const selectedName = useWatch({ control, name: "name" });
   const selectedType = useWatch({ control, name: "type" });
   const selectedDescription = useWatch({ control, name: "description" });
 
   // Keep state live for Preview updates
   useEffect(() => {
-    updateStepData("basicInfo", {
-      name: selectedName || "",
-      componentName: selectedName || "",
-      type: selectedType || "",
-      componentType: selectedType || "",
-      description: selectedDescription || "",
-    });
+    if (selectedName !== undefined || selectedType !== undefined || selectedDescription !== undefined) {
+      updateStepData("basicInfo", {
+        name: selectedName || "",
+        componentName: selectedName || "",
+        type: selectedType || "",
+        componentType: selectedType || "",
+        description: selectedDescription || "",
+      });
+    }
   }, [selectedName, selectedType, selectedDescription, updateStepData]);
 
   const handleTypeSelect = (typeValue) => {
@@ -108,7 +131,6 @@ export default function BasicInfo() {
 
   const onSubmit = async (formData) => {
     if (isSubmitting) return;
-    console.log(" formData", formData)
     if (!formData.type) {
       toast.error("Please select a component type");
       return;
@@ -127,18 +149,50 @@ export default function BasicInfo() {
     };
 
     try {
-      const endpoint = activeWizardId
-        ? `/projects/${projectId}/wizard/${activeWizardId}`
-        : `/projects/${projectId}/wizard`;
-
-      const response = await api.post(endpoint, payload);
+      let response;
+      if (activeWizardId) {
+        // Update existing wizard session / editing component via PATCH to avoid duplicate creation
+        try {
+          response = await api.patch(
+            `/projects/${projectId}/wizard/${activeWizardId}`,
+            payload
+          );
+        } catch (patchErr) {
+          if (
+            patchErr.response?.status === 404 ||
+            patchErr.response?.status === 405
+          ) {
+            try {
+              response = await api.patch(
+                `/projects/${projectId}/components/${activeWizardId}`,
+                payload
+              );
+            } catch {
+              response = await api.post(
+                `/projects/${projectId}/wizard/${activeWizardId}`,
+                payload
+              );
+            }
+          } else {
+            throw patchErr;
+          }
+        }
+      } else {
+        // Initial creation of wizard session
+        response = await api.post(`/projects/${projectId}/wizard`, payload);
+      }
 
       toast.success(
-        response.data?.msg || response.data?.message || "Basic information saved successfully"
+        response.data?.msg ||
+          response.data?.message ||
+          "Basic information saved successfully"
       );
 
       const responseData =
-        response.data?.initialData || response.data?.wizard || response.data;
+        response.data?.initialData ||
+        response.data?.currentWizard ||
+        response.data?.wizard ||
+        response.data;
       const nextStep =
         responseData?.currentStep || response.data?.nextStep || "techStack";
       const returnedWizardId =
@@ -156,12 +210,12 @@ export default function BasicInfo() {
         id: returnedWizardId || activeWizardId,
       });
 
-      // Use backend currentStep - do not manually determine the next step
+      // Advance to next step
       if (nextStep) {
         setCurrentStep(nextStep);
       }
 
-      // Navigate to wizard route with wizardId attached to params
+      // Update URL if new session ID was created
       if (returnedWizardId && !paramWizardId) {
         navigate(
           `/workspaces/${workspaceId}/projects/${projectId}/wizard/${returnedWizardId}`,

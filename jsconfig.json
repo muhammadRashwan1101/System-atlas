@@ -2,7 +2,9 @@
     "compilerOptions": {
         "jsx": "react-jsx",
         "checkJs": true,
-        "moduleResolution": "bundler"
+        "moduleResolution": "bundler",
+        "types": ["vite/client"]
     },
     "include": ["src"]
-}
+}
+

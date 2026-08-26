@@ -90,10 +90,10 @@ export default function WorkspaceGateway() {
                     `/workspaces/${workspaceId}/projects/${prj._id}/graph`
                   )
                 }
-                className="flex items-center justify-between w-full p-4 rounded-xl bg-[#141721] hover:bg-[#1A1F2C] border border-[#232733] hover:border-sky-400/40 text-left transition-all group cursor-pointer"
+                className="flex items-center justify-between w-full p-4 rounded-xl bg-[#141721] hover:bg-[#1A1F2C] border border-[#232733] hover:border-(--primary)/50 text-left transition-all group cursor-pointer"
               >
                 <div className="flex flex-col gap-1">
-                  <span className="text-sm font-medium text-slate-200 group-hover:text-sky-300">
+                  <span className="text-sm font-medium text-slate-200 group-hover:text-(--primary)">
                     {prj.name}
                   </span>
                   {prj.description && (
@@ -102,7 +102,7 @@ export default function WorkspaceGateway() {
                     </span>
                   )}
                 </div>
-                <span className="text-xs font-mono text-sky-400 opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="text-xs font-mono text-(--primary) opacity-0 group-hover:opacity-100 transition-opacity">
                   Open &rarr;
                 </span>
               </button>
@@ -116,7 +116,7 @@ export default function WorkspaceGateway() {
           <button
             type="button"
             onClick={() => navigate(`/workspaces/${workspaceId}/new-project`)}
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all shadow-lg shadow-sky-500/10 cursor-pointer"
+            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-(--primary) hover:bg-[#ccdaff] text-(--text-primary) font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(173,198,255,0.3)] cursor-pointer"
           >
             <FaPlus className="w-3.5 h-3.5" />
             Create New Project
@@ -129,7 +129,7 @@ export default function WorkspaceGateway() {
               onClick={() => setIsSwitchModalOpen(true)}
               className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#141721] hover:bg-[#1A1F2C] border border-[#232733] text-xs font-medium text-slate-300 hover:text-white transition-colors cursor-pointer"
             >
-              <HiOutlineSwitchHorizontal className="w-4 h-4" />
+              <HiOutlineSwitchHorizontal className="w-4 h-4 text-(--primary)" />
               Switch Workspace
             </button>
 
@@ -139,7 +139,7 @@ export default function WorkspaceGateway() {
               onClick={() => navigate("/dashboard")}
               className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#141721] hover:bg-[#1A1F2C] border border-[#232733] text-xs font-medium text-slate-300 hover:text-white transition-colors cursor-pointer"
             >
-              <RxDashboard className="w-4 h-4" />
+              <RxDashboard className="w-4 h-4 text-(--primary)" />
               Dashboard
             </button>
           </div>

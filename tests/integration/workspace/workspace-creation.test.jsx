@@ -47,7 +47,7 @@ describe('Workspace Creation Flow', () => {
     });
   });
 
-  it('submits workspace form and navigates to new-project setup route', async () => {
+  it('submits workspace form and navigates to team setup route', async () => {
     const user = userEvent.setup();
     api.post.mockResolvedValueOnce({
       data: {
@@ -59,8 +59,8 @@ describe('Workspace Creation Flow', () => {
       <Routes>
         <Route path="/new-workspace" element={<WorkspaceCreation />} />
         <Route
-          path="/workspaces/:workspaceId/new-project"
-          element={<div data-testid="new-project-view">New Project View</div>}
+          path="/workspaces/:workspaceId/create-team"
+          element={<div data-testid="create-team-view">Create Team View</div>}
         />
       </Routes>,
       {
@@ -86,7 +86,7 @@ describe('Workspace Creation Flow', () => {
         description:
           'Architectural boundary for global banking, payment pipelines, and microservices.',
       });
-      expect(screen.getByTestId('new-project-view')).toBeInTheDocument();
+      expect(screen.getByTestId('create-team-view')).toBeInTheDocument();
     });
   });
 });

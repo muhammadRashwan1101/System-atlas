@@ -1,5 +1,5 @@
 import { FiSearch, FiBell, FiClock, FiHelpCircle } from "react-icons/fi";
-import { PiGraph } from "react-icons/pi";
+import Breadcrumbs from "../Navigation/Breadcrumbs";
 
 export default function DashboardHeader({
   searchQuery = "",
@@ -9,16 +9,19 @@ export default function DashboardHeader({
 }) {
   return (
     <header className="flex items-center justify-between px-8 py-3.5 border-b border-[#232730] bg-[#0A0B0D]/90 backdrop-blur-md sticky top-0 z-40">
-      {/* Global Dashboard Search */}
-      <div className="relative flex items-center w-96">
-        <FiSearch className="absolute left-3.5 text-[#8b949e] text-xs" />
-        <input
-          type="text"
-          placeholder="Search architecture, workspaces, or teams..."
-          value={searchQuery}
-          onChange={(e) => onSearchChange(e.target.value)}
-          className="w-full pl-9 pr-4 py-2 text-xs rounded-lg bg-[#121418] text-white border border-[#232730] placeholder-[#8b949e] focus:outline-none focus:border-[#ADC6FF]/70 transition-all font-mono"
-        />
+      {/* Left: Breadcrumbs & Search */}
+      <div className="flex items-center gap-6">
+        <Breadcrumbs />
+        <div className="relative hidden md:flex items-center w-80">
+          <FiSearch className="absolute left-3.5 text-[#8b949e] text-xs" />
+          <input
+            type="text"
+            placeholder="Search architecture, workspaces..."
+            value={searchQuery}
+            onChange={(e) => onSearchChange(e.target.value)}
+            className="w-full pl-9 pr-4 py-1.5 text-xs rounded-lg bg-[#121418] text-white border border-[#232730] placeholder-[#8b949e] focus:outline-none focus:border-[#ADC6FF]/70 transition-all font-mono"
+          />
+        </div>
       </div>
 
       {/* Quick Action Icons & Buttons */}

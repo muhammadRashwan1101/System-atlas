@@ -17,13 +17,13 @@ export default function ComponentCard({
       onMouseLeave={() => setIsHovered(false)}
       className={`relative flex flex-col justify-between bg-[#121418] rounded-xl p-5 transition-all duration-300 shadow-lg overflow-hidden cursor-pointer ${
         isHovered
-          ? "border border-(--tertiary) shadow-[0_0_25px_rgba(255,112,86,0.25)]"
+          ? "border border-(--primary) shadow-[0_0_20px_rgba(173,198,255,0.2)]"
           : "border border-[#232730]"
       }`}
     >
       {/* Centered Hover Action Overlay */}
       <div
-        className="absolute inset-0 z-30 flex items-center justify-center gap-3 bg-[#0A0B0D]/60 backdrop-blur-[2px] transition-all duration-300"
+        className="absolute inset-0 z-30 flex items-center justify-center gap-3 bg-[#0A0B0D]/70 backdrop-blur-[2px] transition-all duration-300"
         style={{
           opacity: isHovered ? 1 : 0,
           pointerEvents: isHovered ? "auto" : "none",
@@ -36,7 +36,7 @@ export default function ComponentCard({
             e.stopPropagation();
             if (onInspect) onInspect(comp);
           }}
-          className="w-10 h-10 rounded-full bg-[#5B8CFF] hover:bg-[#4a7cee] text-black font-semibold flex items-center justify-center text-base shadow-lg shadow-blue-500/40 transition-transform duration-150 hover:scale-110 cursor-pointer"
+          className="w-10 h-10 rounded-full bg-(--primary) hover:bg-[#ccdaff] text-(--text-primary) font-semibold flex items-center justify-center text-base shadow-lg shadow-blue-500/30 transition-transform duration-150 hover:scale-110 cursor-pointer"
           title="View Component"
           aria-label="View Component"
         >

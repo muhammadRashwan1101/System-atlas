@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import useAuth from "../../../context/AuthContext";
 import useWorkspace from "../../../context/WorkspaceContext";
@@ -19,6 +19,9 @@ export default function InvitationAcceptance() {
   const [message, setMessage] = useState("Validating architecture invitation...");
   const [targetWorkspace, setTargetWorkspace] = useState(null);
 
+  const processingRef = useRef(false);
+  const processedTokenRef = useRef(null);
+
   useEffect(() => {
     let isMounted = true;
 
@@ -38,10 +41,18 @@ export default function InvitationAcceptance() {
       return;
     }
 
+    // Prevent re-processing if already in-flight or already completed for this token
+    if (processingRef.current || processedTokenRef.current === inviteToken) {
+      return;
+    }
+
     const processInvitation = async () => {
+      processingRef.current = true;
       try {
-        setStatus("verifying");
-        setMessage("Establishing authorized workspace membership...");
+        if (isMounted) {
+          setStatus("verifying");
+          setMessage("Establishing authorized workspace membership...");
+        }
 
         // Try backend invitation activation endpoints if available, otherwise verify workspace
         let responseData = null;
@@ -57,6 +68,7 @@ export default function InvitationAcceptance() {
         }
 
         if (isMounted) {
+          processedTokenRef.current = inviteToken;
           await getCurrentUser();
           const updatedWorkspaces = await refreshWorkspaces();
 
@@ -78,6 +90,8 @@ export default function InvitationAcceptance() {
               "This invitation is invalid, expired, or has already been accepted."
           );
         }
+      } finally {
+        processingRef.current = false;
       }
     };
 
@@ -133,7 +147,7 @@ export default function InvitationAcceptance() {
             <button
               type="button"
               onClick={handleProceed}
-              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-400 hover:to-blue-500 text-slate-950 font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-sky-500/10"
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-(--primary) hover:bg-[#ccdaff] text-(--text-primary) font-bold text-xs uppercase tracking-wider transition-all cursor-pointer shadow-[0_0_15px_rgba(173,198,255,0.3)]"
             >
               Enter Architecture Workspace
               <FiArrowRight className="w-4 h-4" />

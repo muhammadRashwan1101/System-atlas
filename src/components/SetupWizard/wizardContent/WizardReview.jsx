@@ -59,12 +59,31 @@ export default function WizardReview() {
 
     try {
       const endpoint = `/projects/${projectId}/wizard/${wizardId}`;
-      const response = await api.patch(endpoint, payload);
+      let response;
+      try {
+        response = await api.patch(endpoint, payload);
+      } catch (patchErr) {
+        if (
+          patchErr.response?.status === 404 ||
+          patchErr.response?.status === 405
+        ) {
+          try {
+            response = await api.patch(
+              `/projects/${projectId}/components/${wizardId}`,
+              payload
+            );
+          } catch {
+            throw patchErr;
+          }
+        } else {
+          throw patchErr;
+        }
+      }
 
       toast.success(
         response.data?.msg ||
           response.data?.message ||
-          "Component created successfully!"
+          "Component saved successfully!"
       );
 
       setStatus("finished");
@@ -116,7 +135,11 @@ export default function WizardReview() {
 
         <div className="flex items-center gap-4 pt-4 w-full justify-center">
           <Link
-            to="/graph"
+            to={
+              workspaceId && projectId
+                ? `/workspaces/${workspaceId}/projects/${projectId}/graph`
+                : "/app"
+            }
             className="flex items-center gap-2 px-6 py-2.5 bg-sky-500 hover:bg-sky-400 text-black font-semibold text-xs rounded-lg transition-all duration-200 shadow-md shadow-sky-500/20"
           >
             <FiShare2 /> Explore Architecture Graph
@@ -126,13 +149,13 @@ export default function WizardReview() {
             onClick={() =>
               navigate(
                 workspaceId && projectId
-                  ? `/workspaces/${workspaceId}`
-                  : "/dashboard"
+                  ? `/workspaces/${workspaceId}/projects/${projectId}/graph`
+                  : "/app"
               )
             }
             className="flex items-center gap-2 px-5 py-2.5 bg-[#0D0E11] hover:bg-white/5 text-white border border-(--border)/40 font-medium text-xs rounded-lg transition-colors"
           >
-            Return to Workspace
+            View Live Graph
           </button>
         </div>
       </div>

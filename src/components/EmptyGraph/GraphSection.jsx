@@ -28,27 +28,27 @@ export default function GraphSection() {
       <div className="flex relative items-center justify-center">
         <div className="relative w-72 h-72">
           <div
-            className={`absolute top-1/2 left-1/3 -tanslate-x-1/2 -translate-y-1/2 flex items-center justify-center z-10 w-25 h-25 bg-[#191B23] rounded-2xl shadow-[4px_4px_8px_rgba(8,10,14,1),-2px_0px_6px_rgba(50,56,66,1)]`}
+            className={`absolute top-1/2 left-1/3 -translate-x-1/2 -translate-y-1/2 flex items-center justify-center z-10 w-25 h-25 bg-[#191B23] rounded-2xl shadow-[4px_4px_8px_rgba(8,10,14,1),-2px_0px_6px_rgba(50,56,66,1)]`}
           >
             <MdHub className="text-[40px] text-center text-[#D8E2FF]" />
           </div>
           <div
-            className={`${styles.graphObj1} absolute top-47 left-15 -tanslate-x-1/2 -translate-y-1/2 flex items-center justify-center z-9 w-13 h-13 bg-[#191B23] rounded-xl shadow-[4px_4px_8px_rgba(8,10,14,1),-2px_0px_6px_rgba(50,56,66,0.6)]`}
+            className={`${styles.graphObj1} absolute top-47 left-15 flex items-center justify-center z-9 w-13 h-13 bg-[#191B23] rounded-xl shadow-[4px_4px_8px_rgba(8,10,14,1),-2px_0px_6px_rgba(50,56,66,0.6)]`}
           >
             <BiShieldQuarter className="text-xl text-center text-(--primary)" />
           </div>
           <div
-            className={`${styles.graphObj2} absolute top-50 right-10 -tanslate-x-1/2 -translate-y-1/2 flex items-center justify-center z-8 w-16 h-16 bg-[#191B23] rounded-2xl shadow-[4px_4px_8px_rgba(8,10,14,1),-2px_-2px_6px_rgba(36,40,49,1)]`}
+            className={`${styles.graphObj2} absolute top-50 right-10 flex items-center justify-center z-8 w-16 h-16 bg-[#191B23] rounded-2xl shadow-[4px_4px_8px_rgba(8,10,14,1),-2px_-2px_6px_rgba(36,40,49,1)]`}
           >
             <AiOutlineCloud className="text-2xl text-center text-[#FFB786]" />
           </div>
           <div
-            className={`${styles.graphObj3} absolute top-18 left-15 -tanslate-x-1/2 -translate-y-1/2 flex items-center justify-center z-7 w-11 h-11 bg-[#191B23] rounded-lg shadow-[4px_4px_8px_rgba(8,10,14,1),-2px_-2px_6px_rgba(36,40,49,1)]`}
+            className={`${styles.graphObj3} absolute top-18 left-15 flex items-center justify-center z-7 w-11 h-11 bg-[#191B23] rounded-lg shadow-[4px_4px_8px_rgba(8,10,14,1),-2px_-2px_6px_rgba(36,40,49,1)]`}
           >
             <GrStorage className="text-lg text-center text-[#4EDEA3]" />
           </div>
           <div
-            className={`${styles.graphObj4} absolute top-23 right-10 -tanslate-x-1/2 -translate-y-1/2 flex items-center justify-center z-6 w-10 h-10 bg-[#191B23]/40 rounded-lg shadow-[4px_4px_8px_rgba(8,10,14,0.5),-2px_-2px_6px_rgba(36,40,49,1)]`}
+            className={`${styles.graphObj4} absolute top-23 right-10 flex items-center justify-center z-6 w-10 h-10 bg-[#191B23]/40 rounded-lg shadow-[4px_4px_8px_rgba(8,10,14,0.5),-2px_-2px_6px_rgba(36,40,49,1)]`}
           >
             <MdOutlineRouter className="text-xl text-center text-(--text)/40" />
           </div>
@@ -66,8 +66,7 @@ export default function GraphSection() {
         <div className="flex gap-3">
           <Link
             to={wizardPath}
-            id={styles.addComp}
-            className="bg-(--primary) text-(--text-primary) p-5 rounded-xl text-sm flex items-center gap-2 max-w-[25ch] hover:bg-[#ccdaff] transition-all ease-in-out duration-200"
+            className={`${styles.addComp} bg-(--primary) text-(--text-primary) p-5 rounded-xl text-sm flex items-center gap-2 max-w-[25ch] hover:bg-[#ccdaff] transition-all ease-in-out duration-200`}
           >
             <CgAddR className="text-3xl" />
             Add the First Component

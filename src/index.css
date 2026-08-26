@@ -37,14 +37,33 @@
     font-size: 16px;
   }
 }
+
 body {
   margin: 0;
   font-family: var(--body-font);
-  background: linear-gradient(180deg, #121315 0%, #121315 100%);
+  background: #0A0B0D;
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0B0D;
+}
+::-webkit-scrollbar-thumb {
+  background: #252A34;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #3B4252;
 }
 
 button {
-  cursor: pointer
+  cursor: pointer;
 }
 
 .atlas-toast {
@@ -69,7 +88,6 @@ button {
 .Toastify__progress-bar--warning {
   background: #FEB685 !important;
 }
-
 
 #bg-video {
   object-fit: cover;
