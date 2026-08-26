@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { useNavigate, useParams } from "react-router-dom"; 
+import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 
 import ProjectDashboardNavbar from "../../components/ProjectDashboard/ProjectDashboardNavbar";
@@ -11,11 +11,11 @@ const API_BASE_URL = import.meta.env?.VITE_API_URL || "http://localhost:3000/api
 
 export default function ProjectDashboard() {
   const navigate = useNavigate();
-
-  const { workspaceId } = useParams(); 
+  const { workspaceId } = useParams();
 
   const [search, setSearch] = useState("");
- 
+  const [workspaceName, setWorkspaceName] = useState("");
+
   const [filters, setFilters] = useState({
     status: "All",
     targetEnvironment: "All",
@@ -28,7 +28,6 @@ export default function ProjectDashboard() {
   const [error, setError] = useState(null);
 
   const fetchProjects = useCallback(async (signal) => {
-  
     if (!workspaceId) return;
 
     setLoading(true);
@@ -37,24 +36,38 @@ export default function ProjectDashboard() {
       const token = localStorage.getItem("token");
       const params = new URLSearchParams();
 
-    
-      params.append("workspaceId", workspaceId);
-
       if (search.trim()) params.append("search", search.trim());
       if (filters.status && filters.status !== "All") params.append("status", filters.status);
       if (filters.targetEnvironment && filters.targetEnvironment !== "All") params.append("targetEnvironment", filters.targetEnvironment);
       if (filters.manager && filters.manager !== "Any") params.append("manager", filters.manager);
       if (filters.techLead && filters.techLead !== "Any") params.append("techLead", filters.techLead);
 
-      const res = await axios.get(`${API_BASE_URL}/projects?${params.toString()}`, {
+      const url = `${API_BASE_URL}/workspaces/${workspaceId}/projects?${params.toString()}`;
+
+      const res = await axios.get(url, {
         headers: { Authorization: `Bearer ${token}` },
         signal,
       });
 
-      setProjects(res.data.projects || []);
+      const rawProjects = res.data?.data?.projects || res.data?.projects || res.data || [];
+
+      const formattedProjects = rawProjects.map((p) => ({
+        ...p,
+        id: p._id || p.id,
+        code: p.code || `PRJ-${(p._id || "").slice(-4).toUpperCase()}`,
+        managerName: p.manager?.name || p.managerName || (typeof p.manager === "string" ? p.manager : "N/A"),
+        techLead: p.techLead?.name || p.techLead || (typeof p.techLead === "string" ? p.techLead : "N/A"),
+        targetEnvironment: p.targetEnvironment || p.env || "Development",
+      }));
+
+      setProjects(formattedProjects);
+
+      if (res.data?.data?.workspace?.name || res.data?.workspace?.name) {
+        setWorkspaceName(res.data.data?.workspace?.name || res.data.workspace.name);
+      }
     } catch (err) {
       if (!axios.isCancel(err)) {
-        console.error("Error fetching projects:", err);
+        console.error("Error fetching workspace projects:", err);
         setError("Failed to fetch projects. Please check connection.");
       }
     } finally {
@@ -78,12 +91,23 @@ export default function ProjectDashboard() {
     setFilters({ status: "All", targetEnvironment: "All", manager: "Any", techLead: "Any" });
   };
 
+  const handleProjectClick = (project) => {
+    const targetId = project?._id || project?.id;
+    if (!targetId) {
+      console.error("Project ID is missing", project);
+      return;
+    }
+    navigate(`/workspaces/${workspaceId}/projects/${targetId}/details`, {
+      state: { project },
+    });
+  };
+
   return (
-    <div className="w-full min-h-screen bg-[#07080c] flex flex-col">
+    <div className="w-full min-h-screen bg-[#07080c] flex flex-col font-mono text-slate-100">
       <ProjectDashboardNavbar onSearchChange={setSearch} searchValue={search} />
 
       <PageHeader
-        title="Workspace Projects"
+        title={workspaceName ? `${workspaceName} Projects` : "Workspace Projects"}
         subtitle={`WORKSPACE ID: ${workspaceId || "N/A"}`}
         onImport={() => alert("Importing...")}
         onExport={() => alert("Exporting...")}
@@ -91,7 +115,6 @@ export default function ProjectDashboard() {
       />
 
       <div className="p-6 text-slate-300 space-y-6 flex-1">
-     
         <SearchBar
           filters={filters}
           onFilterChange={handleFilterChange}
@@ -103,7 +126,8 @@ export default function ProjectDashboard() {
           loading={loading}
           error={error}
           onResetFilters={handleResetFilters}
-          onAddProject={() => navigate(`/workspaces/${workspaceId}/new-project`)} 
+          onAddProject={() => navigate(`/workspaces/${workspaceId}/new-project`)}
+          onProjectClick={handleProjectClick}
         />
       </div>
     </div>

@@ -1,48 +1,72 @@
 import React from "react";
 import ProjectCard from "./ProjectCard";
-import AddProjectCard from "./AddProjectCard";
 
-export default function ProjectsGrid({ projects, loading, error, onResetFilters, onAddProject }) {
+export default function ProjectsGrid({
+  projects = [],
+  loading = false,
+  error = null,
+  onResetFilters,
+  onAddProject,
+  onProjectClick,
+}) {
   if (loading) {
     return (
-      <div className="text-center py-20 text-slate-500 font-mono text-xs animate-pulse">
-        Fetching system projects...
+      <div className="flex items-center justify-center min-h-[300px] text-slate-400 font-mono text-sm">
+        <span className="animate-pulse">Loading projects data...</span>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center py-12 text-red-400 font-mono text-xs border border-red-900/40 bg-red-950/10 rounded-lg">
-        {error}
+      <div className="flex flex-col items-center justify-center min-h-[300px] text-slate-400 font-mono text-sm gap-3">
+        <p className="text-red-400">{error}</p>
+        <button
+          onClick={onResetFilters}
+          className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs transition-colors"
+        >
+          Reset Filters
+        </button>
+      </div>
+    );
+  }
+
+  if (!projects || projects.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[300px] text-slate-400 font-mono text-sm gap-3">
+        <p>No projects match your current filters.</p>
+        <div className="flex gap-3">
+          <button
+            onClick={onResetFilters}
+            className="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-lg text-xs transition-colors"
+          >
+            Reset Filters
+          </button>
+          {onAddProject && (
+            <button
+              onClick={onAddProject}
+              className="px-4 py-2 bg-sky-600 hover:bg-sky-500 text-white rounded-lg text-xs transition-colors"
+            >
+              + Create Project
+            </button>
+          )}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="space-y-4">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        {projects.map((project) => (
-          <ProjectCard key={project._id} project={project} />
-        ))}
-        
-   
-        <AddProjectCard onAddProject={onAddProject} />
-      </div>
-
-      {!loading && projects.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-12 bg-[#0a0b0d] rounded-xl border border-slate-800/60 text-center px-4">
-          <p className="text-slate-400 font-mono text-xs mb-1">
-            No projects matched your active search & filters.
-          </p>
-          <button
-            onClick={onResetFilters}
-            className="mt-3 px-3 py-1 bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-mono rounded transition-colors cursor-pointer"
-          >
-            Reset All Filters
-          </button>
-        </div>
-      )}
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+      {projects.map((project) => {
+        const projectId = project._id || project.id;
+        return (
+          <ProjectCard
+            key={projectId}
+            project={project}
+            onClick={() => onProjectClick && onProjectClick(project)}
+          />
+        );
+      })}
     </div>
   );
 }

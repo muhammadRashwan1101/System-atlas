@@ -46,9 +46,12 @@ export default function Sidebar() {
     location.pathname === `/workspaces/${currentWorkspaceId}` &&
     !isNewProjectActive;
 
+  // تحديث حالة تفعيل Dashboard للتعرف على المسار الجديد
   const isDashboardActive =
     location.pathname === "/dashboard" ||
-    location.pathname === "/dashboard/project";
+    location.pathname === "/dashboard/project" ||
+    location.pathname === "/ProjectDashboard" ||
+    (currentWorkspaceId && location.pathname === `/workspaces/${currentWorkspaceId}/projects`);
 
   const isTeamsActive =
     location.pathname.startsWith("/teams/") ||
@@ -65,7 +68,7 @@ export default function Sidebar() {
           {/* Logo */}
 
           <div className="flex flex-col items-center justify-center w-30 p-5">
-            <Link to="/dashboard">
+            <Link to="/app">
               <img
                 src={logo}
                 alt="Logo"
@@ -74,19 +77,34 @@ export default function Sidebar() {
             </Link>
           </div>
 
-          {/* ================= Dashboard ================= */}
+          {/* ================= Dashboard / Projects ================= */}
 
-          <Link
-            to="/ProjectDashboard"
-            title="Dashboard"
-            className={`p-3 rounded transition-all ease-in-out duration-250 cursor-pointer ${
-              isDashboardActive
-                ? "bg-(--primary) text-(--text-primary)"
-                : "hover:bg-(--primary) hover:text-(--text-primary) text-(--text)"
-            }`}
-          >
-            <MdOutlineDashboard className="w-5 h-5" />
-          </Link>
+          {currentWorkspaceId ? (
+            <Link
+              to={`/workspaces/${currentWorkspaceId}/projects`}
+              title="Workspace Projects Dashboard"
+              className={`p-3 rounded transition-all ease-in-out duration-250 cursor-pointer ${
+                isDashboardActive
+                  ? "bg-(--primary) text-(--text-primary)"
+                  : "hover:bg-(--primary) hover:text-(--text-primary) text-(--text)"
+              }`}
+            >
+              <MdOutlineDashboard className="w-5 h-5" />
+            </Link>
+          ) : (
+            <button
+              type="button"
+              onClick={() => navigateToWorkspace("projects")}
+              title="Workspace Projects Dashboard"
+              className={`p-3 rounded transition-all ease-in-out duration-250 cursor-pointer ${
+                isDashboardActive
+                  ? "bg-(--primary) text-(--text-primary)"
+                  : "hover:bg-(--primary) hover:text-(--text-primary) text-(--text)"
+              }`}
+            >
+              <MdOutlineDashboard className="w-5 h-5" />
+            </button>
+          )}
 
           {/* ================= Architecture Graph ================= */}
 
@@ -121,7 +139,7 @@ export default function Sidebar() {
           {/* ================= Analytics ================= */}
 
           <Link
-            to="/dashboard"
+            to="/app"
             title="Telemetry & Impact Analysis"
             className="p-3 rounded transition-all ease-in-out duration-250 hover:bg-(--primary) hover:text-(--text-primary) text-(--text)"
           >
@@ -172,7 +190,7 @@ export default function Sidebar() {
             to={
               currentWorkspaceId
                 ? `/workspaces/${currentWorkspaceId}/create-team`
-                : "/dashboard"
+                : "/app"
             }
             title="Teams & Governance"
             className={`p-3 rounded transition-all ease-in-out duration-250 cursor-pointer ${

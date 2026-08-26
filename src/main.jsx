@@ -17,6 +17,7 @@ import EmptyGraph from "./Pages/EmptyGraph/EmptyGraph";
 import Profile from "./Pages/profile/Profile";
 import ProfileSettings from "./Pages/profile/ProfileSettings";
 import ProjectDashboard from "./Pages/ProjectDashboard/ProjectDashboard";
+import ProjectDetails from "./Pages/ProjectDetails/ProjectDetails";
 
 import SetupWizard from "./Pages/SetupWizard/SetupWizard";
 import ComponentsManagement from "./Pages/ComponentsManagement/ComponentsManagement";
@@ -80,7 +81,7 @@ createRoot(document.getElementById("root")).render(
 
               <Route
                 path="/ProjectDashboard"
-                element={<ProjectDashboard/>}
+                element={<ProjectDashboard />}
               />
 
               <Route
@@ -115,6 +116,13 @@ createRoot(document.getElementById("root")).render(
                   element={<WorkspaceGateway />}
                 />
 
+                {/* Workspace Projects Dashboard */}
+
+                <Route
+                  path="projects"
+                  element={<ProjectDashboard />}
+                />
+
                 {/* Create New Project */}
 
                 <Route
@@ -135,6 +143,8 @@ createRoot(document.getElementById("root")).render(
                 <Route path="projects/:projectId">
 
                   {/* Project Components */}
+                  <Route index element={<ProjectDetails />} /> 
+                  <Route path="details" element={<ProjectDetails />} />  
 
                   <Route
                     index

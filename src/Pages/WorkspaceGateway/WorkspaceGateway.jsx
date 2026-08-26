@@ -21,22 +21,15 @@ export default function WorkspaceGateway() {
     let isMounted = true;
     if (!workspaceId) return;
 
-    fetchProjects(workspaceId).then((resList) => {
+    fetchProjects(workspaceId).then(() => {
       if (!isMounted) return;
       setLoading(false);
-      // If exactly 1 project, auto navigate into it
-      if (resList && resList.length === 1) {
-        navigate(
-          `/workspaces/${workspaceId}/projects/${resList[0]._id}/components`,
-          { replace: true }
-        );
-      }
     });
 
     return () => {
       isMounted = false;
     };
-  }, [workspaceId, fetchProjects, navigate]);
+  }, [workspaceId, fetchProjects]);
 
   if (loading) {
     return (
@@ -54,6 +47,7 @@ export default function WorkspaceGateway() {
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-screen bg-[#0A0B0D] text-white p-6">
       <div className="flex flex-col w-full max-w-xl bg-[#0F1117] border border-[#232733] rounded-2xl shadow-2xl p-8 gap-6 animate-in fade-in duration-200">
+        
         {/* Header */}
         <div className="flex items-center gap-4">
           <div className="p-3 rounded-2xl bg-amber-400/10 text-amber-400 border border-amber-400/20 shrink-0">
@@ -78,8 +72,8 @@ export default function WorkspaceGateway() {
             : "Choose which project to inspect components and telemetry graphs for:"}
         </p>
 
-        {/* Project List (if > 1 projects) */}
-        {projects.length > 1 && (
+        {/* Project List: تعرض دائما طالما أن عدد المشاريع > 0 */}
+        {projects.length > 0 && (
           <div className="flex flex-col gap-2 max-h-60 overflow-y-auto p-1">
             {projects.map((prj) => (
               <button
@@ -112,7 +106,6 @@ export default function WorkspaceGateway() {
 
         {/* CTAs */}
         <div className="flex flex-col gap-3 pt-2 border-t border-[#232733]/60">
-          {/* CTA 1: Create New Project */}
           <button
             type="button"
             onClick={() => navigate(`/workspaces/${workspaceId}/new-project`)}
@@ -123,7 +116,6 @@ export default function WorkspaceGateway() {
           </button>
 
           <div className="flex items-center gap-3">
-            {/* CTA 2: Switch Workspace */}
             <button
               type="button"
               onClick={() => setIsSwitchModalOpen(true)}
@@ -133,20 +125,19 @@ export default function WorkspaceGateway() {
               Switch Workspace
             </button>
 
-            {/* CTA 3: Return to Dashboard */}
+            {/* التوجيه الصريح لداشبورد المشاريع الخاصة بالورك سبيس الحالية */}
             <button
               type="button"
-              onClick={() => navigate("/dashboard")}
+              onClick={() => navigate(`/workspaces/${workspaceId}/projects`)}
               className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#141721] hover:bg-[#1A1F2C] border border-[#232733] text-xs font-medium text-slate-300 hover:text-white transition-colors cursor-pointer"
             >
               <RxDashboard className="w-4 h-4" />
-              Dashboard
+              Projects Dashboard
             </button>
           </div>
         </div>
       </div>
 
-      {/* Switch Workspace Modal */}
       <WorkspaceSelectionModal
         isOpen={isSwitchModalOpen}
         onClose={() => setIsSwitchModalOpen(false)}

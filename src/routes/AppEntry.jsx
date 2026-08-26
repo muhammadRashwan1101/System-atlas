@@ -14,7 +14,7 @@ export default function AppEntry() {
     }
 
     return user?.user?.onboarding === "completed"
-    ? <Navigate to="/dashboard" replace />
+    ? <Navigate to="/ProjectDashboard" replace />
     : <Navigate to="/new-workspace" replace />;
     
 }
