@@ -189,8 +189,13 @@ export default function ComponentsManagement() {
     }
   };
 
-  const handleEdit = () => {
-    if (workspaceId && projectId) {
+  const handleEdit = (comp) => {
+    const compId = comp?._id || comp?.id;
+    if (workspaceId && projectId && compId) {
+      navigate(
+        `/workspaces/${workspaceId}/projects/${projectId}/wizard/${compId}`
+      );
+    } else if (workspaceId && projectId) {
       navigate(`/workspaces/${workspaceId}/projects/${projectId}/wizard`);
     } else {
       navigate("/dashboard");

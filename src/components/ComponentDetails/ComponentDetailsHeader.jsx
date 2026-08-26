@@ -1,6 +1,6 @@
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FiSearch, FiBell } from "react-icons/fi";
-import profilePic from "../../assets/profile-pic/profliePic.png";
+import Breadcrumbs from "../Navigation/Breadcrumbs";
 
 export default function ComponentDetailsHeader({
   workspaceName = "Growth-Prod",
@@ -14,21 +14,11 @@ export default function ComponentDetailsHeader({
   return (
     <header className="flex items-center justify-between px-8 py-3.5 border-b border-[#232730] bg-[#0A0B0D]/90 backdrop-blur-md sticky top-0 z-40">
       {/* Breadcrumb Path */}
-      <div className="flex items-center gap-2 text-xs font-mono tracking-wide text-[#8b949e]">
-        <button
-          type="button"
-          onClick={() => navigate(-1)}
-          className="hover:text-[#ADC6FF] transition-colors cursor-pointer uppercase font-medium"
-        >
-          Architecture
-        </button>
-        <span className="text-[#44474F]">&gt;</span>
-        <span className="text-[#8b949e] uppercase font-medium">Inventory</span>
-        <span className="text-[#44474F]">&gt;</span>
-        <span className="text-white font-semibold uppercase tracking-wider">
-          {componentName}
-        </span>
-      </div>
+      <Breadcrumbs
+        workspaceName={workspaceName}
+        projectName={projectName}
+        componentName={componentName}
+      />
 
       {/* Right Search, Actions & Profile */}
       <div className="flex items-center gap-5">
@@ -53,15 +43,6 @@ export default function ComponentDetailsHeader({
           <FiBell />
           <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 rounded-full bg-sky-400" />
         </button>
-
-        {/* User Profile */}
-        <div className="flex items-center gap-3 pl-3 border-l border-[#232730]">
-          <img
-            src={profilePic}
-            alt="User profile"
-            className="w-7 h-7 rounded-full border border-sky-400/40 object-cover"
-          />
-        </div>
       </div>
     </header>
   );

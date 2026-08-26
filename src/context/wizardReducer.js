@@ -93,10 +93,14 @@ export function wizardReducer(state, action) {
         ...state,
         data: {
           ...state.data,
-          [stepKey]: {
-            ...(state.data[stepKey] || {}),
-            ...data,
-          },
+          [stepKey]: Array.isArray(data)
+            ? [...data]
+            : typeof data === "object" && data !== null
+            ? {
+                ...(state.data[stepKey] || {}),
+                ...data,
+              }
+            : data,
         },
       };
     }

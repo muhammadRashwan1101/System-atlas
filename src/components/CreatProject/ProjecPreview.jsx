@@ -1,56 +1,71 @@
+import { PiTreeViewFill, PiTreeStructure } from "react-icons/pi";
+import { IoMdFolderOpen } from "react-icons/io";
+import { IoExtensionPuzzleOutline } from "react-icons/io5";
+import { MdOutlineRocketLaunch, MdOutlineHub } from "react-icons/md";
+import { FaRegUser } from "react-icons/fa";
+
 export default function ProjecPreview({ projectSummary }) {
-    return (
-        <div className="flex flex-col w-full lg:w-1/2 h-full p-4 sm:p-6 lg:p-8 shadow-[-2px_-4px_7px_rgba(0,0,0,0.6)] bg-[#131519]">
-            <div className="flex flex-col items-center justify-between w-full min-h-[400px] lg:h-250 py-4 lg:py-8">
-                <h2 className="font-(family-name:--labels) uppercase text-(--tertiary) text-center text-sm sm:text-base lg:text-lg tracking-wider">
-                    PROJECT ARCHITECTURE
-                    <br className="block lg:hidden" /> PREVIEW
-                </h2>
+  return (
+    <div className="flex flex-col w-1/2 h-full p-8 shadow-[-2px_-4px_7px_rgba(0,0,0,0.6)] border-l border-[#44474F30] bg-(--main-bg)">
+      <div className="flex items-center justify-between w-full py-8">
+        <h2 className="font-(family-name:--labels) uppercase text-(--primary) text-sm tracking-wider">
+          Project Hierarchy Preview
+        </h2>
+        <PiTreeViewFill className="w-6 h-6 text-(--primary)" />
+      </div>
 
-                {/* Summary Title */}
-                <div className="w-[95%] max-w-[380px] mx-auto lg:ml-auto p-4 border border-(--border2) rounded-lg overflow-hidden bg-(--main-bg) text-xs sm:text-sm font-mono mt-6 lg:mt-0 ms-50">
-                    <h2 className="text-xs sm:text-sm tracking-[2px] uppercase text-(--primary) mb-2">
-                        Project Summary
-                    </h2>
-                    <div className="flex justify-between items-center mt-3 w-full gap-4">
-                        <p className="truncate">Department</p>
-                        <span>
-                            {projectSummary.department || "Not Selected"}
-                        </span>
-                    </div>
+      <div className="flex flex-col justify-between w-full p-8 bg-[#1E1F23] rounded-xl shadow-[inset_2px_2px_7px_0px_rgba(145,150,161,0.2),inset_-2px_-2px_7px_rgba(0,0,0,0.6)] border border-white/5">
+        <div className="flex flex-col gap-6 w-full p-2">
+          {/* Project root */}
+          <div className="flex items-center gap-3">
+            <IoMdFolderOpen className="w-5 h-5 text-(--primary)" />
+            <h3 className="font-(family-name:--labels) text-white text-sm font-semibold uppercase truncate">
+              {projectSummary.name || "New Project Target"}
+            </h3>
+          </div>
 
-                    <div className="flex justify-between items-center mt-3 w-full gap-4">
-                        <p className="truncate">Environment</p>
-                        <span>
-                            {projectSummary.targetEnvironment || "Not Selected"}
-                        </span>
-                    </div>
-                    <div className="flex justify-between items-center mt-3 w-full gap-4">
-                        <p>Manager</p>
-                        <span>
-                            {projectSummary.managerName || "Not Assigned"}
-                        </span>
-                    </div>
-                    <div className="flex justify-between items-center mt-3 w-full gap-4">
-                        <p className="truncate">Components</p>
-                        <span className="text-right shrink-0">0</span>
-                    </div>
+          {/* Department */}
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-3 border-s border-b border-slate-600"></div>
+            <span className="font-(family-name:--labels) text-slate-400 text-xs">
+              Dept: <span className="text-slate-200">{projectSummary.department || "Unassigned"}</span>
+            </span>
+          </div>
 
-                    <div className="flex justify-between items-center mt-3 w-full gap-4">
-                        <p className="truncate">Relationships</p>
-                        <span className="text-right shrink-0">0</span>
-                    </div>
-                </div>
-            </div>
+          {/* Environment */}
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-3 border-s border-b border-slate-600"></div>
+            <MdOutlineRocketLaunch className="w-4 h-4 text-[#FEB685]" />
+            <span className="font-(family-name:--labels) text-slate-400 text-xs">
+              Env: <span className="text-slate-200">{projectSummary.targetEnvironment || "Standard"}</span>
+            </span>
+          </div>
 
-            <div className="mt-auto pt-4 border-t border-gray-900/30 lg:border-t-0">
+          {/* Topology */}
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-3 border-s border-b border-slate-600"></div>
+            <MdOutlineHub className="w-4 h-4 text-[#4EDEA3]" />
+            <span className="font-(family-name:--labels) text-slate-400 text-xs">
+              Topology: <span className="text-slate-200">{projectSummary.systemTopology || "Unassigned"}</span>
+            </span>
+          </div>
 
-                <p className="font-(family-name:--labels) text-(--border) text-[10px] sm:text-xs leading-relaxed text-center ">
-                    *Architecture models are dynamically generated
-                    based on project type selection. Connections
-                    represent anticipated VPC traffic flows.
-                </p>
-            </div>
+          {/* Manager */}
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-3 border-s border-b border-slate-600"></div>
+            <FaRegUser className="w-3.5 h-3.5 text-(--primary)" />
+            <span className="font-(family-name:--labels) text-slate-400 text-xs">
+              Lead: <span className="text-slate-200">{projectSummary.managerName || "Unassigned"}</span>
+            </span>
+          </div>
         </div>
-    )
+
+        <div className="border-t border-[#44474F30] mt-8 pt-4">
+          <p className="font-(family-name:--labels) text-slate-500 text-[11px] leading-relaxed">
+            *Architecture topology and node graph will be initialized automatically upon project creation.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }

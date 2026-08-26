@@ -27,13 +27,16 @@ export default function WorkspaceForm({ formRef }) {
     try {
       const response = await api.post("/workspaces", data);
 
-      const workspaceId = response.data.workspace._id;
+      const workspaceId = response.data?.workspace?._id || response.data?.data?._id || response.data?._id;
 
       console.log("Created Workspace:", workspaceId);
 
-      navigate(`/workspaces/${workspaceId}/new-project`);
-
       toast.success("Workspace created successfully");
+      if (workspaceId) {
+        navigate(`/workspaces/${workspaceId}/create-team?flow=onboarding`);
+      } else {
+        navigate("/app");
+      }
 
 
     } catch (err) {

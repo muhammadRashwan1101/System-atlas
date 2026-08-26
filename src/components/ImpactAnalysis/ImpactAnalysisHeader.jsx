@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { FiTv, FiBell } from "react-icons/fi";
 import logo from "../../assets/system_atlas_logo.png";
+import Breadcrumbs from "../Navigation/Breadcrumbs";
 
 export default function ImpactAnalysisHeader({
   activeTab = "Impact",
@@ -12,14 +13,17 @@ export default function ImpactAnalysisHeader({
 
   return (
     <header className="flex items-center justify-between px-6 py-3 border-b border-[#232730] bg-[#0A0B0D]/90 backdrop-blur-md sticky top-0 z-40">
-      {/* Left Branding */}
-      <div className="flex items-center gap-3">
+      {/* Left Branding & Breadcrumbs */}
+      <div className="flex items-center gap-4">
         <Link to="/dashboard" className="flex items-center gap-2.5">
           <img src={logo} alt="System Atlas" className="w-7 h-7 rounded-lg" />
           <span className="font-bold text-white text-sm font-['Geist',sans-serif]">
             System Atlas
           </span>
         </Link>
+        <div className="hidden lg:flex items-center pl-3 border-l border-[#232730]">
+          <Breadcrumbs />
+        </div>
       </div>
 
       {/* Center Tabs: Telemetry | Nodes | Topology | Impact */}

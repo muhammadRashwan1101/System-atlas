@@ -57,21 +57,19 @@ export default function Navbar() {
               </div>
             </div>
           </div>
-          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
+          <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0 gap-3">
             <Link
               to="/login"
-              className="btn relative rounded-full p-1 text-gray-400 hover:text-white transition-colors duration-200"
+              className="font-mono text-xs text-slate-300 hover:text-white px-3 py-2 rounded-lg hover:bg-white/5 transition-all duration-150 uppercase tracking-wider"
             >
-              <span className="absolute -inset-1.5" />
-              <span className="sr-only">Sign in</span>
               Sign in
             </Link>
 
             <Link
-                to="/signup"
-                className="btn relative ms-3 bg-white py-2 px-3 text-(--secondary) font-semibold rounded transition-colors duration-200 hover:bg-white/85"
+              to="/login"
+              className="bg-(--primary) text-(--text-primary) hover:bg-[#ccdaff] font-semibold text-xs uppercase tracking-wider py-2 px-4 rounded-lg transition-all duration-200 shadow-[0_0_12px_rgba(173,198,255,0.25)] hover:shadow-[0_0_16px_rgba(173,198,255,0.45)]"
             >
-                New Provision Account
+              Console Access
             </Link> 
           </div>
         </div>

@@ -15,6 +15,7 @@ import GraphToolbar from "../../components/GraphExplorer/GraphToolbar";
 import GraphInspectorPanel from "../../components/GraphExplorer/GraphInspectorPanel";
 import RelationshipModal from "../../components/GraphExplorer/RelationshipModal";
 import DeleteRelationshipModal from "../../components/GraphExplorer/DeleteRelationshipModal";
+import Breadcrumbs from "../../components/Navigation/Breadcrumbs";
 
 export default function EmptyGraph() {
   const { workspaceId, projectId } = useParams();
@@ -71,8 +72,8 @@ export default function EmptyGraph() {
       console.error("Failed to load project graph data:", err);
       setError(
         err.response?.data?.msg ||
-          err.response?.data?.message ||
-          "Failed to load architecture graph. Please try again."
+        err.response?.data?.message ||
+        "Failed to load architecture graph. Please try again."
       );
     } finally {
       setLoading(false);
@@ -100,8 +101,8 @@ export default function EmptyGraph() {
         if (isMounted) {
           setError(
             err.response?.data?.msg ||
-              err.response?.data?.message ||
-              "Failed to load architecture graph. Please try again."
+            err.response?.data?.message ||
+            "Failed to load architecture graph. Please try again."
           );
         }
       } finally {
@@ -386,8 +387,10 @@ export default function EmptyGraph() {
     <div className="flex flex-col w-full h-screen bg-[#08090C] text-[#C4C6D0] overflow-hidden select-none font-sans">
       {/* Top Bar matching Figma screen */}
       <header className="relative z-30 flex items-center justify-between w-full px-6 py-3 border-b border-[#1E2025] bg-[#0A0B0E]/80 backdrop-blur-md pointer-events-none">
-        {/* Left Area placeholder */}
-        <div className="pointer-events-auto" />
+        {/* Left Area: Breadcrumbs */}
+        <div className="pointer-events-auto flex items-center">
+          <Breadcrumbs />
+        </div>
 
         {/* Center Controls: [ Explore | Edit ] Switcher + Search Bar */}
         <div className="flex items-center gap-4 pointer-events-auto">
@@ -396,22 +399,20 @@ export default function EmptyGraph() {
             <button
               type="button"
               onClick={() => handleToggleMode("explore")}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
-                activeMode === "explore"
-                  ? "bg-[#1E2025] text-white font-semibold shadow-sm"
-                  : "text-[#8E9099] hover:text-white"
-              }`}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${activeMode === "explore"
+                ? "bg-[#1E2025] text-white font-semibold shadow-sm"
+                : "text-[#8E9099] hover:text-white"
+                }`}
             >
               <FiEye className="text-xs" /> Explore
             </button>
             <button
               type="button"
               onClick={() => handleToggleMode("edit")}
-              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${
-                activeMode === "edit"
-                  ? "bg-[#D8E2FF] text-[#0A0B0D] font-semibold shadow-sm"
-                  : "text-[#8E9099] hover:text-white"
-              }`}
+              className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer ${activeMode === "edit"
+                ? "bg-[#D8E2FF] text-[#0A0B0D] font-semibold shadow-sm"
+                : "text-[#8E9099] hover:text-white"
+                }`}
             >
               <FiEdit3 className="text-xs" /> Edit Mode
             </button>

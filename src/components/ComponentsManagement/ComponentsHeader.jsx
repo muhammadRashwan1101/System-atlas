@@ -38,23 +38,6 @@ export default function ComponentsHeader({ searchQuery, onSearchChange }) {
         >
           <FiBell />
         </button>
-
-        {/* User Profile Badge */}
-        <div className="flex items-center gap-3 pl-2 border-l border-[#232730]">
-          <div className="flex flex-col items-end">
-            <span className="text-xs font-semibold text-white leading-tight">
-              Alex Rivera
-            </span>
-            <span className="text-[9px] font-mono uppercase text-[#8b949e] tracking-wider">
-              PRINCIPAL ARCH
-            </span>
-          </div>
-          <img
-            src={profilePic}
-            alt="Alex Rivera"
-            className="w-8 h-8 rounded-full border border-sky-400/40 object-cover"
-          />
-        </div>
       </div>
     </header>
   );

@@ -26,7 +26,7 @@ export default function WorkspaceSelectionModal({
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-[#232733]/80 bg-[#141720]">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-sky-500/10 text-sky-400 border border-sky-500/20">
+            <div className="p-2.5 rounded-xl bg-[#ADC6FF]/10 text-(--primary) border border-(--primary)/20">
               {type === "workspace" ? (
                 <MdOutlineDomain className="w-5 h-5" />
               ) : type === "project" ? (
@@ -82,22 +82,22 @@ export default function WorkspaceSelectionModal({
                   if (onCreateProject) onCreateProject();
                   onClose();
                 }}
-                className="flex items-center justify-between w-full p-4 rounded-xl bg-gradient-to-r from-sky-500/20 to-blue-600/10 hover:from-sky-500/30 hover:to-blue-600/20 border border-sky-500/30 hover:border-sky-400/50 text-white transition-all group cursor-pointer"
+                className="flex items-center justify-between w-full p-4 rounded-xl bg-(--primary) hover:bg-[#ccdaff] text-(--text-primary) shadow-[0_0_12px_rgba(173,198,255,0.3)] transition-all group cursor-pointer"
               >
                 <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-sky-500 text-slate-950 font-bold">
+                  <div className="p-2 rounded-lg bg-(--text-primary)/10 text-(--text-primary) font-bold">
                     <FaPlus className="w-3.5 h-3.5" />
                   </div>
                   <div className="flex flex-col text-left">
-                    <span className="text-sm font-semibold text-white group-hover:text-sky-200">
+                    <span className="text-sm font-semibold text-(--text-primary)">
                       Create New Project
                     </span>
-                    <span className="text-[11px] text-slate-400 font-mono">
+                    <span className="text-[11px] text-(--text-primary)/80 font-mono">
                       Initialize architecture mapping in this workspace
                     </span>
                   </div>
                 </div>
-                <FaArrowRight className="w-3.5 h-3.5 text-sky-400 group-hover:translate-x-1 transition-transform" />
+                <FaArrowRight className="w-3.5 h-3.5 text-(--text-primary) group-hover:translate-x-1 transition-transform" />
               </button>
 
               {/* CTA 2: Switch Workspace */}

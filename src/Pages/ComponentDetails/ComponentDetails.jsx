@@ -748,7 +748,11 @@ export default function ComponentDetails() {
   };
 
   const handleEdit = () => {
-    if (workspaceId && projectId) {
+    if (workspaceId && projectId && componentId) {
+      navigate(
+        `/workspaces/${workspaceId}/projects/${projectId}/wizard/${componentId}`
+      );
+    } else if (workspaceId && projectId) {
       navigate(`/workspaces/${workspaceId}/projects/${projectId}/wizard`);
     } else {
       navigate("/dashboard");

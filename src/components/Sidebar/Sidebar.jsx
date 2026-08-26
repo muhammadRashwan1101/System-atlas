@@ -1,14 +1,13 @@
 import { RxGear } from "react-icons/rx";
 import logo from "../../assets/system_atlas_logo.png";
 import { FaUser } from "react-icons/fa";
-import { Link, useLocation } from "react-router-dom";
-import { MdOutlineDashboard } from "react-icons/md";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { MdOutlineDashboard, MdOutlineLogout, MdOutlineDomain } from "react-icons/md";
 import { PiGraph } from "react-icons/pi";
 import { IoExtensionPuzzleSharp } from "react-icons/io5";
 import { IoAnalyticsOutline } from "react-icons/io5";
 import { PiStarFourFill } from "react-icons/pi";
 import { FaFolderOpen } from "react-icons/fa6";
-import { MdOutlineDomain } from "react-icons/md";
 import { HiUserGroup } from "react-icons/hi2";
 import useContextNavigator from "../../hooks/useContextNavigator";
 import useAuth from "../../context/AuthContext";
@@ -16,7 +15,8 @@ import WorkspaceSelectionModal from "../Navigation/WorkspaceSelectionModal";
 
 export default function Sidebar() {
   const location = useLocation();
-  const { user } = useAuth();
+  const navigate = useNavigate();
+  const { user, logout } = useAuth();
   const {
     currentWorkspaceId,
     currentProjectId,
@@ -49,6 +49,11 @@ export default function Sidebar() {
   const isTeamsActive =
     location.pathname.startsWith("/teams/") ||
     location.pathname.endsWith("/create-team");
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
 
   return (
     <>
@@ -158,7 +163,16 @@ export default function Sidebar() {
           </Link>
         </div>
 
-        <div className="flex flex-col gap-8 items-center">
+        <div className="flex flex-col gap-6 items-center">
+          {/* Logout Button right above Settings */}
+          <button
+            type="button"
+            onClick={handleLogout}
+            title="Log Out"
+            className="p-2 rounded text-(--text) hover:text-rose-400 hover:bg-rose-500/10 transition-all duration-150 ease-in-out cursor-pointer"
+          >
+            <MdOutlineLogout className="text-2xl" />
+          </button>
           <Link to="/profile-settings" title="Settings">
             <RxGear className="text-2xl text-(--text) hover:text-white transition-all duration-150 ease-in-out" />
           </Link>

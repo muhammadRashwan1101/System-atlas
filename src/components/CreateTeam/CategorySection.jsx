@@ -39,13 +39,13 @@ export default function CategorySection({ selectedCategory, onSelectCategory }) 
               onClick={() => handleCategoryClick(cat.id)}
               className={`p-3.5 rounded-lg border font-mono text-sm transition-all duration-150 transform active:scale-95 flex items-center gap-3 cursor-pointer ${
                 isSelected
-                  ? "border-sky-500/80 bg-sky-500/10 text-sky-400 shadow-md shadow-sky-500/10"
+                  ? "border-(--primary) bg-[#ADC6FF]/10 text-(--primary) shadow-[0_0_12px_rgba(173,198,255,0.25)]"
                   : "border-slate-800/80 bg-[#0d0f14] text-slate-300 hover:border-slate-700 hover:text-white"
               }`}
             >
               <div
                 className={`p-2 rounded-md transition-colors ${
-                  isSelected ? "bg-sky-500/20 text-sky-400" : "bg-slate-800/60 text-slate-400"
+                  isSelected ? "bg-[#ADC6FF]/20 text-(--primary)" : "bg-slate-800/60 text-slate-400"
                 }`}
               >
                 <IconComponent className="text-base" />

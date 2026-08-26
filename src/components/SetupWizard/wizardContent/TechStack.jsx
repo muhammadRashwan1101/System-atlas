@@ -36,6 +36,7 @@ export default function TechStack() {
   const {
     handleSubmit,
     setValue,
+    reset,
     control,
     formState: { errors },
   } = useForm({
@@ -45,6 +46,15 @@ export default function TechStack() {
       technologies: initialTechs,
     },
   });
+
+  const hasInitializedRef = useState(false);
+
+  useEffect(() => {
+    if (!hasInitializedRef[0] && initialTechs && initialTechs.length > 0) {
+      hasInitializedRef[1](true);
+      reset({ technologies: initialTechs });
+    }
+  }, [initialTechs, reset, hasInitializedRef]);
 
   const watchedTechnologies = useWatch({ control, name: "technologies" });
   const selectedTechnologies = useMemo(
@@ -141,7 +151,26 @@ export default function TechStack() {
 
     try {
       const endpoint = `/projects/${projectId}/wizard/${wizardId}`;
-      const response = await api.patch(endpoint, payload);
+      let response;
+      try {
+        response = await api.patch(endpoint, payload);
+      } catch (patchErr) {
+        if (
+          patchErr.response?.status === 404 ||
+          patchErr.response?.status === 405
+        ) {
+          try {
+            response = await api.patch(
+              `/projects/${projectId}/components/${wizardId}`,
+              payload
+            );
+          } catch {
+            throw patchErr;
+          }
+        } else {
+          throw patchErr;
+        }
+      }
 
       toast.success(
         response.data?.msg ||
@@ -153,7 +182,8 @@ export default function TechStack() {
         response.data?.currentWizard ||
         response.data?.wizard ||
         response.data;
-      const nextStep = responseData?.currentStep || response.data?.nextStep;
+      const nextStep =
+        responseData?.currentStep || response.data?.nextStep || "ownership";
 
       updateStepData("techStack", {
         technologies: techs,
@@ -162,7 +192,7 @@ export default function TechStack() {
         techStack: techs.join(", "),
       });
 
-      // Transition to backend-returned currentStep
+      // Transition to nextStep
       if (nextStep) {
         setCurrentStep(nextStep);
       }
