@@ -27,6 +27,12 @@ import ImpactAnalysis from "./Pages/ImpactAnalysis/ImpactAnalysis";
 import InvitationAcceptance from "./Pages/Auth/Invitation/InvitationAcceptance";
 import SetNewPassword from "./Pages/Auth/SetNewPassword/SetNewPassword";
 
+import ProjectDashboard from "./Pages/ProjectDashboard/ProjectDashboard";
+import ProjectDetails from "./Pages/ProjectDetails/ProjectDetails";
+import TeamsManagement from "./Pages/TeamsManagement/TeamsManagement";
+import TeamDetails from "./Pages/TeamDetails/TeamDetails";
+import UserManagement from "./Pages/UserManagement/UserManagement";
+
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <AuthProvider>
@@ -62,6 +68,10 @@ createRoot(document.getElementById("root")).render(
               <Route path="/new-workspace" element={<WorkspaceCreation />} />
               <Route path="/profile" element={<Profile />} />
               <Route
+                path="/profile-settings"
+                element={<ProfileSettings />}
+              />
+              <Route
                 path="/profile-settings/edit"
                 element={<ProfileSettings />}
               />
@@ -82,16 +92,32 @@ createRoot(document.getElementById("root")).render(
                 }
               />
               <Route path="/impact" element={<ImpactAnalysis />} />
+              <Route path="/teams" element={<TeamsManagement />} />
+              <Route path="/teams/:teamId" element={<TeamDetails />} />
+              <Route path="/create-team" element={<CreateTeam />} />
+              <Route path="/users" element={<UserManagement />} />
 
               {/* Workspace level */}
               <Route path="/workspaces/:workspaceId">
                 <Route index element={<WorkspaceGateway />} />
-                <Route path="new-project" element={<ProjectCreation />} />
+                <Route path="projects" element={<ProjectDashboard />} />
+                <Route path="teams" element={<TeamsManagement />} />
+                <Route path="teams/:teamId" element={<TeamDetails />} />
+                <Route path="users" element={<UserManagement />} />
+                <Route
+                  path="new-project"
+                  element={
+                    <ProtectedRoute allowedRoles={["admin", "manager", "techlead"]}>
+                      <ProjectCreation />
+                    </ProtectedRoute>
+                  }
+                />
                 <Route path="create-team" element={<CreateTeam />} />
+                
                 {/* Project Level */}
-
                 <Route path="projects/:projectId">
-                  <Route index element={<ComponentsManagement />} />
+                  <Route index element={<ProjectDetails />} />
+                  <Route path="details" element={<ProjectDetails />} />
                   <Route path="components" element={<ComponentsManagement />} />
                   <Route
                     path="components/:componentId"

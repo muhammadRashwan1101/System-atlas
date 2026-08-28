@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FiArrowRight, FiChevronDown } from "react-icons/fi";
+import { FiArrowRight, FiChevronDown, FiPlus } from "react-icons/fi";
 import { PiGraph } from "react-icons/pi";
 import { MdOutlineDomain } from "react-icons/md";
 import { IoExtensionPuzzleSharp } from "react-icons/io5";
@@ -7,6 +7,7 @@ import { IoExtensionPuzzleSharp } from "react-icons/io5";
 export default function TopWorkspacesSection({
   workspaces = [],
   onSelectWorkspace = () => {},
+  onAddWorkspace = () => {},
 }) {
   const [filterHealth, setFilterHealth] = useState("All");
   const [sortBy, setSortBy] = useState("projects");
@@ -63,10 +64,22 @@ export default function TopWorkspacesSection({
   return (
     <div className="flex flex-col gap-4">
       {/* Header & Filter Controls */}
-      <div className="flex items-center justify-between">
-        <h2 className="text-base font-bold text-white font-['Geist',sans-serif]">
-          Top Workspaces
-        </h2>
+      <div className="flex items-center justify-between flex-wrap gap-3">
+        <div className="flex items-center gap-3">
+          <h2 className="text-base font-bold text-white font-['Geist',sans-serif]">
+            Top Workspaces
+          </h2>
+          {onAddWorkspace && (
+            <button
+              type="button"
+              onClick={onAddWorkspace}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#161920] hover:bg-[#1f242e] text-[#ADC6FF] border border-[#2B3240] text-[11px] font-mono font-semibold uppercase tracking-wider transition-colors cursor-pointer"
+            >
+              <FiPlus className="text-xs" />
+              <span>New Workspace</span>
+            </button>
+          )}
+        </div>
 
         {/* Dropdowns */}
         <div className="flex items-center gap-3">

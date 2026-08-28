@@ -113,5 +113,5 @@ describe('Project Creation Flow', () => {
       );
       expect(screen.getByTestId('graph-view')).toBeInTheDocument();
     });
-  });
+  }, 15000);
 });

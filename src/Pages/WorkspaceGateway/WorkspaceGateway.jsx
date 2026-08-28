@@ -1,18 +1,30 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useWorkspace from "../../context/WorkspaceContext";
+import useAuth from "../../context/AuthContext";
 import WorkspaceSelectionModal from "../../components/Navigation/WorkspaceSelectionModal";
-import { FaPlus } from "react-icons/fa6";
+import { FaPlus, FaUser } from "react-icons/fa6";
 import { HiOutlineSwitchHorizontal } from "react-icons/hi";
-import { RxDashboard } from "react-icons/rx";
+import { RxDashboard, RxGear } from "react-icons/rx";
 import { FiLayers } from "react-icons/fi";
 
 export default function WorkspaceGateway() {
   const { workspaceId } = useParams();
   const navigate = useNavigate();
   const { workspaces, projectsByWorkspace, fetchProjects } = useWorkspace();
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [isSwitchModalOpen, setIsSwitchModalOpen] = useState(false);
+
+  const rawRole = user?.role || user?.user?.role || "user";
+  const userRole = String(rawRole).toLowerCase();
+  const canCreateProject =
+    userRole === "admin" || userRole === "manager" || userRole === "techlead";
+  const canSwitchWorkspace =
+    userRole === "admin" || userRole === "manager" || userRole === "techlead";
+  const isDashboardRole = userRole === "admin" || userRole === "manager";
+  const dashboardPath =
+    userRole === "manager" ? "/manager-dashboard" : "/dashboard";
 
   const activeWorkspace = (workspaces || []).find((w) => w._id === workspaceId);
   const projects = projectsByWorkspace[workspaceId] || [];
@@ -74,7 +86,9 @@ export default function WorkspaceGateway() {
         {/* Description */}
         <p className="text-xs text-slate-300 leading-relaxed font-light">
           {projects.length === 0
-            ? "This workspace does not have any active architecture projects yet. Architecture components and telemetry graphs require a project context."
+            ? canCreateProject
+              ? "This workspace does not have any active architecture projects yet. Architecture components and telemetry graphs require a project context."
+              : "This workspace does not have any active architecture projects yet. You can check your profile or account settings."
             : "Choose which project to inspect architecture graph for:"}
         </p>
 
@@ -112,36 +126,60 @@ export default function WorkspaceGateway() {
 
         {/* CTAs */}
         <div className="flex flex-col gap-3 pt-2 border-t border-[#232733]/60">
-          {/* CTA 1: Create New Project */}
-          <button
-            type="button"
-            onClick={() => navigate(`/workspaces/${workspaceId}/new-project`)}
-            className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-(--primary) hover:bg-[#ccdaff] text-(--text-primary) font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(173,198,255,0.3)] cursor-pointer"
-          >
-            <FaPlus className="w-3.5 h-3.5" />
-            Create New Project
-          </button>
+          {/* CTA 1: Create New Project (if permitted) OR Check Own Profile (if user role) */}
+          {canCreateProject ? (
+            <button
+              type="button"
+              onClick={() => navigate(`/workspaces/${workspaceId}/new-project`)}
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-(--primary) hover:bg-[#ccdaff] text-(--text-primary) font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(173,198,255,0.3)] cursor-pointer"
+            >
+              <FaPlus className="w-3.5 h-3.5" />
+              Create New Project
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => navigate("/profile")}
+              className="flex items-center justify-center gap-2 w-full py-3 px-4 rounded-xl bg-(--primary) hover:bg-[#ccdaff] text-(--text-primary) font-bold text-xs uppercase tracking-wider transition-all shadow-[0_0_12px_rgba(173,198,255,0.3)] cursor-pointer"
+            >
+              <FaUser className="w-3.5 h-3.5" />
+              Check Own Profile
+            </button>
+          )}
 
           <div className="flex items-center gap-3">
-            {/* CTA 2: Switch Workspace */}
-            <button
-              type="button"
-              onClick={() => setIsSwitchModalOpen(true)}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#141721] hover:bg-[#1A1F2C] border border-[#232733] text-xs font-medium text-slate-300 hover:text-white transition-colors cursor-pointer"
-            >
-              <HiOutlineSwitchHorizontal className="w-4 h-4 text-(--primary)" />
-              Switch Workspace
-            </button>
+            {/* CTA 2: Switch Workspace (Only for non-user roles) */}
+            {canSwitchWorkspace && (
+              <button
+                type="button"
+                onClick={() => setIsSwitchModalOpen(true)}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#141721] hover:bg-[#1A1F2C] border border-[#232733] text-xs font-medium text-slate-300 hover:text-white transition-colors cursor-pointer"
+              >
+                <HiOutlineSwitchHorizontal className="w-4 h-4 text-(--primary)" />
+                Switch Workspace
+              </button>
+            )}
 
-            {/* CTA 3: Return to Dashboard */}
-            <button
-              type="button"
-              onClick={() => navigate("/dashboard")}
-              className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#141721] hover:bg-[#1A1F2C] border border-[#232733] text-xs font-medium text-slate-300 hover:text-white transition-colors cursor-pointer"
-            >
-              <RxDashboard className="w-4 h-4 text-(--primary)" />
-              Dashboard
-            </button>
+            {/* CTA 3: Return to Dashboard or Profile Settings */}
+            {isDashboardRole ? (
+              <button
+                type="button"
+                onClick={() => navigate(dashboardPath)}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#141721] hover:bg-[#1A1F2C] border border-[#232733] text-xs font-medium text-slate-300 hover:text-white transition-colors cursor-pointer"
+              >
+                <RxDashboard className="w-4 h-4 text-(--primary)" />
+                Dashboard
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => navigate("/profile-settings")}
+                className="flex-1 flex items-center justify-center gap-2 py-2.5 px-3 rounded-xl bg-[#141721] hover:bg-[#1A1F2C] border border-[#232733] text-xs font-medium text-slate-300 hover:text-white transition-colors cursor-pointer"
+              >
+                <RxGear className="w-4 h-4 text-(--primary)" />
+                Profile Settings
+              </button>
+            )}
           </div>
         </div>
       </div>
@@ -154,6 +192,7 @@ export default function WorkspaceGateway() {
         subtitle="Select another workspace to view its projects:"
         items={workspaces}
         type="workspace"
+        canCreateProject={canCreateProject}
         onSelect={(selectedWs) => {
           navigate(`/workspaces/${selectedWs._id}`);
         }}
