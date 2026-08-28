@@ -1,11 +1,21 @@
 import { useState, useCallback } from "react";
 import { useNavigate, useLocation, matchPath } from "react-router-dom";
 import useWorkspace from "../context/WorkspaceContext";
+import useAuth from "../context/AuthContext";
 
 export default function useContextNavigator() {
   const navigate = useNavigate();
   const location = useLocation();
   const { workspaces, fetchProjects, refreshWorkspaces } = useWorkspace();
+  const { user } = useAuth();
+
+  const rawRole = user?.role || user?.user?.role || "user";
+  const userRole = String(rawRole).toLowerCase();
+  const canCreateProject =
+    userRole === "admin" || userRole === "manager" || userRole === "techlead";
+  const isDashboardRole = userRole === "admin" || userRole === "manager";
+  const dashboardPath =
+    userRole === "manager" ? "/manager-dashboard" : "/dashboard";
 
   // Extract current URL context
   const wsMatch = matchPath("/workspaces/:workspaceId/*", location.pathname);
@@ -25,8 +35,10 @@ export default function useContextNavigator() {
     items: [],
     type: "workspace", // "workspace" | "project" | "empty_projects"
     workspaceName: "",
+    canCreateProject: true,
     onSelect: () => {},
     onCreateProject: () => {},
+    onCheckProfile: () => {},
     onSwitchWorkspace: () => {},
     onGoDashboard: () => {},
   });
@@ -45,10 +57,11 @@ export default function useContextNavigator() {
         subtitle: "Choose a workspace to proceed:",
         items: workspaces,
         workspaceName: "",
+        canCreateProject,
         onSelect: onWorkspaceSelected,
       });
     },
-    [workspaces]
+    [workspaces, canCreateProject]
   );
 
   // Helper to open the "No Projects Found in Workspace" modal with 3 CTAs
@@ -62,8 +75,12 @@ export default function useContextNavigator() {
           "Architecture components and graph explorers require an active project.",
         items: [],
         workspaceName: targetWsName || "Selected Workspace",
+        canCreateProject,
         onCreateProject: () => {
           navigate(`/workspaces/${targetWsId}/new-project`);
+        },
+        onCheckProfile: () => {
+          navigate("/profile");
         },
         onSwitchWorkspace: () => {
           openWorkspaceSelector((selectedWs) => {
@@ -71,11 +88,21 @@ export default function useContextNavigator() {
           });
         },
         onGoDashboard: () => {
-          navigate("/dashboard");
+          if (isDashboardRole) {
+            navigate(dashboardPath);
+          } else {
+            navigate("/profile-settings");
+          }
         },
       });
     },
-    [navigate, openWorkspaceSelector]
+    [
+      navigate,
+      openWorkspaceSelector,
+      canCreateProject,
+      isDashboardRole,
+      dashboardPath,
+    ]
   );
 
   // Centralized Workspace-dependent Navigation

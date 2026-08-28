@@ -151,7 +151,11 @@ export default function ProjectForm({ formRef, projectSummary, setProjectSummary
         const userList = Array.isArray(rawList) ? rawList : [];
 
         // Filter only project managers (role === 'manager' or jobTitle includes manager/lead)
+        // and exclude users with >= 3 assigned projects
         const filteredManagers = userList.filter((u) => {
+          const projectsCount = u.projectsCount ?? 0;
+          if (projectsCount >= 3) return false;
+
           const role = String(u.role || u.user?.role || "").toLowerCase();
           const jobTitle = String(
             u.jobTitle || u.user?.jobTitle || ""

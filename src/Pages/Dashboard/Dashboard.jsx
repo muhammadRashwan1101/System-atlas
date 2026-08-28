@@ -111,6 +111,7 @@ export default function Dashboard() {
       <DashboardHeader
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        onAddWorkspace={() => navigate("/new-workspace")}
         onExploreArchitecture={handleExploreArchitecture}
         onGenerateReport={() => setIsReportModalOpen(true)}
       />
@@ -137,6 +138,7 @@ export default function Dashboard() {
         <TopWorkspacesSection
           workspaces={liveData?.topWorkspaces}
           onSelectWorkspace={handleSelectWorkspace}
+          onAddWorkspace={() => navigate("/new-workspace")}
         />
 
         {/* Bottom Row: Recent Activity & Team Snapshots */}

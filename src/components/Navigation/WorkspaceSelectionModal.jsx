@@ -1,6 +1,6 @@
 import { IoClose } from "react-icons/io5";
 import { MdOutlineDomain } from "react-icons/md";
-import { FaFolderOpen, FaPlus, FaArrowRight } from "react-icons/fa6";
+import { FaFolderOpen, FaPlus, FaArrowRight, FaUser } from "react-icons/fa6";
 import { HiOutlineSwitchHorizontal } from "react-icons/hi";
 import { RxDashboard } from "react-icons/rx";
 import { FiLayers } from "react-icons/fi";
@@ -13,8 +13,10 @@ export default function WorkspaceSelectionModal({
   items = [],
   type = "workspace", // "workspace" | "project" | "empty_projects"
   workspaceName = "",
+  canCreateProject = true,
   onSelect,
   onCreateProject,
+  onCheckProfile,
   onSwitchWorkspace,
   onGoDashboard,
 }) {
@@ -69,62 +71,94 @@ export default function WorkspaceSelectionModal({
                 Workspace: {workspaceName || "Current Workspace"}
               </span>
               <p className="text-xs text-slate-300 leading-relaxed font-light">
-                There are currently no architecture projects configured in this workspace. You can initialize the first project, switch to another workspace, or return to the main dashboard.
+                {canCreateProject
+                  ? "There are currently no architecture projects configured in this workspace. You can initialize the first project, switch to another workspace, or return to the main dashboard."
+                  : "There are currently no architecture projects configured in this workspace. You can check your profile and account settings."}
               </p>
             </div>
 
             {/* CTAs */}
             <div className="flex flex-col gap-2.5">
-              {/* CTA 1: Create New Project */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (onCreateProject) onCreateProject();
-                  onClose();
-                }}
-                className="flex items-center justify-between w-full p-4 rounded-xl bg-(--primary) hover:bg-[#ccdaff] text-(--text-primary) shadow-[0_0_12px_rgba(173,198,255,0.3)] transition-all group cursor-pointer"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-(--text-primary)/10 text-(--text-primary) font-bold">
-                    <FaPlus className="w-3.5 h-3.5" />
+              {/* CTA 1: Create New Project (if allowed) OR Check Own Profile */}
+              {canCreateProject ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onCreateProject) onCreateProject();
+                    onClose();
+                  }}
+                  className="flex items-center justify-between w-full p-4 rounded-xl bg-(--primary) hover:bg-[#ccdaff] text-(--text-primary) shadow-[0_0_12px_rgba(173,198,255,0.3)] transition-all group cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-(--text-primary)/10 text-(--text-primary) font-bold">
+                      <FaPlus className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex flex-col text-left">
+                      <span className="text-sm font-semibold text-(--text-primary)">
+                        Create New Project
+                      </span>
+                      <span className="text-[11px] text-(--text-primary)/80 font-mono">
+                        Initialize architecture mapping in this workspace
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col text-left">
-                    <span className="text-sm font-semibold text-(--text-primary)">
-                      Create New Project
-                    </span>
-                    <span className="text-[11px] text-(--text-primary)/80 font-mono">
-                      Initialize architecture mapping in this workspace
-                    </span>
+                  <FaArrowRight className="w-3.5 h-3.5 text-(--text-primary) group-hover:translate-x-1 transition-transform" />
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onCheckProfile) {
+                      onCheckProfile();
+                    }
+                    onClose();
+                  }}
+                  className="flex items-center justify-between w-full p-4 rounded-xl bg-(--primary) hover:bg-[#ccdaff] text-(--text-primary) shadow-[0_0_12px_rgba(173,198,255,0.3)] transition-all group cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-(--text-primary)/10 text-(--text-primary) font-bold">
+                      <FaUser className="w-3.5 h-3.5" />
+                    </div>
+                    <div className="flex flex-col text-left">
+                      <span className="text-sm font-semibold text-(--text-primary)">
+                        Check Own Profile
+                      </span>
+                      <span className="text-[11px] text-(--text-primary)/80 font-mono">
+                        View your assigned components, activity, and personal profile
+                      </span>
+                    </div>
                   </div>
-                </div>
-                <FaArrowRight className="w-3.5 h-3.5 text-(--text-primary) group-hover:translate-x-1 transition-transform" />
-              </button>
+                  <FaArrowRight className="w-3.5 h-3.5 text-(--text-primary) group-hover:translate-x-1 transition-transform" />
+                </button>
+              )}
 
-              {/* CTA 2: Switch Workspace */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (onSwitchWorkspace) onSwitchWorkspace();
-                }}
-                className="flex items-center justify-between w-full p-3.5 rounded-xl bg-[#141721] hover:bg-[#1A1F2C] border border-[#232733] hover:border-[#353D52] text-slate-200 hover:text-white transition-all group cursor-pointer"
-              >
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg bg-slate-800 text-slate-300">
-                    <HiOutlineSwitchHorizontal className="w-4 h-4" />
+              {/* CTA 2: Switch Workspace (Only for non-user roles) */}
+              {canCreateProject && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onSwitchWorkspace) onSwitchWorkspace();
+                  }}
+                  className="flex items-center justify-between w-full p-3.5 rounded-xl bg-[#141721] hover:bg-[#1A1F2C] border border-[#232733] hover:border-[#353D52] text-slate-200 hover:text-white transition-all group cursor-pointer"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 rounded-lg bg-slate-800 text-slate-300">
+                      <HiOutlineSwitchHorizontal className="w-4 h-4" />
+                    </div>
+                    <div className="flex flex-col text-left">
+                      <span className="text-xs font-medium text-slate-200 group-hover:text-white">
+                        Switch Workspace
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-mono">
+                        Select another workspace that may contain active projects
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col text-left">
-                    <span className="text-xs font-medium text-slate-200 group-hover:text-white">
-                      Switch Workspace
-                    </span>
-                    <span className="text-[10px] text-slate-400 font-mono">
-                      Select another workspace that may contain active projects
-                    </span>
-                  </div>
-                </div>
-                <span className="text-xs font-mono text-slate-400 group-hover:text-slate-200">&rarr;</span>
-              </button>
+                  <span className="text-xs font-mono text-slate-400 group-hover:text-slate-200">&rarr;</span>
+                </button>
+              )}
 
-              {/* CTA 3: Return to Dashboard */}
+              {/* CTA 3: Return to Dashboard or Profile Settings */}
               <button
                 type="button"
                 onClick={() => {
@@ -139,10 +173,10 @@ export default function WorkspaceSelectionModal({
                   </div>
                   <div className="flex flex-col text-left">
                     <span className="text-xs font-medium text-slate-200 group-hover:text-white">
-                      Return to Dashboard
+                      {canCreateProject ? "Return to Dashboard" : "Profile Settings"}
                     </span>
                     <span className="text-[10px] text-slate-400 font-mono">
-                      Go back to global overview and metrics
+                      {canCreateProject ? "Go back to global overview and metrics" : "Manage your account preferences and credentials"}
                     </span>
                   </div>
                 </div>

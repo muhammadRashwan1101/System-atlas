@@ -1,13 +1,16 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { RxMagnifyingGlass } from "react-icons/rx";
 import { AiOutlineBell } from "react-icons/ai";
 import { toast } from "react-toastify";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom"; 
 import api from "../../api/axios";
+import useWorkspace from "../../context/WorkspaceContext";
+import useAuth from "../../context/AuthContext";
 
 import TeamForm from "../../components/CreateTeam/TeamForm";
 import CategorySection from "../../components/CreateTeam/CategorySection";
 import TeamLeadSelect from "../../components/CreateTeam/TeamLeadSelect";
+import TeamMembersSelect from "../../components/CreateTeam/TeamMembersSelect";
 import EntityPreview from "../../components/CreateTeam/EntityPreview";
 import Breadcrumbs from "../../components/Navigation/Breadcrumbs";
 
@@ -19,12 +22,22 @@ export default function CreateTeam() {
   const workspaceId = paramWsId || searchParams.get("workspaceId");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const { workspaces, projectsByWorkspace, fetchProjects } = useWorkspace();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (workspaceId && fetchProjects) {
+      fetchProjects(workspaceId);
+    }
+  }, [workspaceId, fetchProjects]);
+
   const [formData, setFormData] = useState({
     teamName: "",
     teamCode: "",
     description: "",
     category: "",
     teamLead: null,
+    members: [],
   });
 
   const handleInputChange = (field, value) => {
@@ -37,6 +50,10 @@ export default function CreateTeam() {
 
   const handleTeamLeadSelect = (leadObj) => {
     setFormData((prev) => ({ ...prev, teamLead: leadObj }));
+  };
+
+  const handleMembersChange = (membersList) => {
+    setFormData((prev) => ({ ...prev, members: membersList }));
   };
 
   const handleFooterSubmit = (e) => {
@@ -66,6 +83,10 @@ export default function CreateTeam() {
 
     setIsSubmitting(true);
 
+    const memberIds = (formData.members || []).map((m) =>
+      m?._id || m?.id || (typeof m === "string" ? m : null)
+    ).filter(Boolean);
+
     const payload = {
       teamName: basicFormData.teamName.trim(),
       teamCode: basicFormData.teamCode.trim().toUpperCase(),
@@ -73,7 +94,7 @@ export default function CreateTeam() {
       category: formData.category,
       teamLead: leadId,
       responsibilities: [],
-      members: [],
+      members: memberIds,
       status: "active",
     };
 
@@ -82,10 +103,33 @@ export default function CreateTeam() {
 
       if (response.status === 201 || response.status === 200) {
         toast.success("Team created successfully!");
-        if (workspaceId) {
-          navigate(`/workspaces/${workspaceId}/new-project?flow=onboarding`);
+
+        const flow = searchParams.get("flow");
+        const onboardingVal =
+          user?.user?.onboarding !== undefined
+            ? user.user.onboarding
+            : user?.user?.onboardingStatus !== undefined
+            ? user.user.onboardingStatus
+            : user?.onboarding !== undefined
+            ? user.onboarding
+            : user?.onboardingStatus;
+
+        const isUserOnboarding = onboardingVal === "pending" || flow === "onboarding";
+
+        const currentWsId = workspaceId || workspaces?.[0]?._id;
+        const existingProjects = currentWsId ? (projectsByWorkspace[currentWsId] || []) : [];
+        const hasExistingProjects = existingProjects.length > 0;
+
+        // If user is in initial onboarding phase and has no projects yet
+        if (isUserOnboarding && !hasExistingProjects && currentWsId) {
+          navigate(`/workspaces/${currentWsId}/new-project?flow=onboarding`);
         } else {
-          navigate("/dashboard");
+          // Projects/workspaces already exist -> navigate directly to Teams Management dashboard
+          if (currentWsId) {
+            navigate(`/workspaces/${currentWsId}/teams`);
+          } else {
+            navigate("/teams");
+          }
         }
       }
     } catch (err) {
@@ -153,6 +197,11 @@ export default function CreateTeam() {
               value={formData.teamLead}
               onChange={handleTeamLeadSelect}
             />
+            <TeamMembersSelect
+              selectedMembers={formData.members}
+              onMembersChange={handleMembersChange}
+              teamName={formData.teamName || "Untitled Team"}
+            />
           </div>
 
           {/* Right Column: Live Preview */}
@@ -161,6 +210,12 @@ export default function CreateTeam() {
               teamName={formData.teamName}
               teamCode={formData.teamCode}
               leaderName={getLeaderFullName()}
+              metrics={{
+                components: 0,
+                services: 0,
+                projects: 0,
+                members: (formData.members || []).length,
+              }}
             />
           </div>
         </div>
@@ -179,7 +234,14 @@ export default function CreateTeam() {
         <div className="flex items-center gap-4">
           <button
             type="button"
-            onClick={() => navigate(workspaceId ? `/workspaces/${workspaceId}` : "/dashboard")}
+            onClick={() => {
+              const currentWsId = workspaceId || workspaces?.[0]?._id;
+              if (currentWsId) {
+                navigate(`/workspaces/${currentWsId}/teams`);
+              } else {
+                navigate("/teams");
+              }
+            }}
             className="py-2 px-2 text-sm font-semibold rounded-lg text-[#FF8A80] uppercase hover:text-[#FF8A80]/80 hover:bg-[#FF8A8020] transform ease-in-out duration-200 cursor-pointer"
           >
             Cancel

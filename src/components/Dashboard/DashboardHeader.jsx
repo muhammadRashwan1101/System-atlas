@@ -1,9 +1,10 @@
-import { FiSearch, FiBell, FiClock, FiHelpCircle } from "react-icons/fi";
+import { FiSearch, FiBell, FiClock, FiHelpCircle, FiPlus } from "react-icons/fi";
 import Breadcrumbs from "../Navigation/Breadcrumbs";
 
 export default function DashboardHeader({
   searchQuery = "",
   onSearchChange = () => {},
+  onAddWorkspace = () => {},
   onExploreArchitecture = () => {},
   onGenerateReport = () => {},
 }) {
@@ -55,8 +56,16 @@ export default function DashboardHeader({
         <div className="flex items-center gap-2.5 pl-2 border-l border-[#232730]">
           <button
             type="button"
+            onClick={onAddWorkspace}
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-(--primary) hover:bg-(--primary)/80 text-(--text-primary)/80 font-bold text-xs tracking-wider uppercase transition-all shadow-md shadow-blue-500/10 cursor-pointer font-mono"
+          >
+            <FiPlus className="text-sm stroke-[2.5]" />
+            <span>Add Workspace</span>
+          </button>
+          <button
+            type="button"
             onClick={onExploreArchitecture}
-            className="px-3.5 py-1.5 rounded-lg bg-[#ADC6FF] hover:bg-[#8eb2ff] text-[#002E6A] font-semibold text-xs tracking-wider uppercase transition-all shadow-md shadow-blue-500/10 cursor-pointer font-mono"
+            className="px-3.5 py-1.5 rounded-lg bg-[#161920] hover:bg-[#1f242e] text-white border border-[#2B3240] font-medium text-xs tracking-wider uppercase transition-all cursor-pointer font-mono"
           >
             Explore Architecture
           </button>
@@ -72,3 +81,4 @@ export default function DashboardHeader({
     </header>
   );
 }
+

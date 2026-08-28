@@ -3,7 +3,8 @@ import { renderHook, act } from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import useContextNavigator from '../../../src/hooks/useContextNavigator';
 import { WorkspaceContext } from '../../../src/context/WorkspaceContext';
-import { createTestWorkspace, createTestProject } from '../../fixtures/factories';
+import { AuthContext } from '../../../src/context/AuthContext';
+import { createTestWorkspace, createTestProject, createTestUser } from '../../fixtures/factories';
 
 describe('useContextNavigator Hook', () => {
   const mockWorkspaces = [
@@ -23,24 +24,26 @@ describe('useContextNavigator Hook', () => {
     mockRefreshWorkspaces = vi.fn();
   });
 
-  const createWrapper = (initialPath = '/', workspaceContextVal = {}) => {
+  const createWrapper = (initialPath = '/', workspaceContextVal = {}, userVal = createTestUser()) => {
     return function Wrapper({ children }) {
       return (
-        <MemoryRouter initialEntries={[initialPath]}>
-          <WorkspaceContext.Provider
-            value={{
-              workspaces: mockWorkspaces,
-              projectsByWorkspace: {},
-              fetchProjects: mockFetchProjects,
-              refreshWorkspaces: mockRefreshWorkspaces,
-              ...workspaceContextVal,
-            }}
-          >
-            <Routes>
-              <Route path="*" element={children} />
-            </Routes>
-          </WorkspaceContext.Provider>
-        </MemoryRouter>
+        <AuthContext.Provider value={{ user: userVal, loading: false, setUser: vi.fn(), getCurrentUser: vi.fn() }}>
+          <MemoryRouter initialEntries={[initialPath]}>
+            <WorkspaceContext.Provider
+              value={{
+                workspaces: mockWorkspaces,
+                projectsByWorkspace: {},
+                fetchProjects: mockFetchProjects,
+                refreshWorkspaces: mockRefreshWorkspaces,
+                ...workspaceContextVal,
+              }}
+            >
+              <Routes>
+                <Route path="*" element={children} />
+              </Routes>
+            </WorkspaceContext.Provider>
+          </MemoryRouter>
+        </AuthContext.Provider>
       );
     };
   };
@@ -98,6 +101,30 @@ describe('useContextNavigator Hook', () => {
     expect(result.current.modalState.isOpen).toBe(true);
     expect(result.current.modalState.type).toBe('empty_projects');
     expect(result.current.modalState.title).toBe('No Projects in this Workspace');
+  });
+
+  it('marks canCreateProject as false for user role when opening empty projects modal', async () => {
+    mockFetchProjects.mockResolvedValueOnce([]);
+
+    const singleWs = [createTestWorkspace({ _id: 'ws-empty', name: 'Empty WS' })];
+    const { result } = renderHook(() => useContextNavigator(), {
+      wrapper: createWrapper(
+        '/dashboard',
+        {
+          workspaces: singleWs,
+          fetchProjects: mockFetchProjects,
+        },
+        createTestUser({ role: 'user' })
+      ),
+    });
+
+    await act(async () => {
+      await result.current.navigateToProject('components');
+    });
+
+    expect(result.current.modalState.isOpen).toBe(true);
+    expect(result.current.modalState.type).toBe('empty_projects');
+    expect(result.current.modalState.canCreateProject).toBe(false);
   });
 
   it('opens project selector modal when target workspace has multiple projects', async () => {

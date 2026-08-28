@@ -28,10 +28,16 @@ export default function Sidebar() {
 
   const userRole = String(user?.role || user?.user?.role || "user").toLowerCase();
   const isDashboardRole = userRole === "admin" || userRole === "manager";
+  const canCreateProject =
+    userRole === "admin" || userRole === "manager" || userRole === "techlead";
   const dashboardPath = userRole === "manager" ? "/manager-dashboard" : "/dashboard";
 
   // Active state checkers based strictly on the authoritative URL
   const isGraphActive = location.pathname.endsWith("/graph");
+  const isProjectsActive =
+    location.pathname.endsWith("/projects") ||
+    (currentWorkspaceId &&
+      location.pathname === `/workspaces/${currentWorkspaceId}/projects`);
   const isComponentsActive =
     location.pathname.endsWith("/components") ||
     location.pathname.includes("/wizard") ||
@@ -44,11 +50,16 @@ export default function Sidebar() {
     currentWorkspaceId &&
     !currentProjectId &&
     location.pathname === `/workspaces/${currentWorkspaceId}` &&
-    !isNewProjectActive;
+    !isNewProjectActive &&
+    !isProjectsActive;
   const isDashboardActive = location.pathname === "/dashboard" || location.pathname === "/manager-dashboard";
   const isTeamsActive =
-    location.pathname.startsWith("/teams/") ||
+    location.pathname.startsWith("/teams") ||
+    location.pathname.includes("/teams") ||
     location.pathname.endsWith("/create-team");
+  const isUsersActive =
+    location.pathname.startsWith("/users") ||
+    location.pathname.includes("/users");
 
   const handleLogout = () => {
     logout();
@@ -79,6 +90,20 @@ export default function Sidebar() {
               <MdOutlineDashboard className="w-5 h-5" />
             </Link>
           )}
+
+          {/* Projects Hub (Global Instance Index) */}
+          <button
+            type="button"
+            onClick={() => navigateToWorkspace("projects")}
+            title="Projects Index"
+            className={`p-3 rounded transition-all ease-in-out duration-250 cursor-pointer ${
+              isProjectsActive
+                ? "bg-(--primary) text-(--text-primary)"
+                : "hover:bg-(--primary) hover:text-(--text-primary) text-(--text)"
+            }`}
+          >
+            <FaFolderOpen className="w-5 h-5" />
+          </button>
 
           {/* Architecture Graph (Project-scoped) */}
           <button
@@ -121,37 +146,10 @@ export default function Sidebar() {
             </div>
           </Link>
 
-          {/* New Project (Workspace-scoped) */}
+          {/* Teams Governance & Management (Moved to button above) */}
           <button
             type="button"
-            onClick={() => navigateToWorkspace("new-project")}
-            title="New Project"
-            className={`p-3 rounded transition-all ease-in-out duration-250 cursor-pointer ${
-              isNewProjectActive
-                ? "bg-(--primary) text-(--text-primary)"
-                : "hover:bg-(--primary) hover:text-(--text-primary) text-(--text)"
-            }`}
-          >
-            <FaFolderOpen className="w-5 h-5" />
-          </button>
-
-          {/* Workspace Hub */}
-          <button
-            type="button"
-            onClick={() => navigateToWorkspace("")}
-            title="Workspace Directory"
-            className={`p-3 rounded transition-all ease-in-out duration-250 cursor-pointer ${
-              isWorkspaceActive
-                ? "bg-(--primary) text-(--text-primary)"
-                : "hover:bg-(--primary) hover:text-(--text-primary) text-(--text)"
-            }`}
-          >
-            <MdOutlineDomain className="w-5 h-5" />
-          </button>
-
-          {/* Teams Governance */}
-          <Link
-            to={`/workspaces/${currentWorkspaceId}/create-team`}
+            onClick={() => navigateToWorkspace("teams")}
             title="Teams & Governance"
             className={`p-3 rounded transition-all ease-in-out duration-250 cursor-pointer ${
               isTeamsActive
@@ -160,7 +158,21 @@ export default function Sidebar() {
             }`}
           >
             <HiUserGroup className="w-5 h-5" />
-          </Link>
+          </button>
+
+          {/* User Management Center */}
+          <button
+            type="button"
+            onClick={() => navigateToWorkspace("users")}
+            title="User Management"
+            className={`p-3 rounded transition-all ease-in-out duration-250 cursor-pointer ${
+              isUsersActive
+                ? "bg-(--primary) text-(--text-primary)"
+                : "hover:bg-(--primary) hover:text-(--text-primary) text-(--text)"
+            }`}
+          >
+            <FaUser className="w-5 h-5" />
+          </button>
         </div>
 
         <div className="flex flex-col gap-6 items-center">
